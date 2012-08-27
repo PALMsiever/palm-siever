@@ -2,7 +2,7 @@
 
 = Requirements =
 
-PALM-siever needs DipImage to run. You can download it from [www.diplib.org]. Follow the instructions to install it on your platform.
+PALM-siever needs `DipImage` to run. You can download it from [www.diplib.org]. Follow the instructions to install it on your platform.
 
 = Installation =
 

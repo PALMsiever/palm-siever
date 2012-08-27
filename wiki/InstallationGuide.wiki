@@ -1,0 +1,35 @@
+#summary Installation guide
+
+= Requirements =
+
+PALM-siever needs DipImage to run. You can download it from [www.diplib.org]. Follow the instructions to install it on your platform.
+
+= Installation =
+
+  # Make sure DipImage is installed and remember the installation directory, which we will refer to as _DIP_DIR_
+  # Copy “palm-siever-vX.X.zip” to a folder of your choice PALM_DIR
+  # Open MATLAB
+  # Execute: “addpath PALM_DIR” (substitute PALM_DIR with the dir where you extracted palm-siever)
+  # Modify the setup.m file to reflect your DIP_DIR.
+  # Execute: “setup”
+
+= Quickstart =
+To open a PRM file, use the “importprm” command. The syntax is simply:
+{{{
+importprm filename
+}}}
+The filename should be the full path to your PRM file. Note: it works best on local files.
+
+The command will load the data, with each column of the file as a separate variable.
+
+To run the software, execute:
+{{{
+PALMsiever
+}}}
+
+It will ask to specify what variables are X position, Y position, localization precision for X and localization precision for Y.
+
+You can specify them when opening the application.
+{{{
+PALMsiever(‘xVar’,’yVar’,’sigmaX’,’sigmaY’)
+}}}

@@ -7,11 +7,14 @@ PALM-siever needs `DipImage` to run. You can download it from [www.diplib.org]. 
 = Installation =
 
   # Make sure `DipImage` is installed and remember the installation directory, which we will refer to as _DIP_DIR_
-  # Copy “palm-siever-vX.X.zip” to a folder of your choice PALM_DIR
+  # Copy “palm-siever-vX.X.zip” to a folder of your choice _PALM_DIR_
   # Open MATLAB
-  # Execute: “addpath PALM_DIR” (substitute PALM_DIR with the dir where you extracted palm-siever)
-  # Modify the setup.m file to reflect your DIP_DIR.
-  # Execute: “setup”
+  # Execute: (substitute PALM_DIR with the dir where you extracted palm-siever)
+{{{
+addpath PALM_DIR
+}}}
+  # Modify the `setup.m` file to reflect your DIP_DIR.
+  # Execute: `setup`
 
 = Quickstart =
 To open a PRM file, use the “importprm” command. The syntax is simply:

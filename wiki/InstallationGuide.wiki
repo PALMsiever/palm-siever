@@ -1,27 +1,41 @@
 #summary Installation guide
 
-= Requirements =
+== Requirements =
 
-PALM-siever needs `DipImage` to run. You can download it from [www.diplib.org]. Follow the instructions to install it on your platform.
+PALM-siever needs `DipImage` to run. You can download it from [http://www.diplib.org]. Follow the instructions to install it on your platform.
 
-= Installation =
+== Installation =
 
   # Make sure `DipImage` is installed and remember the installation directory, which we will refer to as _DIP_DIR_
-  # Copy “palm-siever-vX.X.zip” to a folder of your choice _PALM_DIR_
+  # Copy “palm-siever-vX.X.zip” to a folder of your choice _PALM_DIR_ or download the latest version with
+{{{
+svn checkout http://palm-siever.googlecode.com/svn/trunk/ palm-siever-read-only
+}}}
   # Open MATLAB
-  # Execute: (substitute PALM_DIR with the dir where you extracted palm-siever)
+  # Execute: (substitute _PALM_DIR_ with the dir where you extracted palm-siever)
 {{{
 addpath PALM_DIR
 }}}
-  # Modify the `setup.m` file to reflect your DIP_DIR.
-  # Execute: `setup`
+  # Modify the `palmsiever_setup.m` file to reflect your _DIP_DIR_.
+  # Execute: `palmsiever_setup`
 
-= Quickstart =
+== Quickstart =
+You need to run `palmsiever_setup` for each new MATLAB session (make sure to have _PALM_DIR_ in your path, or add it with `addpath`. Alternatively, you can add these two lines to your `startup.m` file.
+{{{
+addpath _PALM_DIR_
+palmsiever_setup
+}}}
+
 To open a PRM file, use the “importprm” command. The syntax is simply:
 {{{
 importprm filename
 }}}
 The filename should be the full path to your PRM file. Note: it works best on local files.
+
+You can open a CSV with: 
+{{{
+importprm('filename',',')
+}}}
 
 The command will load the data, with each column of the file as a separate variable.
 

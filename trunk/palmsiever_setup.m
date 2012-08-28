@@ -1,8 +1,8 @@
 % SETUP SCRIPT FOR PALM-siever
 % ============================
 % Author:   Thomas Pengo
-% Web:      http://code.google.com/palm-siever
-%
+% Web:      http://code.google.com/p/palm-siever
+% Licence:  GPL-v.3
 
 % Find out where we are
 palm_siever = fileparts(which('palmsiever_setup'));

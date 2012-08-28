@@ -16,7 +16,7 @@
 % warranty is given.
 %
 % Author: Thomas Pengo, 2012
-function importprm(filename,delim)
+function Nr = importprm(filename,delim)
 
 failed = false; ok = false;
 while ~failed && ~ok
@@ -72,6 +72,7 @@ else
     d=Dimension(Nr,Nc);
 end
 M=eval(PRMutils.getMATLABcommand(fout,d));
+Nr=size(M,1);
 
 % Import the data
 %M = textscan(FILE,repmat('%f32',1,Nc),'Delimiter','\t');

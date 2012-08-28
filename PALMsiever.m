@@ -34,7 +34,7 @@ function varargout = PALMsiever(varargin)
 addpath(fileparts(which('AreaAnalysis')));
 addpath(fileparts(fileparts(which('AreaAnalysis'))));
 
-% Last Modified by GUIDE v2.5 27-Aug-2012 10:46:54
+% Last Modified by GUIDE v2.5 28-Aug-2012 09:47:57
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -316,6 +316,13 @@ hold(handles.axes1,'off')
 XPosition=evalin('base',handles.varx);
 YPosition=evalin('base',handles.vary);
 
+try
+    gamma=str2double(get(handles.tGamma,'String'));
+catch
+    warning('Unreadable gamma value, defaulting to 1')
+    gamma=1;
+end
+
 data = get(handles.tParameters,'Data');
 
 subset = true(length(XPosition),1);
@@ -342,6 +349,7 @@ assignin('base','subset',subset);
 
 minC = str2double(get(handles.minC,'String'));
 maxC = str2double(get(handles.maxC,'String'));
+nbins = str2double(get(handles.tBins,'String'));
 
 setappdata(0,'pointsetsubset',subset);
 
@@ -379,6 +387,7 @@ switch get(handles.pShow,'Value')
             density = zeros(res+1);
             X = repmat(n,res+1,1); Y = repmat(m',1,res+1);
         end
+        density = gammaAdjust(density,gamma);
         imagesc(n,m,density',[minC maxC]); colormap hot
         setappdata(0,'KDE',{X,Y,density'})
     case 8 % "Jittered histogram"
@@ -408,9 +417,10 @@ switch get(handles.pShow,'Value')
             density = zeros(res+1);
             X = repmat(n,res+1,1); Y = repmat(m',1,res+1);
         end
+        density = gammaAdjust(density,gamma);
         imagesc(n,m,density',[minC maxC]); colormap hot
         setappdata(0,'KDE',{X,Y,density'})
-    case 7 % Histogram 3D
+    case 7 % Histogram 3D Hue Opacity
         n=linspace(minX,maxX,res);
         m=linspace(minY,maxY,res);
         ZPosition=evalin('base',handles.varz);
@@ -446,11 +456,12 @@ switch get(handles.pShow,'Value')
 
         sigma = str2double(get(handles.sigma,'String'));
         density = gaussf(density/max(density(:)),[sigma/pxx sigma/pxy 0]);
+        density = gammaAdjust(density,gamma);
 
         HSV = joinchannels('HSV',zz(density,'corner')/(nz+1)*2*pi,1+newim(size(density)),density);
         RGB = colorspace(HSV,'RGB');
 
-        a = .5; b=1; sbar = 1;
+        a = .5; b=1; sbar = .625;
 
         rgb = zeros(size(density,2),size(density,1),3);
         for i=1:size(density,3)
@@ -508,6 +519,7 @@ switch get(handles.pShow,'Value')
         else
             density = zeros(res);
         end
+        density = gammaAdjust(density,gamma);
         imagesc(X(1,:),Y(:,1),density,[minC maxC])
         setappdata(0,'KDE',{X,Y,density})
         set(gca,'Color',[0 0 0])
@@ -524,30 +536,32 @@ switch get(handles.pShow,'Value')
             density = zeros(res);
             X = repmat(n,res,1); Y = repmat(m',1,res);
         end
+        density = gammaAdjust(density,gamma);
+        contour(handles.axes1,X,Y,density,linspace(minC,maxC,nbins))
         setappdata(0,'KDE',{X,Y,density})
     case 6 % Gaussians
-        if NP>0
-            points = [XPosition(subset)-minX YPosition(subset)-minY];
-            % Convert points to indexes from 1:n and 1:m
-            [xi X]= quantization(XPosition(subset),minX,maxX,res);
-            [yi Y]= quantization(YPosition(subset),minY,maxY,res);
-            pxSize = [(maxX-minX)/res (maxY-minY)/res];
-            sigmaX = evalin('base',handles.sigmax);
-            sigmaY = evalin('base',handles.sigmay);
-            sigmaX=sigmaX(subset);sigmaY=sigmaY(subset);
-            offX = (XPosition(subset)-minX)/(maxX-minX) - xi/res;
-            offY = (YPosition(subset)-minY)/(maxY-minY) - yi/res;
-
-            density = render_gauss(pxSize,[xi yi],[sigmaX sigmaY],[offX offY],[res res],...
-                [minX minY (maxX-minX) (maxY-minY)]);
-            offset = points-ceil(points); points = ceil(points);
-        else
-            n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
-            density = zeros(res);
-            X = repmat(n,res,1); Y = repmat(m',1,res);
-        end
-        imagesc(X,Y,density,[minC maxC])
-        setappdata(0,'KDE',{X,Y,density})
+%         if NP>0
+%             points = [XPosition(subset)-minX YPosition(subset)-minY];
+%             % Convert points to indexes from 1:n and 1:m
+%             [xi X]= quantization(XPosition(subset),minX,maxX,res);
+%             [yi Y]= quantization(YPosition(subset),minY,maxY,res);
+%             pxSize = [(maxX-minX)/res (maxY-minY)/res];
+%             sigmaX = evalin('base',handles.sigmax);
+%             sigmaY = evalin('base',handles.sigmay);
+%             sigmaX=sigmaX(subset);sigmaY=sigmaY(subset);
+%             offX = (XPosition(subset)-minX)/(maxX-minX) - xi/res;
+%             offY = (YPosition(subset)-minY)/(maxY-minY) - yi/res;
+% 
+%             density = render_gauss(pxSize,[xi yi],[sigmaX sigmaY],[offX offY],[res res],...
+%                 [minX minY (maxX-minX) (maxY-minY)]);
+%             offset = points-ceil(points); points = ceil(points);
+%         else
+%             n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
+%             density = zeros(res);
+%             X = repmat(n,res,1); Y = repmat(m',1,res);
+%         end
+%         imagesc(X,Y,density,[minC maxC])
+%         setappdata(0,'KDE',{X,Y,density})
     case 5 % "Histogram + Gauss"
         n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
         if NP>0
@@ -564,6 +578,7 @@ switch get(handles.pShow,'Value')
             density = zeros(res+1);
             X = repmat(n,res+1,1); Y = repmat(m',1,res+1);
         end
+        density = gammaAdjust(density,gamma);
         imagesc(n,m,density',[minC maxC]); colormap hot
         setappdata(0,'KDE',{X,Y,density'})
     case 9 %"Delaunay Triangulation"
@@ -616,7 +631,7 @@ isRightclick = strcmp(get(gcf,'SelectionType'),'alt');
 isLeftclick = strcmp(get(gcf,'SelectionType'),'normal');
 
 if isRightclick
-    PLOTS = [3];
+    PLOTS = [2];
     
     S = getappdata(0,'KDE');
     if isempty(S)
@@ -634,6 +649,10 @@ if isRightclick
         
     subset0 = X.^2 + Y.^2 < r*r;
     ss = [X(subset0) Y(subset0)];
+    if isempty(ss)
+        msgbox(['No points within the specified radius: ' num2str(r)]);
+        return
+    end
     [v d] = eig(cov(ss)); 
     dir = v(:,2);
     dirM = [dir [-dir(2);dir(1)]];
@@ -838,6 +857,9 @@ function tParameters_CellEditCallback(hObject, eventdata, handles)
 redraw(handles)
 
 function handles=reloadData(handles)
+if ~isfield(handles,'N')
+    return
+end
 % Set data
 [rows2 data] = getVariables(handles,handles.N);
 
@@ -1491,9 +1513,9 @@ function handles=openDelimited(delimiter, extension, handles)
 [filename, pathname] = uigetfile(['*.' extension]);
 
 if filename(1)~=0
-    importprm(fullfile(pathname,filename),'base',delimiter)
+    Nr = importprm(fullfile(pathname,filename),delimiter)
     
-    [rows2 data] = getVariables(handles);
+    [rows2 data] = getVariables(handles, Nr);
     
     if length(rows2)<1
         uiwait(errdlg('Empty file? I was not able to load the file'))
@@ -1970,3 +1992,26 @@ function bgWheel_SelectionChangeFcn(hObject, eventdata, handles)
 %	OldValue: handle of the previously selected object or empty if none was selected
 %	NewValue: handle of the currently selected object
 % handles    structure with handles and user data (see GUIDATA)
+
+
+
+function tGamma_Callback(hObject, eventdata, handles)
+% hObject    handle to tGamma (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of tGamma as text
+%        str2double(get(hObject,'String')) returns contents of tGamma as a double
+redraw(handles)
+
+% --- Executes during object creation, after setting all properties.
+function tGamma_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to tGamma (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end

@@ -2,7 +2,7 @@
 
 == Requirements =
 
-PALM-siever needs `DipImage` to run. You can download it from [http://www.diplib.org]. Follow the instructions to install it on your platform.
+PALM-siever is a MATLAB application. At the moment, it needs `DipImage` too to run. You can download it from [http://www.diplib.org]. Follow the instructions to install it on your platform.
 
 == Installation =
 

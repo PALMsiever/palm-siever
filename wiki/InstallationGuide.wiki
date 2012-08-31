@@ -20,7 +20,7 @@ addpath PALM_DIR
   # Execute: `palmsiever_setup`
 
 == Quickstart =
-You need to run `palmsiever_setup` for each new MATLAB session (make sure to have _PALM_DIR_ in your path, or add it with `addpath`. Alternatively, you can add these two lines to your `startup.m` file.
+You need to run `palmsiever_setup` for each new MATLAB session (make sure to have _PALM_DIR_ in your path, or add it with `addpath`). Alternatively, you can add these two lines to your `startup.m` file.
 {{{
 addpath _PALM_DIR_
 palmsiever_setup

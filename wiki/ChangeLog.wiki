@@ -7,7 +7,7 @@ First version!
 
 = Sep 6 2012 = 
 
-Added a few features, and better plugin support.
+Added a few features for plugin support.
 
   * new `getX`, `getY`, `getZ` and `getSubset` functions in the `lib` directory let you write plugins more easily. As an example, `plot3D.m` uses these three functions to generate a 3D scatterplot of the data shown in the window.
   * `fetch` also exposed. Can be used to retrieve a variable from the workspace. Use of this function is encouraged, as it future-proofs changes.

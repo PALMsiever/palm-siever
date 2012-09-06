@@ -1907,13 +1907,6 @@ figure; scatter(sX,sY,10,Y, 'filled'); axis equal
 colormap(hot); caxis((caxis-mean(caxis))*1.3+mean(caxis))
 colorbar('SouthOutside')
 
-function varargout = fetch(varargin)
-
-for i=1:nargin
-    varargout{i} = evalin('base',varargin{i});
-end
-
-
 % --------------------------------------------------------------------
 function miTubeFit_Callback(hObject, eventdata, handles)
 % hObject    handle to miTubeFit (see GCBO)

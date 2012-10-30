@@ -1,18 +1,21 @@
-pixelSizeS = inputdlg('Pixel size (nm/pixel)'); % nm/pixel
+function toNanometers(handles)
 
-if ~isempty(pixelSizeS)
+if isnumeric(handles)
+    pixelSize = handles;
+else
+    pixelSizeS = inputdlg('Pixel size (nm/pixel)'); % nm/pixel
     pixelSize = str2double(pixelSizeS);
-
-    X_Position = X_Position * pixelSize;
-    Y_Position = Y_Position * pixelSize;
-    Sigma_X_Pos_Full = Sigma_X_Pos_Full * pixelSize;
-    Sigma_Y_Pos_Full = Sigma_Y_Pos_Full * pixelSize;
-
-    Group_X_Position = Group_X_Position * pixelSize;
-    Group_Y_Position = Group_Y_Position * pixelSize;
-    Group_Sigma_X_Pos = Group_Sigma_X_Pos * pixelSize;
-    Group_Sigma_Y_Pos = Group_Sigma_Y_Pos * pixelSize;
-    
 end
+
+assignin('base','X_Position',evalin('base','X_Position') * pixelSize);
+assignin('base','Y_Position',evalin('base','Y_Position') * pixelSize);
+assignin('base','Sigma_X_Pos_Full',evalin('base','Sigma_X_Pos_Full') * pixelSize);
+assignin('base','Sigma_Y_Pos_Full',evalin('base','Sigma_Y_Pos_Full') * pixelSize);
+
+assignin('base','Group_X_Position',evalin('base','Group_X_Position') * pixelSize);
+assignin('base','Group_Y_Position',evalin('base','Group_Y_Position') * pixelSize);
+assignin('base','Group_Sigma_X_Pos',evalin('base','Group_Sigma_X_Pos') * pixelSize);
+assignin('base','Group_Sigma_Y_Pos',evalin('base','Group_Sigma_Y_Pos') * pixelSize);
+
 
 

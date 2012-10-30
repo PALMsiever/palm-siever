@@ -272,21 +272,31 @@ minZ = min(ZPosition);
 maxZ = max(ZPosition);
 
 deltaz = str2double(get(handles.fDeltaZ,'String'));
-nslices = (maxZ-minZ)/deltaz;
+nslices = ceil((maxZ-minZ)/deltaz);
 
 res = getRes(handles);
 stack = zeros(res, res, nslices);
+%h = waitbar(0,'Rendering stack...');
 for i=1:nslices
     from = minZ + deltaz*(i-1);
     to = minZ + deltaz*i;
     
     setZbounds(handles,[from to]);
     
+    frame = zeros(res,res);
+
     redraw(handles);
-    pdf = getappdata(0,'KDE');
     
-    stack(:,:,i) = double(extend(pdf{3},[res res],'leftup',0,'yes'));
+    if sum(getSubset(handles))>0
+        pdf = getappdata(0,'KDE');
+        frame(1:size(pdf{3},1),1:size(pdf{3},2)) = pdf{3};
+    end
+    
+    stack(:,:,i) = frame;
+    disp([i nslices]);
+    %waitbar(i/nslices,h);
 end
+%close(h)
 
 function res = getRes(handles);
 res = 2^(get(handles.pResolution,'Value')+7); %CAREFUL CHANGING VALS IN CTRL!!!
@@ -316,12 +326,7 @@ hold(handles.axes1,'off')
 XPosition=evalin('base',handles.varx);
 YPosition=evalin('base',handles.vary);
 
-try
-    gamma=str2double(get(handles.tGamma,'String'));
-catch
-    warning('Unreadable gamma value, defaulting to 1')
-    gamma=1;
-end
+gamma = getGamma(handles);
 
 data = get(handles.tParameters,'Data');
 
@@ -455,18 +460,32 @@ switch get(handles.pShow,'Value')
         end
 
         sigma = str2double(get(handles.sigma,'String'));
-        density = gaussf(density/max(density(:)),[sigma/pxx sigma/pxy 0]);
+        if nodiplib()
+            H = fspecial('gaussian',round(mean([sigma/pxx*6 sigma/pxy*6]))/2*2+1,mean([sigma/pxx sigma/pxy]));
+            density = imfilter(density/max(density(:)),H);
+        else
+            density = gaussf(density/max(density(:)),[sigma/pxx sigma/pxy 0]);
+        end
         density = gammaAdjust(density,gamma);
 
-        HSV = joinchannels('HSV',zz(density,'corner')/(nz+1)*2*pi,1+newim(size(density)),density);
-        RGB = colorspace(HSV,'RGB');
-
+        if nodiplib()
+            hh = (cumsum(ones(size(density)),3)-1)/nz;
+            ss = ones(size(density));
+            vv = density/max(density(:));
+            RGB0 = reshape(hsv2rgb([hh(:) ss(:) vv(:)]),[size(density) 3]);
+            RGB = {squeeze(RGB0(:,:,:,1)) squeeze(RGB0(:,:,:,2)) squeeze(RGB0(:,:,:,3))};            
+            di=0;
+        else
+            HSV = joinchannels('HSV',zz(density,'corner')/(nz+1)*2*pi,1+newim(size(density)),density);
+            RGB = colorspace(HSV,'RGB');
+            di=1;
+        end
         a = .5; b=1; sbar = .625;
 
         rgb = zeros(size(density,2),size(density,1),3);
         for i=1:size(density,3)
             for c=1:3
-                rgb(:,:,c) = rgb(:,:,c).*double(1-a*squeeze(density(:,:,i-1)))' + double(b*squeeze(RGB{c}(:,:,i-1)*density(:,:,i-1)))';
+                rgb(:,:,c) = rgb(:,:,c).*double(1-a*squeeze(density(:,:,i-di)))' + double(b*squeeze(RGB{c}(:,:,i-di)*density(:,:,i-di)))';
             end
         end
         
@@ -483,32 +502,36 @@ switch get(handles.pShow,'Value')
 
         maxc = max(rgb(:));
 
-        tickss = colorspace(...
+        if ~nodiplib()
+            tickss = colorspace(...
             joinchannels('HSV',...
             xx(szt,'corner')/szt(1)*2*pi,...
             newim(szt)+1,...
             newim(szt)+maxc),'RGB');
-        for i=0:10:(szt(1)-1)
-            tickss{:}(i,:)=1;
+        
+            for i=0:10:(szt(1)-1)
+                tickss{:}(i,:)=1;
+            end
+
+            colb = colorspace(...
+                joinchannels('HSV',...
+                xx(sz,'corner')/sz(1)*2*pi,...
+                newim(sz)+.5,...
+                (1-yy(sz,'corner')/sz(2))*maxc),'RGB');
+
+            rgb(cby+(1:sz(2)),cbx+(1:sz(1)),:)=cat(3,double(colb{1}),double(colb{2}),double(colb{3}));
+            rgb(cby+(1:szt(2))-3,cbx+(1:szt(1)),:)=cat(3,double(tickss{1}),double(tickss{2}),double(tickss{3}));
+            rgb(sbx+(1:szs(2)),sby+(1:szs(1)),:)=maxc;
         end
-
-        colb = colorspace(...
-            joinchannels('HSV',...
-            xx(sz,'corner')/sz(1)*2*pi,...
-            newim(sz)+.5,...
-            (1-yy(sz,'corner')/sz(2))*maxc),'RGB');
-
-        rgb(cby+(1:sz(2)),cbx+(1:sz(1)),:)=cat(3,double(colb{1}),double(colb{2}),double(colb{3}));
-        rgb(cby+(1:szt(2))-3,cbx+(1:szt(1)),:)=cat(3,double(tickss{1}),double(tickss{2}),double(tickss{3}));
-        rgb(sbx+(1:szs(2)),sby+(1:szs(1)),:)=maxc;
         
         imagesc(n,m,rgb);
         
-        text(minX+cbx*pxx,minY+pxy*(cby-5*(res/256)),num2str(minZ),'Color','w', 'HorizontalAlignment','left')
-        text(minX+(cbx+sz(1))*pxx,minY+pxy*(cby-5*(res/256)),num2str(maxZ),'Color','w', 'HorizontalAlignment','right')
-        text(minX+pxx*(sby+szs(1)/2),minY+pxy*(sbx-5*(res/256)),[num2str(100) ' nm'],'Color','w', 'HorizontalAlignment','center')
-        %text(minY+pxy*(cbx+sz(1)),minX+pxx*(cby-5),num2str(maxZ),'Color','w', 'HorizontalAlignment','right')
-        
+        if ~nodiplib()
+            text(minX+cbx*pxx,minY+pxy*(cby-5*(res/256)),num2str(minZ),'Color','w', 'HorizontalAlignment','left')
+            text(minX+(cbx+sz(1))*pxx,minY+pxy*(cby-5*(res/256)),num2str(maxZ),'Color','w', 'HorizontalAlignment','right')
+            text(minX+pxx*(sby+szs(1)/2),minY+pxy*(sbx-5*(res/256)),[num2str(100) ' nm'],'Color','w', 'HorizontalAlignment','center')
+            %text(minY+pxy*(cbx+sz(1)),minX+pxx*(cby-5),num2str(maxZ),'Color','w', 'HorizontalAlignment','right')
+        end        
     case 3 % "KDE"
         if NP>0
             [bandwidth,density,X,Y]=kde2d([XPosition(subset) YPosition(subset)],res,...
@@ -530,7 +553,12 @@ switch get(handles.pShow,'Value')
                 [max(XPosition(subset)) max(YPosition(subset))]);
             pxArea=(maxX-minX)/res * (maxY-minY)/res;
             density = density*sum(subset)/pxArea;
-            density = double(gaussf(density,2));
+            if nodiplib()
+                H = fspecial('gaussian',7,2);
+                density = imfilter(density,H);
+            else
+                density = double(gaussf(density,2));
+            end
         else
             n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
             density = zeros(res);
@@ -572,7 +600,13 @@ switch get(handles.pShow,'Value')
             pxx=(maxX-minX)/res; pxy=(maxY-minY)/res;
             pxArea=pxx * pxy;
             sigma = str2double(get(handles.sigma,'String'));
-            density = double(gaussf(accumarray(RR(RRok,:),1,[res,res])/pxArea,[sigma/pxy sigma/pxx]));
+            A = accumarray(RR(RRok,:),1,[res,res])/pxArea;
+            if nodiplib()
+                H = fspecial('gaussian',round(sigma/pxy*6)/2*2+1,sigma/pxx);
+                density = imfilter(A,H);
+            else
+                density = double(gaussf(A,[sigma/pxy sigma/pxx]));
+            end
             X = repmat(n,res,1); Y = repmat(m',1,res);
         else
             density = zeros(res+1);
@@ -1513,28 +1547,34 @@ function handles=openDelimited(delimiter, extension, handles)
 [filename, pathname] = uigetfile(['*.' extension]);
 
 if filename(1)~=0
-    Nr = importprm(fullfile(pathname,filename),delimiter)
+    try
+        Nr = importprm(fullfile(pathname,filename),delimiter)
+        
+        evalin('base','clear')
     
-    [rows2 data] = getVariables(handles, Nr);
-    
-    if length(rows2)<1
-        uiwait(errdlg('Empty file? I was not able to load the file'))
-        return
+        [rows2 data] = getVariables(handles, Nr);
+
+        if length(rows2)<1
+            uiwait(errdlg('Empty file? I was not able to load the file'))
+            return
+        end
+
+        evalin('base','clear subset');
+
+        set(handles.pXAxis,'String',rows2);
+        set(handles.pYAxis,'String',rows2);
+        set(handles.pZAxis,'String',rows2);
+
+        assignin('base','subset',evalin('base',['true(size(' rows2{1} '))']))
+
+        set(handles.tFilename, 'String', fullfile(pathname,filename));
+
+        handles=selectVariables(handles);
+
+        redraw(handles)
+    catch err
+        throw(err)
     end
-    
-    evalin('base','clear subset');
-    
-    set(handles.pXAxis,'String',rows2);
-    set(handles.pYAxis,'String',rows2);
-    set(handles.pZAxis,'String',rows2);
-    
-    assignin('base','subset',evalin('base',['true(size(' rows2{1} '))']))
-    
-    set(handles.tFilename, 'String', fullfile(pathname,filename));
-    
-    handles=selectVariables(handles);
-    
-    redraw(handles)
 end
 
 
@@ -1544,8 +1584,8 @@ function bExportStack_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if strcmp(get(handles.pShow,'String'),'Points')
-    msgbox('Does not work with point sets. Try KDE or Histogram instead');
+if isPoints(handles)
+    msgbox('Does not work with scatterplot. Try KDE or Histogram instead');
     return
 end
 
@@ -1557,18 +1597,35 @@ if filename
     maxC = str2double(get(handles.maxC,'String'));
 
     [minX maxX minY maxY] = getBounds(handles);
+    res = getRes(handles);
     
-    res = 2^(get(handles.pResolution,'Value')+7); %CAREFUL CHANGING VALS IN CTRL!!!
     pxx = (maxX-minX)/res; pxy = (maxY-minY)/res;
 
     physDims.dimensions = pxx;
     physDims.dimensionUnits = 'nm';
     
-    writeim(...
-        uint16((density-minC)*2^16/(maxC-minC)),...
-        fullfile(path,filename),...
-        'TIFF',0,physDims);
+    % To 16-bits
+    density = uint16((density-minC)*2^16/(maxC-minC)); 
+    
+    if nodiplib()
+        writeim(...
+            density,...
+            fullfile(path,filename),...
+            'TIFF',0,physDims);
+    else
+        nslices = size(density,3);
+        for slice = 1:size(density,3)
+            imwrite(squeeze(density(:,:,slice)),...
+                fullfile(path,sprintf([filename(1:end-4) '_%0' num2str(ceil(log(nslices+eps)/log(10))) 'd' filename(end-3:end)],slice)),'TIFF');
+        end
+    end
 end
+
+function res = isPoints(handles)
+
+renderings = get(handles.pShow,'String');
+i = get(handles.pShow,'Value');
+res = strcmp(renderings{i},'Points');
 
 
 % --- Executes on button press in pbRefreshZ.
@@ -2008,3 +2065,6 @@ function tGamma_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+function ndl = nodiplib()
+ndl = getappdata(0,'usediplib')==false;

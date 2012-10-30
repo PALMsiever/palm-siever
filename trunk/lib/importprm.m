@@ -21,10 +21,10 @@ function Nr = importprm(filename,delim)
 failed = false; ok = false;
 while ~failed && ~ok
     try
-        PrintStdErrMonitor()
+        PrintStdErrMonitor();
         ok = true;
     catch 
-        pathname = uigetdir('','Please specify where I can find PrintStdErrMonitor.class');
+        pathname = uigetdir('','Please specify where I can find utils.jar');
         if pathname
             javaaddpath(pathname)
         else
@@ -43,7 +43,12 @@ end
 
 environment = 'base';
 
-fd = fopen(filename);
+[fd msg] = fopen(filename);
+
+if fd == -1
+    errordlg([filename ': ' msg])
+    error(msg)
+end
 
 % Read headers
 H = textscan(fgetl(fd),'%s','Delimiter',delim); 

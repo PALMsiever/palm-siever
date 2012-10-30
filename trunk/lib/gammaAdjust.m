@@ -3,9 +3,10 @@ function imG = gammaAdjust(im,gammaVal)
 %   Author: Seamus Holden, 2012
 
 imMax = max(im(:));
+imMin = min(im(:));
 
 % Normalise image
-imG = ((im/imMax).^gammaVal)*imMax;
+imG = real((( (im-imMin)/(imMax-imMin)).^gammaVal)*(imMax-imMin)+imMin);
 
 end
 

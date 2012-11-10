@@ -34,7 +34,7 @@ function varargout = PALMsiever(varargin)
 addpath(fileparts(which('AreaAnalysis')));
 addpath(fileparts(fileparts(which('AreaAnalysis'))));
 
-% Last Modified by GUIDE v2.5 10-Nov-2012 16:16:07
+% Last Modified by GUIDE v2.5 10-Nov-2012 18:28:39
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -2105,4 +2105,3 @@ ims = ImageSelection(im2java(xxi));
 tk=javaMethod('getDefaultToolkit','java.awt.Toolkit');
 cp=tk.getSystemClipboard;
 cp.setContents(ims,[]);
-

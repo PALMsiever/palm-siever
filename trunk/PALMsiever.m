@@ -34,7 +34,7 @@ function varargout = PALMsiever(varargin)
 addpath(fileparts(which('AreaAnalysis')));
 addpath(fileparts(fileparts(which('AreaAnalysis'))));
 
-% Last Modified by GUIDE v2.5 28-Aug-2012 09:47:57
+% Last Modified by GUIDE v2.5 10-Nov-2012 16:16:07
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -326,6 +326,12 @@ hold(handles.axes1,'off')
 XPosition=evalin('base',handles.varx);
 YPosition=evalin('base',handles.vary);
 
+if isfield(handles,'varID')
+    ID=evalin('base',handles.varID);
+else
+    ID=ones(size(XPosition));
+end
+
 gamma = getGamma(handles);
 
 data = get(handles.tParameters,'Data');
@@ -371,12 +377,14 @@ is3D = get(handles.pShow,'Value') == 7;
 
 res = getRes(handles);
 
+r = str2double(get(handles.radius,'String'));
+
 % Calculate pixel sizes
 pxx = (maxX-minX)/res; pxy = (maxY-minY)/res;
 set(handles.lPxSize,'String',[num2str(pxx) 'x' num2str(pxy)]);
 switch get(handles.pShow,'Value')
     case 1 % "Points"
-        plot(handles.axes1,XPosition(subset),YPosition(subset),'.');
+        scatter(handles.axes1,XPosition(subset),YPosition(subset),r,ID(subset),'.');
     case 2 % "Histogram"
         n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
         if NP>0
@@ -625,13 +633,6 @@ switch get(handles.pShow,'Value')
         caxis([minC maxC]);
         set(gca,'Color',[0 0 0])
         setappdata(0,'Tri',{X,Y,T,C})
-end
-
-if get(handles.cbDensity,'Value') && get(handles.pShow,'Value')>1
-    Density = zeros(length(XPosition),1);
-    Density(subset0) = interp2(X,Y,density,XPosition(subset0),YPosition(subset0),'nearest',0);
-    %Density = interp2(X,Y,density,XPosition,YPosition,'nearest',0);
-    assignin('base','Density_',Density);
 end
 
 axis ij
@@ -903,6 +904,7 @@ set(handles.tParameters, 'Data', data);
 set(handles.pXAxis,'String',rows2);
 set(handles.pYAxis,'String',rows2);
 set(handles.pZAxis,'String',rows2);
+set(handles.pID,'String',rows2);
 
 function [rows2 data N] = getVariables(handles,N)
 cols = get(handles.tParameters,'ColumnName');
@@ -1012,6 +1014,36 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
+% --- Executes on selection change in pID.
+function pID_Callback(hObject, eventdata, handles)
+% hObject    handle to pID (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns pID contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from pID
+valsID = get(handles.pID,'String');
+
+handles.varID=valsID{get(handles.pID,'Value')};
+
+guidata(gcf,handles);
+
+redraw(handles)
+
+
+% --- Executes during object creation, after setting all properties.
+function pID_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to pID (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
 % --- Executes when selected cell(s) is changed in tParameters.
 function tParameters_CellSelectionCallback(hObject, eventdata, handles)
 % hObject    handle to tParameters (see GCBO)
@@ -1034,36 +1066,6 @@ function bRedraw_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 redraw(handles)
-
-
-% --- Executes on button press in bExport.
-function bExport_Callback(hObject, eventdata, handles)
-% hObject    handle to bExport (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-if strcmp(get(handles.pShow,'String'),'Points')
-    msgbox('Does not work with point sets. Try KDE or Histogram instead');
-    return
-end
-
-[filename path]=uiputfile('*.tif');
-if filename
-    a = getappdata(0,'KDE');
-    X = a{1}(1,:); Y = a{2}(:,1); 
-    density = a{3};
-
-    minC = str2double(get(handles.minC,'String'));
-    maxC = str2double(get(handles.maxC,'String'));
-
-    res = 2^(get(handles.pResolution,'Value')+7); %CAREFUL CHANGING VALS IN CTRL!!!
-    pxx = (max(X)-min(X))/res; pxy = (max(Y)-min(Y))/res;
-
-    imwrite(...
-        uint16((density-minC)*2^16/(maxC-minC)),...
-        fullfile(path,filename),...
-        'tif','Resolution',[1/pxx 1/pxy]);
-end
 
 % --- Executes on button press in pushbutton6.
 function pushbutton6_Callback(hObject, eventdata, handles)
@@ -1170,62 +1172,6 @@ minmaxX = evalin('base',['[min(' rows{get(handles.pXAxis,'Value')} ') max(' rows
 [minX maxX minY maxY] = getBounds(handles);
 handles=setBounds(handles,[minmaxX minY maxY]);
 redraw(handles)
-
-
-% --- Executes on button press in pExportCSV.
-function pExportCSV_Callback(hObject, eventdata, handles)
-% hObject    handle to pExportCSV (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-[filename path]=uiputfile('*.csv');
-if filename
-    rows = get(handles.tParameters,'RowName'); N = length(rows);
-    ffname = fullfile(path,filename);
-    
-    M = zeros(N,sum(getappdata(0,'pointsetsubset')));
-    rows2='';
-    for irow=1:N
-        M(irow,:)=evalin('base',[rows{irow} '(getappdata(0,''pointsetsubset''))']);
-        rows2=[rows2 ',' char(rows{irow})];
-    end
-    rows2=rows2(2:end);
-    
-    fd=fopen(ffname,'w');
-    fprintf(fd,'%s\n',rows2);
-    fprintf(fd,['%10f' repmat(',%10f',1,N-1) '\n'],M);
-    fclose(fd);
-end
-
-
-% --- Executes on button press in bCopy.
-function bCopy_Callback(hObject, eventdata, handles)
-% hObject    handle to bCopy (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-strs = get(handles.pShow,'String');
-switch strs{get(handles.pShow,'Value')}
-    case 'KDE'
-    case 'Histogram'
-    case 'Histogram + Gauss filter'
-    case 'Jittered histogram'
-    otherwise
-        msgbox('Not implemented yet, only works with KDE.');
-        return
-end  
-
-a = getappdata(0,'KDE');
-X = a{1}; Y = a{2}; density = a{3};
-
-minC = str2double(get(handles.minC,'String'));
-maxC = str2double(get(handles.maxC,'String'));
-
-xxi=uint8((density'-minC)*2^8/(maxC-minC))';
-ims = ImageSelection(im2java(xxi));
-tk=javaMethod('getDefaultToolkit','java.awt.Toolkit');
-cp=tk.getSystemClipboard;
-cp.setContents(ims,[]);
-
 
 % --- Executes on button press in bAutoMinC.
 function bAutoMinC_Callback(hObject, eventdata, handles)
@@ -1574,50 +1520,6 @@ if filename(1)~=0
         redraw(handles)
     catch err
         throw(err)
-    end
-end
-
-
-% --- Executes on button press in bExportStack.
-function bExportStack_Callback(hObject, eventdata, handles)
-% hObject    handle to bExportStack (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-if isPoints(handles)
-    msgbox('Does not work with scatterplot. Try KDE or Histogram instead');
-    return
-end
-
-[filename path]=uiputfile('*.tif');
-if filename
-    density = renderStack(handles);
-
-    minC = str2double(get(handles.minC,'String'));
-    maxC = str2double(get(handles.maxC,'String'));
-
-    [minX maxX minY maxY] = getBounds(handles);
-    res = getRes(handles);
-    
-    pxx = (maxX-minX)/res; pxy = (maxY-minY)/res;
-
-    physDims.dimensions = pxx;
-    physDims.dimensionUnits = 'nm';
-    
-    % To 16-bits
-    density = uint16((density-minC)*2^16/(maxC-minC)); 
-    
-    if nodiplib()
-        writeim(...
-            density,...
-            fullfile(path,filename),...
-            'TIFF',0,physDims);
-    else
-        nslices = size(density,3);
-        for slice = 1:size(density,3)
-            imwrite(squeeze(density(:,:,slice)),...
-                fullfile(path,sprintf([filename(1:end-4) '_%0' num2str(ceil(log(nslices+eps)/log(10))) 'd' filename(end-3:end)],slice)),'TIFF');
-        end
     end
 end
 
@@ -2068,3 +1970,139 @@ end
 
 function ndl = nodiplib()
 ndl = getappdata(0,'usediplib')==false;
+
+
+% --------------------------------------------------------------------
+function mSaveTIFF_Callback(hObject, eventdata, handles)
+% hObject    handle to mSaveTIFF (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+if strcmp(get(handles.pShow,'String'),'Points')
+    msgbox('Does not work with point sets. Try KDE or Histogram instead');
+    return
+end
+
+[filename path]=uiputfile('*.tif');
+if filename
+    a = getappdata(0,'KDE');
+    X = a{1}(1,:); Y = a{2}(:,1); 
+    density = a{3};
+
+    minC = str2double(get(handles.minC,'String'));
+    maxC = str2double(get(handles.maxC,'String'));
+
+    res = 2^(get(handles.pResolution,'Value')+7); %CAREFUL CHANGING VALS IN CTRL!!!
+    pxx = (max(X)-min(X))/res; pxy = (max(Y)-min(Y))/res;
+
+    imwrite(...
+        uint16((density-minC)*2^16/(maxC-minC)),...
+        fullfile(path,filename),...
+        'tif','Resolution',[1/pxx 1/pxy]);
+end
+
+% --------------------------------------------------------------------
+function mSaveStack_Callback(hObject, eventdata, handles)
+% hObject    handle to mSaveStack (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+if isPoints(handles)
+    msgbox('Does not work with scatterplot. Try KDE or Histogram instead');
+    return
+end
+
+[filename path]=uiputfile('*.tif');
+if filename
+    density = renderStack(handles);
+
+    minC = str2double(get(handles.minC,'String'));
+    maxC = str2double(get(handles.maxC,'String'));
+
+    [minX maxX minY maxY] = getBounds(handles);
+    res = getRes(handles);
+    
+    pxx = (maxX-minX)/res; pxy = (maxY-minY)/res;
+
+    physDims.dimensions = pxx;
+    physDims.dimensionUnits = 'nm';
+    
+    % To 16-bits
+    density = uint16((density-minC)*2^16/(maxC-minC)); 
+    
+    if nodiplib()
+        writeim(...
+            density,...
+            fullfile(path,filename),...
+            'TIFF',0,physDims);
+    else
+        nslices = size(density,3);
+        for slice = 1:size(density,3)
+            imwrite(squeeze(density(:,:,slice)),...
+                fullfile(path,sprintf([filename(1:end-4) '_%0' num2str(ceil(log(nslices+eps)/log(10))) 'd' filename(end-3:end)],slice)),'TIFF');
+        end
+    end
+end
+
+% --------------------------------------------------------------------
+function mSaveCSV_Callback(hObject, eventdata, handles)
+% hObject    handle to mSaveCSV (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+[filename path]=uiputfile('*.csv');
+if filename
+    rows = get(handles.tParameters,'RowName'); N = length(rows);
+    ffname = fullfile(path,filename);
+    
+    M = zeros(N,sum(getappdata(0,'pointsetsubset')));
+    rows2='';
+    for irow=1:N
+        M(irow,:)=evalin('base',[rows{irow} '(getappdata(0,''pointsetsubset''))']);
+        rows2=[rows2 ',' char(rows{irow})];
+    end
+    rows2=rows2(2:end);
+    
+    fd=fopen(ffname,'w');
+    fprintf(fd,'%s\n',rows2);
+    fprintf(fd,['%10f' repmat(',%10f',1,N-1) '\n'],M);
+    fclose(fd);
+end
+
+
+% --------------------------------------------------------------------
+function mEdit_Callback(hObject, eventdata, handles)
+% hObject    handle to mEdit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function mCopy_Callback(hObject, eventdata, handles)
+% hObject    handle to mCopy (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+strs = get(handles.pShow,'String');
+switch strs{get(handles.pShow,'Value')}
+    case 'KDE'
+    case 'Histogram'
+    case 'Histogram + Gauss filter'
+    case 'Jittered histogram'
+    otherwise
+        msgbox('Not implemented yet, only works with KDE.');
+        return
+end  
+
+a = getappdata(0,'KDE');
+X = a{1}; Y = a{2}; density = a{3};
+
+minC = str2double(get(handles.minC,'String'));
+maxC = str2double(get(handles.maxC,'String'));
+
+xxi=uint8((density'-minC)*2^8/(maxC-minC))';
+ims = ImageSelection(im2java(xxi));
+tk=javaMethod('getDefaultToolkit','java.awt.Toolkit');
+cp=tk.getSystemClipboard;
+cp.setContents(ims,[]);
+

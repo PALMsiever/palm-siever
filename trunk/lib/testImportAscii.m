@@ -8,4 +8,6 @@ fname2 ='C:\Users\Holden.LEBPC15\Documents\data\121107PalmSieverTestData\QuickPA
 %fileIoAscii(fileSpec,'Export','Filename',fname,'ColAssingment',colAssignHash);
 
 fSpec2 = 'RapidStorm.m';
-fileIoOther(fSpec2,'Export','test');
+fname3= 'C:\Users\Holden.LEBPC15\Documents\data\121107PalmSieverTestData\RapidStorm txt output .txt';
+fileIoOther(fSpec2,'ReturnVarNames')
+varAssign = fileIoOther(fSpec2,'Import','Filename',fname3)

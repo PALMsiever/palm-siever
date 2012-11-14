@@ -32,7 +32,7 @@ fs = getAsciiFileSpec(fileSpec);
 
 switch ioMode
 case 'ReturnVarNames'
-   [varNamesCell] = parseVarNames(fs.colNames);
+   [varNamesCell] = stringToVarName(fs.colNames);
    varargout = {varNamesCell};
 case 'Import'
    [varAssignment] = importAscii(fs,varargin{:});
@@ -64,7 +64,7 @@ if isempty(filename)
 else
    fdata = importdata(filename, fs.delimiter, fs.nHeaderLines);
    fColNames = fdata.colheaders;
-   varNames = parseVarNames(fColNames);
+   varNames = stringToVarName(fColNames);
    assignToWorkSpace(fdata.data,varNames,workspaceName);
    varAssignment=assignVars(varNames,fs);
 end
@@ -93,7 +93,7 @@ if isempty(filename)
    error('File name not specified');
 else
    colNames = fs.colNames;
-   varNames = parseVarNames(colNames);
+   varNames = stringToVarName(colNames);
    if useColHash
       [dataColNames, data] = getDataFromWS(workspaceName,colNames, varNames,colAssignHash);
    else
@@ -141,7 +141,7 @@ data =[];
 for ii = 1: numel(varNames)
    %find each of those varNames in the base workspace
    if useColHash
-      cMatch  = find(strcmp(colAssignHash{1}, fColNames{ii} );
+      cMatch  = find(strcmp(colAssignHash{1}, fColNames{ii} ));
       varNameCur = colAssignHash{2}{cMatch};
    else
       varNameCur = varNames{ii};
@@ -156,60 +156,34 @@ for ii = 1: numel(varNames)
       data = [data,temp(:)];
    end
 end
-%---------------------------------------------
-function varNames = parseVarNames(colNames);
-varNames=colNames;
-%strip any preceding non-alphanumerics
-varNames =regexprep(varNames,'^[^a-zA-Z]+','');
-%turn any character that is not alphabetic, numeric, or underscore to _
-varNames = regexprep(varNames,'\W+','_');
-%strip trailing '_'
-varNames = regexprep(varNames,'_$','');
-%test if any of the varNames are empty
-kk=1;
-for ii = 1:numel(varNames)
-   if isempty(varNames{ii})
-      varNames{ii} = ['a',num2str(kk)];
-      kk = kk+1;
-   end
-end
-for ii = 1:numel(varNames)
-   for jj = 1:numel(varNames)
-      kk = 1;
-      if ii~=jj && strcmp(varNames{ii},varNames{jj})
-         varNames{jj} = [varNames{jj},num2str(kk)];
-         kk = kk+1;
-      end
-   end
-end
 %-------------------------------------------------
 function varAssignment=assignVars(varNames,fs)
 varAssignment={};
 colNames = fs.colNames;
 if isfield(fs,'xCol')&& any(strcmp(fs.xCol,colNames))
    matches = find(strcmp(fs.xCol,colNames));
-   xVarName = varNames(matches(1));
+   xVarName = varNames{matches(1)};
 else
-   xVarName = varNames(1);
+   xVarName = varNames{1};
 end
 varAssignment = {varAssignment{:},{'x',xVarName}};
 
 if isfield(fs,'yCol')&& any(strcmp(fs.yCol,colNames))
    matches = find(strcmp(fs.yCol,colNames));
-   yVarName = varNames(matches(1));
+   yVarName = varNames{matches(1)};
 else
-   yVarName = varNames(2);
+   yVarName = varNames{2);
 end
 varAssignment = {varAssignment{:},{'y',yVarName}};
 
 if isfield(fs,'zCol')&& any(strcmp(fs.zCol,colNames))
    matches = find(strcmp(fs.zCol,colNames));
-   zVarName = varNames(matches(1));
+   zVarName = varNames{matches(1)};
    varAssignment = {varAssignment{:},{'z',zVarName}};
 end
 if isfield(fs,'frameCol')&& any(strcmp(fs.frameCol,colNames))
    matches = find(strcmp(fs.frameCol,colNames));
-   frameVarName = varNames(matches(1));
+   frameVarName = varNames{matches(1)};
    varAssignment = {varAssignment{:},{'frame',frameVarName}};
 end
 

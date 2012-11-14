@@ -18,7 +18,8 @@ function [varargout] = fileIoAscii(fileSpec,ioMode, varargin)
 %  Input arguments:
 %     'Filename',fileName, (optional) ('Workspace', workspaceName), (optional), 'ColAssingment', colAssignHash
 %      workspaceName: Default = 'base'
-%      colAssignHash: Nx2 cell array hash table, relating variable names expected by function, and actual variable names in workspace
+%      colAssignHash: 2xN cell array hash table, relating variable names expected by function, and actual variable names in workspace
+%        ie {{colName1, colName2,colName3},{varName1,varName2,varName3}}
 %  Output arguments: 
 %    None
 %Get file information:
@@ -65,7 +66,7 @@ else
    fColNames = fdata.colheaders;
    varNames = parseVarNames(fColNames);
    assignToWorkSpace(fdata.data,varNames,workspaceName);
-   varAssignment=assignVars(varNames,fs);%TODO!!
+   varAssignment=assignVars(varNames,fs);
 end
 %------------------------------------------------------------
 function exportAscii(fs,varargin);
@@ -139,9 +140,13 @@ data =[];
 %for now assume no col hash
 for ii = 1: numel(varNames)
    %find each of those varNames in the base workspace
-   %TODO: implement looking up col hash here
-   %if useColHash
-   varNameCur = varNames{ii};
+   if useColHash
+      cMatch  = find(strcmp(colAssignHash{1}, fColNames{ii} );
+      varNameCur = colAssignHash{2}{cMatch};
+   else
+      varNameCur = varNames{ii};
+   end
+
    temp =[];
    evalString = ['if exist(''',varNameCur,''',''var'');assignin(''caller'',''temp'',',varNameCur,'); end'];
    evalin(workspaceName,evalString);
@@ -168,7 +173,6 @@ for ii = 1:numel(varNames)
       kk = kk+1;
    end
 end
-%TODO test if any of the varNames are now equal
 for ii = 1:numel(varNames)
    for jj = 1:numel(varNames)
       kk = 1;

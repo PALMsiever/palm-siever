@@ -1,25 +1,29 @@
 File specification for import/export from other localization microscopy programs
 // Files with complex formats (eg XML) must be read/ exported using an M file
-
-***************
-For import:
-  Input arguments:
-    'Filename',fileName,'Import', (optional) workspaceName
-      workspaceName: Default = 'base'
-  Output arguments:
-    None - assign all variables in to workspaceName
-For export:
-  Input arguments:
-    'Filename',fileName, 'Export', (optional) workspaceName, (optional), varNamesHash
-      workspaceName: Default = 'base'
-      varNamesHash: Nx2 cell array hash table, relating variable names expected by function, and actual variable names in workspace
-  Output arguments: 
-    None
-Get file information:
-  Input argumements:
-    'ReturnVarNames'
-  Output:
-    varNamesCell
-
+%***************
+% ioMode: 'ReturnVarNames','Import', 'Export'
+%For import:
+%  Input arguments:
+%    'Filename',fileName, (optional) ('Workspace', workspaceName)
+%      workspaceName: Default = 'base'
+%  Output arguments:
+%    Assigns all variables in to workspaceName
+%     varAssignment - cell containing:
+%     {'x',xColName,
+%      'y',yColName,
+%      'z',zColName, (optional)
+%      'frame',frameColName, (optional)}
+%For export:
+%  Input arguments:
+%     'Filename',fileName, (optional) ('Workspace', workspaceName), (optional), 'ColAssingment', colAssignHash
+%      workspaceName: Default = 'base'
+%      colAssignHash: Nx2 cell array hash table, relating variable names expected by function, and actual variable names in workspace
+%  Output arguments: 
+%    None
+%Get file information:
+%  Input argumements:
+%    
+%  Output:
+%    varNamesCell
 
 Files are expected to assign in variables with predefined names, and to look for these variables in the workspace to do export (or to use varNamesHash to find the equivalent variables under a different name).

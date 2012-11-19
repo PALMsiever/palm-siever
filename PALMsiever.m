@@ -923,7 +923,13 @@ for irow=1:length(rows)
 
     for icol=1:length(cols)
         try
-            data{irow-rowoffset,icol} = evalin('base',[cols{icol} '(' rows{irow} ')']);
+            fev = evalin('base',[cols{icol} '(' rows{irow} ')']);
+            if strcmp(cols{icol},'min')
+                fev = fev * .999;
+            elseif strcmp(cols{icol},'max')
+                fev = fev * 1.001;
+            end
+            data{irow-rowoffset,icol} = fev;
         catch err
             rowoffset=rowoffset+1;
             brk = true;
@@ -955,7 +961,13 @@ rows = get(handles.tParameters,'RowName');
 for irow=1:length(rows)
     var = evalin('base',rows{irow});
     for icol=3:length(cols)
-        data{irow,icol} = evalin('base',[cols{icol} '(' rows{irow} '(subset))']);
+        fev = evalin('base',[cols{icol} '(' rows{irow} '(subset))']);
+        if strcmp(cols{icol},'min')
+            fev = fev * .999;
+        elseif strcmp(cols{icol},'max')
+            fev = fev * 1.001;
+        end
+        data{irow,icol} = fev;
     end
 end
 set(handles.tParameters,'Data',data)
@@ -1631,7 +1643,7 @@ end
 mh = uimenu(gcf,'Label','Plugins');
 uimenu(mh,'Label','Refresh','Callback',@(varargin) plugins_refresh(mh));
 
-pluginsDir = fullfile(fileparts(which('palmsiever_setup')),'plugins');
+pluginsDir = evalin('base','pluginsDir');
 addpath(pluginsDir)
 
 sep = true;

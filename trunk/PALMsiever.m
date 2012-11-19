@@ -1730,24 +1730,18 @@ end
 fileType = feval(fname,name,'FileType');
 [filename path]=uigetfile(['*.',fileType]);
 
-varAssignment=feval(fname,name, 'Import', 'Filename',fullfile(path,filename));
-nEl = evalin('base',['numel(',varAssignment{1}{2},')']);
-handles.N = nEl;
-guidata(handles.output, handles);
-reloadData(handles);
-setPSVar(handles,varAssignment);
-handles=guidata(handles.output);
-reloadData(handles);
-handles=guidata(handles.output);
-redraw(handles);
-
-%
-%function importOther_callback(name,hObject, eventdata, handles)
-%% function importAscii_callback(name,hObject, eventdata, handles)
-%% hObject    handle to calling menu item (see GCBO)
-%% eventdata  reserved - to be defined in a future version of MATLAB
-%% handles    structure with handles and user data (see GUIDATA)
-%display([name,' ',fpath]);
+if filename~=0
+   varAssignment=feval(fname,name, 'Import', 'Filename',fullfile(path,filename));
+   nEl = evalin('base',['numel(',varAssignment{1}{2},')']);
+   handles.N = nEl;
+   guidata(handles.output, handles);
+   reloadData(handles);
+   setPSVar(handles,varAssignment);
+   handles=guidata(handles.output);
+   reloadData(handles);
+   handles=guidata(handles.output);
+   redraw(handles);
+end
 
 function tBins_Callback(hObject, eventdata, handles)
 % hObject    handle to tBins (see GCBO)

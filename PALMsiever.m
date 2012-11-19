@@ -34,7 +34,7 @@ function varargout = PALMsiever(varargin)
 addpath(fileparts(which('AreaAnalysis')));
 addpath(fileparts(fileparts(which('AreaAnalysis'))));
 
-% Last Modified by GUIDE v2.5 10-Nov-2012 18:28:39
+% Last Modified by GUIDE v2.5 19-Nov-2012 15:08:34
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -110,7 +110,10 @@ handles.varz=rows2{1};
 guidata(hObject, handles);
 
 % Update plugins menu
-plugins_refresh()
+plugins_refresh();
+
+% Update menuimport menu
+menuImport_refresh(hObject, eventdata, handles)
 
 % Set default action to Z
 set(handles.bgWheel,'SelectedObject',handles.rbZ);
@@ -1651,9 +1654,9 @@ for f = dir(fullfile(pluginsDir,'*.m'))'
     name = f.name(1:end-2);
     if sep
         sep=false; 
-        uimenu(mh,'Label',name,'Callback',@(varargin) plugins_callback(name,varargin),'Separator','on'); 
+        uimenu(mh,'Label',name,'Callback',@(varargin) plugins_callback(name,varargin{:}),'Separator','on'); 
     else
-        uimenu(mh,'Label',name,'Callback',@(varargin) plugins_callback(name,varargin)); 
+        uimenu(mh,'Label',name,'Callback',@(varargin) plugins_callback(name,varargin{:})); 
     end
 end
 
@@ -1668,9 +1671,83 @@ catch err
         rethrow(err)
     end
 end
-    
 
+function menuImport_refresh(hObject, eventdata, handles)
 
+hImp= findobj(gcf,'Tag','MenuImport'); %DONT CHANGE THE TAG NAME FOR IMPORT!
+hCh = get(hImp,'Children');
+if ~isempty(hCh)
+   for ii = 1:numel(hCh)
+      delete(hCh(ii));
+   end
+end
+
+uimenu(hImp,'Label','Refresh','Callback',@(varargin) menuImport_refresh());
+
+% add the Ascii file imports
+fileSpecPath= fullfile(fileparts(which('palmsiever_setup')),'fileIO','Ascii');
+
+sep = true;
+for f = dir(fullfile(fileSpecPath,'*.m'))'
+    name = f.name(1:end-2);
+    if sep
+        sep=false; 
+        uimenu(hImp,'Label',name,'Callback',@(varargin) import_callback(name,'ascii',hObject, eventdata, handles),'Separator','on'); 
+    else
+        uimenu(hImp,'Label',name,'Callback',@(varargin) import_callback(name,'ascii',hObject, eventdata, handles)); 
+    end
+end
+
+% add the Other file imports
+fileSpecPath= fullfile(fileparts(which('palmsiever_setup')),'fileIO','Other');
+
+sep = true;
+for f = dir(fullfile(fileSpecPath,'*.m'))'
+    name = f.name(1:end-2);
+    if sep
+        sep=false; 
+        uimenu(hImp,'Label',name,'Callback',@(varargin) import_callback(name,'other',hObject, eventdata, handles),'Separator','on'); 
+    else
+        uimenu(hImp,'Label',name,'Callback',@(varargin) import_callback(name,'other',hObject, eventdata, handles)); 
+    end
+end
+
+function import_callback(name,mode,hObject, eventdata, handles)
+% function import_callback(name,hObject, eventdata, handles)
+% hObject    handle to calling menu item (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+if strcmp(mode,'ascii')
+   fname = 'fileIoAscii';
+elseif strcmp(mode,'other')
+   fname = 'fileIoOther';
+else
+   fname ='';
+   error('Unsupported import mode');
+end
+   
+fileType = feval(fname,name,'FileType');
+[filename path]=uigetfile(['*.',fileType]);
+
+varAssignment=feval(fname,name, 'Import', 'Filename',fullfile(path,filename));
+nEl = evalin('base',['numel(',varAssignment{1}{2},')']);
+handles.N = nEl;
+guidata(handles.output, handles);
+reloadData(handles);
+setPSVar(handles,varAssignment);
+handles=guidata(handles.output);
+reloadData(handles);
+handles=guidata(handles.output);
+redraw(handles);
+
+%
+%function importOther_callback(name,hObject, eventdata, handles)
+%% function importAscii_callback(name,hObject, eventdata, handles)
+%% hObject    handle to calling menu item (see GCBO)
+%% eventdata  reserved - to be defined in a future version of MATLAB
+%% handles    structure with handles and user data (see GUIDATA)
+%display([name,' ',fpath]);
 
 function tBins_Callback(hObject, eventdata, handles)
 % hObject    handle to tBins (see GCBO)
@@ -2117,3 +2194,10 @@ ims = ImageSelection(im2java(xxi));
 tk=javaMethod('getDefaultToolkit','java.awt.Toolkit');
 cp=tk.getSystemClipboard;
 cp.setContents(ims,[]);
+
+
+% --------------------------------------------------------------------
+function MenuImport_Callback(hObject, eventdata, handles)
+% hObject    handle to MenuImport (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)

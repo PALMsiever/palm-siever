@@ -1,3 +1,4 @@
+function [minX, maxX, minY, maxY] = getBounds(handles)
 % [minX maxX minY maxY] = getBounds(handles)
 %
 %   Given the figure's handles, the function returns the minimum and
@@ -7,7 +8,6 @@
 % warranty is given.
 %
 % Author: Thomas Pengo, 2012
-function [minX maxX minY maxY] = getBounds(handles)
 data = get(handles.tParameters,'Data');
 a = get(handles.tParameters,'RowName');
 minX = data{cellfun(@(x) strcmp(x,handles.varx),a),1};

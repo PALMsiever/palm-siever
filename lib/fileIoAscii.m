@@ -2,7 +2,7 @@ function [varargout] = fileIoAscii(fileSpec,ioMode, varargin)
 % function fileIoAscii(fileSpec,varargin)
 % Parses a fileSpec ini file, and uses it to read in PALM data
 %***************
-% ioMode: 'ReturnVarNames','Import', 'Export'
+% ioMode: 'ReturnVarNames','Import', 'Export','FileType'
 %For import:
 %  Input arguments:
 %    'Filename',fileName, (optional) ('Workspace', workspaceName)
@@ -10,10 +10,10 @@ function [varargout] = fileIoAscii(fileSpec,ioMode, varargin)
 %  Output arguments:
 %    Assigns all variables in to workspaceName
 %     varAssignment - cell containing:
-%     {'x',xColName,
-%      'y',yColName,
-%      'z',zColName, (optional)
-%      'frame',frameColName, (optional)}
+%     {{'x',xColName},
+%      {'y',yColName},
+%      {'z',zColName}, (optional)
+%      {'frame',frameColName} (optional)}
 %For export:
 %  Input arguments:
 %     'Filename',fileName, (optional) ('Workspace', workspaceName), (optional), 'ColAssingment', colAssignHash
@@ -39,6 +39,8 @@ case 'Import'
    varargout ={varAssignment};
 case 'Export'
    exportAscii(fs,varargin{:});
+case 'FileType'
+   varargout = {fs.fileType};
 otherwise
    error('Unrecognised file IO mode');
 end
@@ -172,7 +174,7 @@ if isfield(fs,'yCol')&& any(strcmp(fs.yCol,colNames))
    matches = find(strcmp(fs.yCol,colNames));
    yVarName = varNames{matches(1)};
 else
-   yVarName = varNames{2);
+   yVarName = varNames{2};
 end
 varAssignment = {varAssignment{:},{'y',yVarName}};
 
@@ -202,6 +204,7 @@ function [fs]= getAsciiFileSpec(fileSpec)
 palmSieverPath = fileparts(which('palmsiever_setup'));
 asciiPath = [palmSieverPath, filesep(),'fileIO',filesep(),'Ascii'];
 fSpecPath = [asciiPath, filesep(),fileSpec];
+
 run(fSpecPath);
 if exist('fs','var')
    return;

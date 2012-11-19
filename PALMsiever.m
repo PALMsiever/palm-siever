@@ -94,8 +94,17 @@ if ~isempty(varargin)
     end
     handles.N=evalin('base',['length(' varargin{1} ')']);   
 else
-    handles=selectVariables(handles);
+    %workaround for calling palmsiever without arguments
+    X = rand(100,1); Y=X;sigmax = X;sigmay=X;
+    assignin('base','X',X);assignin('base','Y',Y);
+    assignin('base','Dummy_sigma_X',sigmax);assignin('base','Dummy_sigma_Y',sigmay);
+    handles.varx='X';
+    handles.vary='Y';
+    handles.sigmax='Dummy_sigma_X';
+    handles.sigmay='Dummy_sigma_Y';
+    handles.N=size(X,1);
 end
+%guidata(handles.output, handles);
 handles=reloadData(handles);
 
 rows2 = get(handles.pXAxis,'String');
@@ -1646,7 +1655,7 @@ end
 mh = uimenu(gcf,'Label','Plugins');
 uimenu(mh,'Label','Refresh','Callback',@(varargin) plugins_refresh(mh));
 
-pluginsDir = evalin('base','pluginsDir');
+pluginsDir= fullfile(fileparts(which('palmsiever_setup')),'plugins');
 addpath(pluginsDir)
 
 sep = true;
@@ -1681,8 +1690,6 @@ if ~isempty(hCh)
       delete(hCh(ii));
    end
 end
-
-uimenu(hImp,'Label','Refresh','Callback',@(varargin) menuImport_refresh());
 
 % add the Ascii file imports
 fileSpecPath= fullfile(fileparts(which('palmsiever_setup')),'fileIO','Ascii');
@@ -1739,6 +1746,12 @@ if filename~=0
    setPSVar(handles,varAssignment);
    handles=guidata(handles.output);
    reloadData(handles);
+   handles=guidata(handles.output);
+   redraw(handles);
+   handles=guidata(handles.output);
+   autoMin(handles);
+   handles=guidata(handles.output);
+   autoMax(handles);
    handles=guidata(handles.output);
    redraw(handles);
 end

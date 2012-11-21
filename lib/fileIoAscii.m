@@ -19,7 +19,9 @@ function [varargout] = fileIoAscii(fileSpec,ioMode, varargin)
 %     'Filename',fileName, (optional) ('Workspace', workspaceName), (optional), 'ColAssingment', colAssignHash
 %      workspaceName: Default = 'base'
 %      colAssignHash: 2xN cell array hash table, relating variable names expected by function, and actual variable names in workspace
-%        ie {{colName1, colName2,colName3},{varName1,varName2,varName3}}
+%        ie {colName1, varName1;
+%            colName2, varName2;
+%            colName3, varName3}
 %  Output arguments: 
 %    None
 %Get file information:
@@ -34,6 +36,9 @@ switch ioMode
 case 'ReturnVarNames'
    [varNamesCell] = stringToVarName(fs.colNames);
    varargout = {varNamesCell};
+case 'ReturnColNames'
+   [colNamesCell] = fs.colNames;
+   varargout = {colNamesCell};
 case 'Import'
    [varAssignment] = importAscii(fs,varargin{:});
    varargout ={varAssignment};
@@ -143,19 +148,25 @@ data =[];
 for ii = 1: numel(varNames)
    %find each of those varNames in the base workspace
    if useColHash
-      cMatch  = find(strcmp(colAssignHash{1}, fColNames{ii} ));
-      varNameCur = colAssignHash{2}{cMatch};
+      cMatch  = find(strcmp(colAssignHash(:,1), fColNames{ii} ));
+      if ~isempty(cMatch)
+         varNameCur = colAssignHash{cMatch,2};
+      else
+         varNameCur=[];
+      end
    else
       varNameCur = varNames{ii};
    end
 
-   temp =[];
-   evalString = ['if exist(''',varNameCur,''',''var'');assignin(''caller'',''temp'',',varNameCur,'); end'];
-   evalin(workspaceName,evalString);
-   %if found add the name to dataColNames and add the variable as a column in data
-   if ~isempty(temp)
-      dataColNames = {dataColNames{:},fColNames{ii}};
-      data = [data,temp(:)];
+   if ~isempty(varNameCur)
+      temp =[];
+      evalString = ['if exist(''',varNameCur,''',''var'');assignin(''caller'',''temp'',',varNameCur,'); end'];
+      evalin(workspaceName,evalString);
+      %if found add the name to dataColNames and add the variable as a column in data
+      if ~isempty(temp)
+         dataColNames = {dataColNames{:},fColNames{ii}};
+         data = [data,temp(:)];
+      end
    end
 end
 %-------------------------------------------------

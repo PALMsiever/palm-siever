@@ -29,6 +29,8 @@ function varargout = fileIoOther(fileSpec,ioMode, varargin)
 
 palmSieverPath = fileparts(which('palmsiever_setup'));
 otherPath = [palmSieverPath, filesep(),'fileIO',filesep(),'Other'];
+genericTxtPath = [palmSieverPath, filesep(),'fileIO'];
 addpath(otherPath);
+addpath(genericTxtPath);
 fSpecFunName = regexprep(fileSpec,'\.m$','');
 [varargout{1:nargout}]= feval(fSpecFunName,ioMode,varargin{:});

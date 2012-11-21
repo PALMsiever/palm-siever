@@ -56,22 +56,13 @@ function [varNamesCell,semanticCell] = getVarNames()
 %Give the "Standard" semantic columns short variable names
 
 semanticCell={...
-'position in sample space in x dimension', 
-'position in sample space in y dimension',
-'position in sample space in z dimension',
-'frame number',
-'emission strength' ,
-'fit residue chi square value',
-'local background'};
-
-varNamesCell = {...
 'x',
 'y',
-'z',
 'frame',
-'intensity',
-'chi2',
-'local_bg'};
+'chi2'
+};
+
+varNamesCell = semanticCell;
 
 %-----------------------------------------------
 function varNames = parseVarNames(fileSemanticCell)

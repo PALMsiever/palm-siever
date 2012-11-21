@@ -34,7 +34,7 @@ function varargout = PALMsiever(varargin)
 addpath(fileparts(which('AreaAnalysis')));
 addpath(fileparts(fileparts(which('AreaAnalysis'))));
 
-% Last Modified by GUIDE v2.5 19-Nov-2012 15:08:34
+% Last Modified by GUIDE v2.5 20-Nov-2012 16:25:28
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -123,6 +123,7 @@ plugins_refresh();
 
 % Update menuimport menu
 menuImport_refresh(hObject, eventdata, handles)
+menuExport_refresh(hObject, eventdata, handles)
 
 % Set default action to Z
 set(handles.bgWheel,'SelectedObject',handles.rbZ);
@@ -1694,14 +1695,14 @@ end
 % add the Ascii file imports
 fileSpecPath= fullfile(fileparts(which('palmsiever_setup')),'fileIO','Ascii');
 
-sep = true;
+sep = false;
 for f = dir(fullfile(fileSpecPath,'*.m'))'
     name = f.name(1:end-2);
     if sep
         sep=false; 
-        uimenu(hImp,'Label',name,'Callback',@(varargin) import_callback(name,'ascii',hObject, eventdata, handles),'Separator','on'); 
+        uimenu(hImp,'Label',name,'Callback',@(varargin) import_callback(name,'ascii',varargin{:}),'Separator','on'); 
     else
-        uimenu(hImp,'Label',name,'Callback',@(varargin) import_callback(name,'ascii',hObject, eventdata, handles)); 
+        uimenu(hImp,'Label',name,'Callback',@(varargin) import_callback(name,'ascii',varargin{:})); 
     end
 end
 
@@ -1713,17 +1714,24 @@ for f = dir(fullfile(fileSpecPath,'*.m'))'
     name = f.name(1:end-2);
     if sep
         sep=false; 
-        uimenu(hImp,'Label',name,'Callback',@(varargin) import_callback(name,'other',hObject, eventdata, handles),'Separator','on'); 
+        uimenu(hImp,'Label',name,'Callback',@(varargin) import_callback(name,'other',varargin{:}),'Separator','on'); 
     else
-        uimenu(hImp,'Label',name,'Callback',@(varargin) import_callback(name,'other',hObject, eventdata, handles)); 
+        uimenu(hImp,'Label',name,'Callback',@(varargin) import_callback(name,'other',varargin{:})); 
     end
 end
 
-function import_callback(name,mode,hObject, eventdata, handles)
+
+% add the Generic file import
+sep = true;
+name = 'Generic';
+uimenu(hImp,'Label','Generic text file','Callback',@(varargin) import_callback(name,'other',varargin{:}),'Separator','on'); 
+
+function import_callback(name,mode,hObject, eventdata)
 % function import_callback(name,hObject, eventdata, handles)
 % hObject    handle to calling menu item (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+handles = guidata(hObject);
 
 if strcmp(mode,'ascii')
    fname = 'fileIoAscii';
@@ -1755,6 +1763,85 @@ if filename~=0
    handles=guidata(handles.output);
    redraw(handles);
 end
+
+
+function menuExport_refresh(hObject, eventdata, handles)
+
+hImp= findobj(gcf,'Tag','MenuExport'); %DONT CHANGE THE TAG NAME FOR EXPORT!
+hCh = get(hImp,'Children');
+if ~isempty(hCh)
+   for ii = 1:numel(hCh)
+      delete(hCh(ii));
+   end
+end
+
+% add the Ascii file imports
+fileSpecPath= fullfile(fileparts(which('palmsiever_setup')),'fileIO','Ascii');
+
+sep = true;
+for f = dir(fullfile(fileSpecPath,'*.m'))'
+    name = f.name(1:end-2);
+    if sep
+        sep=false; 
+        uimenu(hImp,'Label',name,'Callback',@(varargin) export_callback(name,'ascii',varargin{:}),'Separator','on'); 
+    else
+        uimenu(hImp,'Label',name,'Callback',@(varargin) export_callback(name,'ascii',varargin{:})); 
+    end
+end
+
+% add the Other file imports
+fileSpecPath= fullfile(fileparts(which('palmsiever_setup')),'fileIO','Other');
+
+sep = true;
+for f = dir(fullfile(fileSpecPath,'*.m'))'
+    name = f.name(1:end-2);
+    if sep
+        sep=false; 
+        uimenu(hImp,'Label',name,'Callback',@(varargin) export_callback(name,'other',varargin{:}),'Separator','on'); 
+    else
+        uimenu(hImp,'Label',name,'Callback',@(varargin) export_callback(name,'other',varargin{:}));
+    end
+end
+
+% add the Generic file import
+sep = true;
+name = 'Generic';
+uimenu(hImp,'Label','Generic text file','Callback',@(varargin) export_callback(name,'other',varargin{:}),'Separator','on'); 
+
+function export_callback(name,mode,hObject, eventdata)
+% function import_callback(name,hObject, eventdata, handles)
+% hObject    handle to calling menu item (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+handles = guidata(hObject);
+if strcmp(mode,'ascii')
+   fname = 'fileIoAscii';
+elseif strcmp(mode,'other')
+   fname = 'fileIoOther';
+else
+   fname ='';
+   error('Unsupported export mode');
+end
+   
+fileType = feval(fname,name,'FileType');
+[filename path]=uiputfile(['*.',fileType]);
+
+if filename~=0
+   if strcmp(name,'Generic')
+      varNamesGui= getVariables(handles,handles.N);
+      feval(fname,name, 'Export', 'Filename',fullfile(path,filename),'ColAssingment',varNamesGui);
+   else
+      colNamesFile= feval(fname,name, 'ReturnColNames');
+      varNamesGui= getVariables(handles,handles.N);
+      [colHash isCancelled]= getColHash(colNamesFile, varNamesGui);
+      if isCancelled ==0
+         feval(fname,name, 'Export', 'Filename',fullfile(path,filename),'ColAssingment',colHash);
+      end
+   end
+end
+
+
 
 function tBins_Callback(hObject, eventdata, handles)
 % hObject    handle to tBins (see GCBO)
@@ -2206,5 +2293,12 @@ cp.setContents(ims,[]);
 % --------------------------------------------------------------------
 function MenuImport_Callback(hObject, eventdata, handles)
 % hObject    handle to MenuImport (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function MenuExport_Callback(hObject, eventdata, handles)
+% hObject    handle to MenuExport (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)

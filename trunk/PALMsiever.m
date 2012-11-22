@@ -1833,8 +1833,9 @@ if filename~=0
       feval(fname,name, 'Export', 'Filename',fullfile(path,filename),'ColAssingment',varNamesGui);
    else
       colNamesFile= feval(fname,name, 'ReturnColNames');
+      varNamesFile= feval(fname,name, 'ReturnVarNames');
       varNamesGui= getVariables(handles,handles.N);
-      [colHash isCancelled]= getColHash(colNamesFile, varNamesGui);
+      [colHash isCancelled]= getColHash(colNamesFile, varNamesFile, varNamesGui);
       if isCancelled ==0
          feval(fname,name, 'Export', 'Filename',fullfile(path,filename),'ColAssingment',colHash);
       end

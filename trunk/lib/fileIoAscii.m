@@ -108,10 +108,10 @@ else
    end
 end
 
-writePalmAscii(filename, dataColNames,data,fs.delimiter, fs.headerPrefix,fs.headerPostfix);
+writePalmAscii(filename, dataColNames,data,fs.delimiter, fs.numberFormat,fs.headerPrefix,fs.headerPostfix);
 
 %---------------------------------------------
-function writePalmAscii(filename,dataColNames,data,delimiter, headerPrefix,headerPostfix)
+function writePalmAscii(filename,dataColNames,data,delimiter, numberFormat, headerPrefix,headerPostfix)
 fid = fopen(filename,'w');
 %header prefix
 fprintf(fid,headerPrefix);
@@ -128,7 +128,7 @@ end
 %header postfix
 fprintf(fid,headerPostfix);
 fclose(fid);
-dlmwrite(filename, data,'-append','delimiter',delimiter);
+dlmwrite(filename, data,'-append','delimiter',delimiter,'precision', numberFormat);
 
 
 

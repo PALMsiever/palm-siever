@@ -22,7 +22,7 @@ function varargout = getColHash(varargin)
 
 % Edit the above text to modify the response to help getColHash
 
-% Last Modified by GUIDE v2.5 21-Nov-2012 16:38:13
+% Last Modified by GUIDE v2.5 22-Nov-2012 12:30:15
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -63,9 +63,10 @@ guidata(hObject, handles);
 % modify the close function so that it calls the cancel callback
 %set(hObject,'CloseRequestFcn',@(varargin) pushbuttonCloseReq_Callback(varargin{:}) );
 
-varNameFile = varargin{1};
-varNameGui = varargin{2};
-setupTable(handles,varNameFile,varNameGui)
+colNameFile= varargin{1};
+varNameFile= varargin{2};
+varNameGui= varargin{3};
+setupTable(handles,colNameFile,varNameFile,varNameGui)
 % UIWAIT makes getColHash wait for user response (see UIRESUME)
 uiwait(handles.figure1);
 
@@ -111,12 +112,24 @@ uiresume(handles.figure1);
 
 
 %----------------------------------------------------
-function setupTable(handles,varNameFile,varNameGui)
+function setupTable(handles,colNameFile,varNameFile,varNameGui)
 
 varOptions = ['-',varNameGui(:)'];
-nRow = numel(varNameFile);
+nRow = numel(colNameFile);
 
-data = [varNameFile(:),repmat({'-'},nRow,1)];
+%for each column, work out whether there is a variable with the matching name, 
+% if so, set  the initial data value to that
+initVal =cell(size(colNameFile));
+for ii = 1:numel(colNameFile)
+   cMatch = strcmp(varNameFile{ii},varNameGui);
+   if any(cMatch)
+      initVal{ii} = varNameFile{ii};
+   else
+      initVal{ii} = '-';
+   end
+end
+
+data = [colNameFile(:),initVal(:)];
 columneditable =  [false true]; 
 set(handles.uitableVarNames,'Data',data);
 set(handles.uitableVarNames,'ColumnFormat',{'char',varOptions});
@@ -128,4 +141,3 @@ function colHashOut = stripEmptyRows(colHashIn)
 
 emptyMarker = '-';
 colHashOut = colHashIn(~strcmp(colHashIn(:,2),emptyMarker),:);
-

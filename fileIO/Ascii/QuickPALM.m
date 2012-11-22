@@ -19,6 +19,7 @@ fs.colNames={' ',
    'Y Symmetry (%%)',
    'Width minus Height (px)',
    'Frame Number'};
+fs.numberFormat='%g';
 %[OptionalColumnAssignments]
 fs.xCol='X (px)';
 fs.yCol='Y (px)';

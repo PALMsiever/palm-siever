@@ -964,7 +964,22 @@ function pXAxis_Callback(hObject, eventdata, handles)
 
 % Hints: contents = get(hObject,'String') returns pXAxis contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from pXAxis
-pYAxis_Callback(hObject, eventdata, handles)
+
+% Get data range for previous X
+minmaxX = evalin('base',['[min(' handles.settings.varx ') max(' handles.settings.varx ')]']);
+
+% Set range on the table
+[minX maxX minY maxY] = getBounds(handles);
+handles=setBounds(handles,[minmaxX minY maxY]);
+redraw(handles)
+
+% Go on and save the new X
+valsX = get(handles.pXAxis,'String');
+handles.settings.varx=valsX{get(handles.pXAxis,'Value')};
+guidata(gcf,handles);
+
+% Redraw
+redraw(handles)
 
 % --- Executes during object creation, after setting all properties.
 function pXAxis_CreateFcn(hObject, eventdata, handles)
@@ -987,12 +1002,17 @@ function pYAxis_Callback(hObject, eventdata, handles)
 
 % Hints: contents = get(hObject,'String') returns pYAxis contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from pYAxis
-valsX = get(handles.pXAxis,'String');
+% Get data range for previous Y
+minmaxY = evalin('base',['[min(' handles.settings.vary ') max(' handles.settings.vary ')]']);
+
+% Set range on the table
+[minX maxX minY maxY] = getBounds(handles);
+handles=setBounds(handles,[minX maxX minmaxY]);
+redraw(handles)
+
+% Go on and save the new Y
 valsY = get(handles.pYAxis,'String');
-
-handles.settings.varx=valsX{get(handles.pXAxis,'Value')};
 handles.settings.vary=valsY{get(handles.pYAxis,'Value')};
-
 guidata(gcf,handles);
 
 redraw(handles)

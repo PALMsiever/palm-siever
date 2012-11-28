@@ -1,4 +1,7 @@
 % Generic command
 function generic_command(handles)
 
-evalin('base',inputdlg)
+txt=inputdlg;
+
+evalin('base',txt{1});
+

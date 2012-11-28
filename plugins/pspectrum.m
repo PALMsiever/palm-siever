@@ -31,27 +31,38 @@ end
 
 figure; 
 
-subplot(2,2,1); semilogy(PRx, PR); hold; semilogy(nPRx, nPR, 'g');
+subplot(2,2,1); loglog(PRx, PR); hold; loglog(nPRx, nPR, 'g');
 title('Radial power spectrum');
 xlabel('Frequency [units^{-1}]');
 ylabel('Power');
 legend('Signal','Uniform noise')
+grid on
+grid minor
+axis tight
 
-subplot(2,2,2); semilogy(PRx,PR./nPR,'r');
-title('Radial power spectrum');
+subplot(2,2,2); loglog(PRx,PR./nPR,'r');
+title('Signal to noise ratio');
 xlabel('Frequency [units^{-1}]');
 ylabel('SNR');
+grid on
+grid minor
+axis tight
 
-
-subplot(2,2,3); semilogy(1/PRx, PR); hold; semilogy(nPRx, nPR, 'g');
+subplot(2,2,3); loglog(1./PRx, PR); hold; loglog(1./nPRx, nPR, 'g');
 title('Radial power spectrum');
-xlabel('Frequency [units^{-1}]');
+xlabel('1/Frequency [units]');
 ylabel('Power');
 legend('Signal','Uniform noise')
+grid on
+grid minor
+axis tight
 
-subplot(2,2,4); semilogy(1/PRx,PR./nPR,'r');
-title('Radial power spectrum');
-xlabel('Frequency [units^{-1}]');
+subplot(2,2,4); loglog(1./PRx,PR./nPR,'r');
+title('Signal to noise ratio');
+xlabel('1/Frequency [units]');
 ylabel('SNR');
+grid on
+grid minor
+axis tight
 
 

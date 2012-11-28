@@ -34,7 +34,7 @@ function varargout = PALMsiever(varargin)
 addpath(fileparts(which('AreaAnalysis')));
 addpath(fileparts(fileparts(which('AreaAnalysis'))));
 
-% Last Modified by GUIDE v2.5 28-Nov-2012 11:03:56
+% Last Modified by GUIDE v2.5 28-Nov-2012 11:47:24
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -2416,3 +2416,22 @@ minmaxZ = evalin('base',['[min(' rows{get(handles.pFrame,'Value')} ') max(' rows
 % Set range on the table
 handles=setFramebounds(handles,minmaxZ);
 redraw(handles)
+
+
+% --- Executes when user attempts to close figure1.
+function figure1_CloseRequestFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: delete(hObject) closes the figure
+
+res = questdlg('Would you like to save your work before closing?','Save');
+
+if strcmp(res,'Yes')
+    mSave_Callback(hObject, eventdata, handles)
+    delete(hObject);
+elseif strcmp(res,'No')
+    delete(hObject);    
+end
+

@@ -34,7 +34,7 @@ function varargout = PALMsiever(varargin)
 addpath(fileparts(which('AreaAnalysis')));
 addpath(fileparts(fileparts(which('AreaAnalysis'))));
 
-% Last Modified by GUIDE v2.5 27-Nov-2012 20:54:37
+% Last Modified by GUIDE v2.5 28-Nov-2012 11:03:56
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -49,7 +49,7 @@ if nargin && ischar(varargin{1})
 end
 
 try
-    %watchon
+    watch_on
     if nargout
 
         try
@@ -64,13 +64,25 @@ try
     else
         gui_mainfcn(gui_State, varargin{:});
     end
-    %watchoff
+    watch_off
 catch myerr
-    %watchoff
+    watch_off
     errordlg(myerr.message);
     rethrow(myerr)
 end
 % End initialization code - DO NOT EDIT
+
+function watch_on
+if isappdata(0,'self')
+    set(getappdata(0,'self'),'Pointer','watch');
+    drawnow
+end
+
+function watch_off
+if isappdata(0,'self')
+    set(getappdata(0,'self'),'Pointer','arrow');
+    drawnow
+end
 
 
 % --- Executes just before PALMsiever is made visible.
@@ -80,6 +92,8 @@ function PALMsiever_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to PALMsiever (see VARARGIN)
+
+setappdata(0,'self',handles.figure1);
 
 % Add 'range' function to base
 assignin('base','range',@(x) max(x)-min(x))
@@ -185,6 +199,8 @@ function varargout = PALMsiever_OutputFcn(hObject, eventdata, handles)
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+setappdata(0,'self',[]);
 
 % Get default command line output from handles structure
 if isfield(handles,'output')
@@ -324,6 +340,7 @@ res = 2^(get(handles.pResolution,'Value')+7); %CAREFUL CHANGING VALS IN CTRL!!!
 
 
 function redraw(handles)
+watch_on
 
 if evalin('base','drawing')==true
     return
@@ -339,6 +356,8 @@ catch err
     rethrow(err)
 end
 assignin('base','drawing',false);
+
+watch_off
 
 function redrawHelper(handles)
 
@@ -927,6 +946,7 @@ set(handles.tParameters, 'Data', data);
 set(handles.pXAxis,'String',rows2);
 set(handles.pYAxis,'String',rows2);
 set(handles.pZAxis,'String',rows2);
+set(handles.pFrame,'String',rows2);
 set(handles.pID,'String',rows2);
 
 function updateTable(handles)
@@ -1744,9 +1764,12 @@ fileType = feval(fname,name,'FileType');
 [filename path]=uigetfile(['*.',fileType]);
 
 if filename~=0
+   watch_on
+   
    varAssignment=feval(fname,name, 'Import', 'Filename',fullfile(path,filename));
    nEl = evalin('base',['numel(',varAssignment{1}{2},')']);
    handles.settings.N = nEl;
+   set(handles.tFilename,'String',filename);
    guidata(handles.output, handles);
    reloadData(handles);
    setPSVar(handles,varAssignment);
@@ -1760,6 +1783,8 @@ if filename~=0
    autoMax(handles);
    handles=guidata(handles.output);
    redraw(handles);
+   
+   watch_off
 end
 
 
@@ -2312,11 +2337,15 @@ function mSave_Callback(hObject, eventdata, handles)
 [filename, pathname] = uiputfile('*.mat');
 
 if filename(1)~=0
+    watch_on
+    
     try
         serialize(handles,fullfile(pathname,filename));
     catch err
         rethrow(err)
     end
+    
+    watch_off
 end
 
 
@@ -2329,6 +2358,8 @@ function mOpen_Callback(hObject, eventdata, handles)
 [filename, pathname] = uigetfile('*.mat');
 
 if filename(1)~=0
+    watch_on
+    
     try
         handles=serialize(handles,fullfile(pathname,filename));
         
@@ -2338,4 +2369,50 @@ if filename(1)~=0
     catch err
         rethrow(err)
     end
+    
+    watch_off
 end
+
+
+% --- Executes on selection change in pFrame.
+function pFrame_Callback(hObject, eventdata, handles)
+% hObject    handle to pFrame (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns pFrame contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from pFrame
+valsFrame = get(handles.pFrame,'String');
+
+handles.settings.varFrame=valsFrame{get(handles.pFrame,'Value')};
+
+guidata(gcf,handles);
+
+redraw(handles)
+
+
+% --- Executes during object creation, after setting all properties.
+function pFrame_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to pFrame (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pbRefreshFrame.
+function pbRefreshFrame_Callback(hObject, eventdata, handles)
+% hObject    handle to pbRefreshFrame (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Get data range for Y
+rows = get(handles.tParameters,'RowName');
+minmaxZ = evalin('base',['[min(' rows{get(handles.pFrame,'Value')} ') max(' rows{get(handles.pFrame,'Value')} ')]']);
+
+% Set range on the table
+handles=setFramebounds(handles,minmaxZ);
+redraw(handles)

@@ -10,8 +10,8 @@ function [minX, maxX, minY, maxY] = getBounds(handles)
 % Author: Thomas Pengo, 2012
 data = get(handles.tParameters,'Data');
 a = get(handles.tParameters,'RowName');
-minX = data{cellfun(@(x) strcmp(x,handles.varx),a),1};
-maxX = data{cellfun(@(x) strcmp(x,handles.varx),a),2};
-minY = data{cellfun(@(x) strcmp(x,handles.vary),a),1};
-maxY = data{cellfun(@(x) strcmp(x,handles.vary),a),2};
+minX = data{cellfun(@(x) strcmp(x,handles.settings.varx),a),1};
+maxX = data{cellfun(@(x) strcmp(x,handles.settings.varx),a),2};
+minY = data{cellfun(@(x) strcmp(x,handles.settings.vary),a),1};
+maxY = data{cellfun(@(x) strcmp(x,handles.settings.vary),a),2};
 

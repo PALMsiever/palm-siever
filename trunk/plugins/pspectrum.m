@@ -1,9 +1,57 @@
 % Power spectrum of the current rendering
 function pspectrum(handles)
 
-D = getappdata(0,'KDE'); D = D{3};
-FD = real(abs(ft(D))^2);
-dipshow(log(FD),'lin')
+X = getX(handles); 
+Y = getY(handles); 
+subset = getSubset(handles);
+X = X(subset); 
+Y = Y(subset); 
 
-figure; surf(double(log(FD)))
+[minX maxX minY maxY] = getBounds(handles);
+
+X = X-(maxX+minX)/2;
+Y = Y-(maxY+minY)/2;
+
+n = getRes(handles);
+
+if maxX-minX > maxY-minY
+    pxSize = (maxX-minX)/n;
+    maxY = (maxY+minY)/2 + pxSize * n/2;
+    minY = (maxY+minY)/2 - pxSize * n/2;
+else
+    pxSize = (maxY-minY)/n;
+    maxX = (maxX+minX)/2 + pxSize * n/2;
+    minX = (maxX+minX)/2 - pxSize * n/2;
+end
+
+[ PR PRx ] = radialSpectrum(X,Y,pxSize,n);
+[ nPR nPRx ] = radialSpectrum(...
+    (rand(size(X))-.5)*(maxX-minX),...
+    (rand(size(Y))-.5)*(maxY-minY),pxSize,n);
+
+figure; 
+
+subplot(2,2,1); semilogy(PRx, PR); hold; semilogy(nPRx, nPR, 'g');
+title('Radial power spectrum');
+xlabel('Frequency [units^{-1}]');
+ylabel('Power');
+legend('Signal','Uniform noise')
+
+subplot(2,2,2); semilogy(PRx,PR./nPR,'r');
+title('Radial power spectrum');
+xlabel('Frequency [units^{-1}]');
+ylabel('SNR');
+
+
+subplot(2,2,3); semilogy(1/PRx, PR); hold; semilogy(nPRx, nPR, 'g');
+title('Radial power spectrum');
+xlabel('Frequency [units^{-1}]');
+ylabel('Power');
+legend('Signal','Uniform noise')
+
+subplot(2,2,4); semilogy(1/PRx,PR./nPR,'r');
+title('Radial power spectrum');
+xlabel('Frequency [units^{-1}]');
+ylabel('SNR');
+
 

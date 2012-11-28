@@ -34,7 +34,7 @@ function varargout = PALMsiever(varargin)
 addpath(fileparts(which('AreaAnalysis')));
 addpath(fileparts(fileparts(which('AreaAnalysis'))));
 
-% Last Modified by GUIDE v2.5 20-Nov-2012 16:25:28
+% Last Modified by GUIDE v2.5 27-Nov-2012 20:54:37
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -48,19 +48,27 @@ if nargin && ischar(varargin{1})
     gui_State.gui_Callback = str2func(varargin{1});
 end
 
-if nargout
-    
-    try
-        javaaddpath(fileparts(which('AreaAnalysis')));
-        ImageSelection([])
-    catch err
-        errordlg(['Could not load ImageSelection class. No ''Copy''. Please put '...
-            'ImageSelection.class in the same directory as the AreaAnalysis'])
-    end
+try
+    %watchon
+    if nargout
 
-    [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
-else
-    gui_mainfcn(gui_State, varargin{:});
+        try
+            javaaddpath(fileparts(which('AreaAnalysis')));
+            ImageSelection([])
+        catch err
+            errordlg(['Could not load ImageSelection class. No ''Copy''. Please put '...
+                'ImageSelection.class in the same directory as the AreaAnalysis'])
+        end
+
+        [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+    else
+        gui_mainfcn(gui_State, varargin{:});
+    end
+    %watchoff
+catch myerr
+    %watchoff
+    errordlg(myerr.message);
+    rethrow(myerr)
 end
 % End initialization code - DO NOT EDIT
 
@@ -81,39 +89,39 @@ assignin('base','drawing','false')
 handles.output = hObject;
 
 if ~isempty(varargin)
-    handles.varx=varargin{1};
-    handles.vary=varargin{2};
+    handles.settings.varx=varargin{1};
+    handles.settings.vary=varargin{2};
     if numel(varargin)>2
-        handles.sigmax=varargin{3};
-        handles.sigmay=varargin{4};
+        handles.settings.sigmax=varargin{3};
+        handles.settings.sigmay=varargin{4};
     else
-        handles.sigmax=['Dummy_sigma_' varargin{1}];
-        handles.sigmay=['Dummy_sigma_' varargin{2}];
-        assignin('base',handles.sigmax,ones(size(evalin('base',varargin{1}))));
-        assignin('base',handles.sigmay,ones(size(evalin('base',varargin{2}))));
+        handles.settings.sigmax=['Dummy_sigma_' varargin{1}];
+        handles.settings.sigmay=['Dummy_sigma_' varargin{2}];
+        assignin('base',handles.settings.sigmax,ones(size(evalin('base',varargin{1}))));
+        assignin('base',handles.settings.sigmay,ones(size(evalin('base',varargin{2}))));
     end
-    handles.N=evalin('base',['length(' varargin{1} ')']);   
+    handles.settings.N=evalin('base',['length(' varargin{1} ')']);   
 else
     %workaround for calling palmsiever without arguments
     X = rand(100,1); Y=X;sigmax = X;sigmay=X;
     assignin('base','X',X);assignin('base','Y',Y);
     assignin('base','Dummy_sigma_X',sigmax);assignin('base','Dummy_sigma_Y',sigmay);
-    handles.varx='X';
-    handles.vary='Y';
-    handles.sigmax='Dummy_sigma_X';
-    handles.sigmay='Dummy_sigma_Y';
-    handles.N=size(X,1);
+    handles.settings.varx='X';
+    handles.settings.vary='Y';
+    handles.settings.sigmax='Dummy_sigma_X';
+    handles.settings.sigmay='Dummy_sigma_Y';
+    handles.settings.N=size(X,1);
 end
 %guidata(handles.output, handles);
 handles=reloadData(handles);
 
 rows2 = get(handles.pXAxis,'String');
-ix = find(cellfun(@(x) strcmp(x,handles.varx),rows2),1); set(handles.pXAxis,'Value',ix);
-iy = find(cellfun(@(x) strcmp(x,handles.vary),rows2),1); set(handles.pYAxis,'Value',iy);
+ix = find(cellfun(@(x) strcmp(x,handles.settings.varx),rows2),1); set(handles.pXAxis,'Value',ix);
+iy = find(cellfun(@(x) strcmp(x,handles.settings.vary),rows2),1); set(handles.pYAxis,'Value',iy);
 
 % Update Z Axis too
 set(handles.pZAxis,'String',rows2);
-handles.varz=rows2{1};
+handles.settings.varz=rows2{1};
 
 % Update handles structure
 guidata(hObject, handles);
@@ -144,31 +152,31 @@ end
 
 sel = javaMethod('showInputDialog','javax.swing.JOptionPane',[],'Choose X axis','',3,[],rows2,[]);
 if sel
-    handles.N = evalin('base',['length(' sel ')']);
+    handles.settings.N = evalin('base',['length(' sel ')']);
 else
     return
 end
 
 if sel
-   handles.varx=sel; 
+   handles.settings.varx=sel; 
 end
 
 sel = javaMethod('showInputDialog','javax.swing.JOptionPane',[],'Choose Y axis','',3,[],rows2,[]);
 
 if sel
-   handles.vary=sel; 
+   handles.settings.vary=sel; 
 end
 
 sel = javaMethod('showInputDialog','javax.swing.JOptionPane',[],'Choose X axis sigma','',3,[],rows2,[]);
 
 if sel
-   handles.sigmax=sel; 
+   handles.settings.sigmax=sel; 
 end
 
 sel = javaMethod('showInputDialog','javax.swing.JOptionPane',[],'Choose Y axis sigma','',3,[],rows2,[]);
 
 if sel
-   handles.sigmay=sel; 
+   handles.settings.sigmay=sel; 
 end
 
 % --- Outputs from this function are returned to the command line.
@@ -279,7 +287,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 function stack = renderStack(handles)
-ZPosition=evalin('base',handles.varz);
+ZPosition=evalin('base',handles.settings.varz);
 
 minZ = min(ZPosition);
 maxZ = max(ZPosition);
@@ -336,11 +344,11 @@ function redrawHelper(handles)
 
 hold(handles.axes1,'off')
 
-XPosition=evalin('base',handles.varx);
-YPosition=evalin('base',handles.vary);
+XPosition=evalin('base',handles.settings.varx);
+YPosition=evalin('base',handles.settings.vary);
 
-if isfield(handles,'varID')
-    ID=evalin('base',handles.varID);
+if isfield(handles.settings,'varID')
+    ID=evalin('base',handles.settings.varID);
 else
     ID=ones(size(XPosition));
 end
@@ -422,7 +430,7 @@ switch get(handles.pShow,'Value')
         if NP>0
             notrials = 20;
             NN = sum(subset);
-            amount = (evalin('base',handles.sigmax)+evalin('base',handles.sigmay))/2;
+            amount = (evalin('base',handles.settings.sigmax)+evalin('base',handles.settings.sigmay))/2;
             for i=1:notrials
                 RR = round((res-1)*[...
                     (XPosition(subset)+randn(NN,1).*amount(subset)-minX)/(maxX-minX) ...
@@ -449,11 +457,11 @@ switch get(handles.pShow,'Value')
     case 7 % Histogram 3D Hue Opacity
         n=linspace(minX,maxX,res);
         m=linspace(minY,maxY,res);
-        ZPosition=evalin('base',handles.varz);
+        ZPosition=evalin('base',handles.settings.varz);
         [minZ maxZ]=getZbounds(handles);
         nz = 32; notrials = 1; % SET NOTRIALS TO 20 FOR JITTERING
         NN = sum(subset);
-        amount = (evalin('base',handles.sigmax)+evalin('base',handles.sigmay))/2;
+        amount = (evalin('base',handles.settings.sigmax)+evalin('base',handles.settings.sigmay))/2;
         amount = amount*0; % TO AVOID JITTERING
         density = zeros(res,res,nz);
         setProgress(handles,0);
@@ -560,6 +568,8 @@ switch get(handles.pShow,'Value')
                 [max(XPosition(subset)) max(YPosition(subset))]);
             pxArea=(maxX-minX)/res * (maxY-minY)/res;
             density = density*sum(subset)/pxArea;
+            
+            fprintf('Bandwidth: %f\n', bandwidth);
         else
             density = zeros(res);
         end
@@ -595,8 +605,8 @@ switch get(handles.pShow,'Value')
 %             [xi X]= quantization(XPosition(subset),minX,maxX,res);
 %             [yi Y]= quantization(YPosition(subset),minY,maxY,res);
 %             pxSize = [(maxX-minX)/res (maxY-minY)/res];
-%             sigmaX = evalin('base',handles.sigmax);
-%             sigmaY = evalin('base',handles.sigmay);
+%             sigmaX = evalin('base',handles.settings.sigmax);
+%             sigmaY = evalin('base',handles.settings.sigmay);
 %             sigmaX=sigmaX(subset);sigmaY=sigmaY(subset);
 %             offX = (XPosition(subset)-minX)/(maxX-minX) - xi/res;
 %             offY = (YPosition(subset)-minY)/(maxY-minY) - yi/res;
@@ -690,9 +700,9 @@ if isRightclick
     
     % Calculate profile along eigenvalues
     subset = evalin('base','subset');
-    X=evalin('base',handles.varx); X=X(subset)-x;
-    Y=evalin('base',handles.vary); Y=Y(subset)-y;
-    sigmas = (evalin('base',handles.sigmax)+evalin('base',handles.sigmay))/2;
+    X=evalin('base',handles.settings.varx); X=X(subset)-x;
+    Y=evalin('base',handles.settings.vary); Y=Y(subset)-y;
+    sigmas = (evalin('base',handles.settings.sigmax)+evalin('base',handles.settings.sigmay))/2;
     nbins = str2double(get(handles.tBins,'String'));
         
     subset0 = X.^2 + Y.^2 < r*r;
@@ -905,11 +915,11 @@ function tParameters_CellEditCallback(hObject, eventdata, handles)
 redraw(handles)
 
 function handles=reloadData(handles)
-if ~isfield(handles,'N')
+if ~isfield(handles.settings,'N')
     return
 end
 % Set data
-[rows2 data] = getVariables(handles,handles.N);
+[rows2 data] = getVariables(handles,handles.settings.N);
 
 set(handles.tParameters,'RowName',rows2);
 set(handles.tParameters, 'Data', data);
@@ -919,47 +929,8 @@ set(handles.pYAxis,'String',rows2);
 set(handles.pZAxis,'String',rows2);
 set(handles.pID,'String',rows2);
 
-function [rows2 data N] = getVariables(handles,N)
-cols = get(handles.tParameters,'ColumnName');
-rows = evalin('base','who');
-rowoffset=0; brk=false;
-
-rows2={}; data={};
-for irow=1:length(rows)
-    var = evalin('base',rows{irow});
-    % Skip logical vectors, vars beginning with '_', matrices, or vectors
-    % of different length than N, or functions
-    if ~isnumeric(var) || rows{irow}(1)=='_' || size(var,2)>1 || nargin>1 && (size(var,1)~=N)
-        rowoffset=rowoffset+1;
-        continue
-    end
-
-    for icol=1:length(cols)
-        try
-            fev = evalin('base',[cols{icol} '(' rows{irow} ')']);
-            if strcmp(cols{icol},'min')
-                fev = fev * .999;
-            elseif strcmp(cols{icol},'max')
-                fev = fev * 1.001;
-            end
-            data{irow-rowoffset,icol} = fev;
-        catch err
-            rowoffset=rowoffset+1;
-            brk = true;
-            break
-        end
-    end
-    if brk
-        brk = false;
-        continue
-    end
-    rows2{irow-rowoffset}=rows{irow};
-end
-
-
-
 function updateTable(handles)
-XPosition=evalin('base',handles.varx);
+XPosition=evalin('base',handles.settings.varx);
 data = get(handles.tParameters,'Data');
 subset = true(length(XPosition),1);
 rows = get(handles.tParameters,'RowName');
@@ -1019,8 +990,8 @@ function pYAxis_Callback(hObject, eventdata, handles)
 valsX = get(handles.pXAxis,'String');
 valsY = get(handles.pYAxis,'String');
 
-handles.varx=valsX{get(handles.pXAxis,'Value')};
-handles.vary=valsY{get(handles.pYAxis,'Value')};
+handles.settings.varx=valsX{get(handles.pXAxis,'Value')};
+handles.settings.vary=valsY{get(handles.pYAxis,'Value')};
 
 guidata(gcf,handles);
 
@@ -1049,7 +1020,7 @@ function pID_Callback(hObject, eventdata, handles)
 %        contents{get(hObject,'Value')} returns selected item from pID
 valsID = get(handles.pID,'String');
 
-handles.varID=valsID{get(handles.pID,'Value')};
+handles.settings.varID=valsID{get(handles.pID,'Value')};
 
 guidata(gcf,handles);
 
@@ -1372,8 +1343,8 @@ function pFit_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-XPosition=evalin('base',handles.varx);
-YPosition=evalin('base',handles.vary);
+XPosition=evalin('base',handles.settings.varx);
+YPosition=evalin('base',handles.settings.vary);
 
 minX = min(XPosition); maxX = max(XPosition);
 minY = min(YPosition); maxY = max(YPosition);
@@ -1403,7 +1374,7 @@ function figure1_WindowKeyPressFcn(hObject, eventdata, handles)
 
 function handles = setStatus(handles, str)
 
-set(handles.tStatus, 'String', str)
+%set(handles.tStatus, 'String', str)
 %text(10,10,str,'Color','y')
 
 
@@ -1448,7 +1419,7 @@ function pZAxis_Callback(hObject, eventdata, handles)
 % Hints: contents = get(hObject,'String') returns pZAxis contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from pZAxis
 vals = get(hObject,'String');
-handles.varz=vals{get(hObject,'Value')};
+handles.settings.varz=vals{get(hObject,'Value')};
 guidata(gcf,handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1519,14 +1490,14 @@ function handles=openDelimited(delimiter, extension, handles)
 
 if filename(1)~=0
     try
-        Nr = importprm(fullfile(pathname,filename),delimiter)
-        
         evalin('base','clear')
+
+        Nr = importprm(fullfile(pathname,filename),delimiter);
     
         [rows2 data] = getVariables(handles, Nr);
 
         if length(rows2)<1
-            uiwait(errdlg('Empty file? I was not able to load the file'))
+            uiwait(errordlg('Empty file? I was not able to load the file'))
             return
         end
 
@@ -1542,7 +1513,8 @@ if filename(1)~=0
 
         handles=selectVariables(handles);
 
-        redraw(handles)
+        assignin('base','drawing',false);
+        redraw(handles);
     catch err
         throw(err)
     end
@@ -1656,11 +1628,17 @@ end
 mh = uimenu(gcf,'Label','Plugins');
 uimenu(mh,'Label','Refresh','Callback',@(varargin) plugins_refresh(mh));
 
-pluginsDir= fullfile(fileparts(which('palmsiever_setup')),'plugins');
-addpath(pluginsDir)
+if isappdata(0,'staticplugins') && getappdata(0,'staticplugins')
+    plugins = get_static_plugins;
+else
+    pluginsDir= fullfile(fileparts(which('palmsiever_setup')),'plugins');
+    addpath(pluginsDir)
+    
+    plugins = dir(fullfile(pluginsDir,'*.m'))';
+end
 
 sep = true;
-for f = dir(fullfile(pluginsDir,'*.m'))'
+for f = plugins
     name = f.name(1:end-2);
     if sep
         sep=false; 
@@ -1748,7 +1726,7 @@ fileType = feval(fname,name,'FileType');
 if filename~=0
    varAssignment=feval(fname,name, 'Import', 'Filename',fullfile(path,filename));
    nEl = evalin('base',['numel(',varAssignment{1}{2},')']);
-   handles.N = nEl;
+   handles.settings.N = nEl;
    guidata(handles.output, handles);
    reloadData(handles);
    setPSVar(handles,varAssignment);
@@ -1829,12 +1807,12 @@ fileType = feval(fname,name,'FileType');
 
 if filename~=0
    if strcmp(name,'Generic')
-      varNamesGui= getVariables(handles,handles.N);
+      varNamesGui= getVariables(handles,handles.settings.N);
       feval(fname,name, 'Export', 'Filename',fullfile(path,filename),'ColAssingment',varNamesGui);
    else
       colNamesFile= feval(fname,name, 'ReturnColNames');
       varNamesFile= feval(fname,name, 'ReturnVarNames');
-      varNamesGui= getVariables(handles,handles.N);
+      varNamesGui= getVariables(handles,handles.settings.N);
       [colHash isCancelled]= getColHash(colNamesFile, varNamesFile, varNamesGui);
       if isCancelled ==0
          feval(fname,name, 'Export', 'Filename',fullfile(path,filename),'ColAssingment',colHash);
@@ -1879,8 +1857,8 @@ function miTrace_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 subset = evalin('base','subset');
-X=evalin('base',handles.varx); X=X(subset);
-Y=evalin('base',handles.vary); Y=Y(subset);
+X=evalin('base',handles.settings.varx); X=X(subset);
+Y=evalin('base',handles.settings.vary); Y=Y(subset);
 r0 = str2double(get(handles.radius,'String'));
 step = str2double(get(handles.length,'String'));
 
@@ -1940,8 +1918,8 @@ function miTrace_Histogram_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 Trace = evalin('base','Trace');
 subset = evalin('base','subset');
-X=evalin('base',handles.varx); X=X(subset);
-Y=evalin('base',handles.vary); Y=Y(subset);
+X=evalin('base',handles.settings.varx); X=X(subset);
+Y=evalin('base',handles.settings.vary); Y=Y(subset);
 nbins = str2double(get(handles.tBins,'String'));
 r = str2double(get(handles.radius,'String'));
 
@@ -1961,8 +1939,8 @@ function miDG1_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 Trace = evalin('base','Trace');
 subset = evalin('base','subset');
-X=evalin('base',handles.varx); X=X(subset);
-Y=evalin('base',handles.vary); Y=Y(subset);
+X=evalin('base',handles.settings.varx); X=X(subset);
+Y=evalin('base',handles.settings.vary); Y=Y(subset);
 nbins = str2double(get(handles.tBins,'String'));
 r = str2double(get(handles.radius,'String'));
 
@@ -2035,7 +2013,7 @@ function miSigmaProfile_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-[Trace subset X Y] = fetch('Trace','subset',handles.varx,handles.vary);
+[Trace subset X Y] = fetch('Trace','subset',handles.settings.varx,handles.settings.vary);
 X=X(subset); Y=Y(subset);
 
 nbins = str2double(get(handles.tBins,'String'));
@@ -2059,8 +2037,8 @@ function miTubeFit_Callback(hObject, eventdata, handles)
 [Trace subset X Y] = fetch(...
     'Trace',...
     'subset',...
-    handles.varx,...
-    handles.vary);
+    handles.settings.varx,...
+    handles.settings.vary);
 X=X(subset);
 Y=Y(subset);
 
@@ -2303,3 +2281,41 @@ function MenuExport_Callback(hObject, eventdata, handles)
 % hObject    handle to MenuExport (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function mSave_Callback(hObject, eventdata, handles)
+% hObject    handle to mSave (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+[filename, pathname] = uiputfile('*.mat');
+
+if filename(1)~=0
+    try
+        serialize(handles,fullfile(pathname,filename));
+    catch err
+        rethrow(err)
+    end
+end
+
+
+% --------------------------------------------------------------------
+function mOpen_Callback(hObject, eventdata, handles)
+% hObject    handle to mOpen (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+[filename, pathname] = uigetfile('*.mat');
+
+if filename(1)~=0
+    try
+        handles=serialize(handles,fullfile(pathname,filename));
+        
+        guidata(hObject, handles);
+        
+        redraw(handles);
+    catch err
+        rethrow(err)
+    end
+end

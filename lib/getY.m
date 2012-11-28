@@ -1,3 +1,3 @@
 function Y = getY(handles)
 
-Y = fetch(handles.vary);
+Y = fetch(handles.settings.vary);

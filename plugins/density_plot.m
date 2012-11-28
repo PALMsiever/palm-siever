@@ -8,9 +8,9 @@ if button==27
     return
 end
 
-subset = evalin('base','subset');
-X=evalin('base',handles.varx); X=X(subset)-x;
-Y=evalin('base',handles.vary); Y=Y(subset)-y;
+subset = getSubset(handles);
+X=getX(handles); X=X(subset)-x;
+Y=getY(handles); Y=Y(subset)-y;
 r = str2double(get(handles.radius,'String'));
 l = str2double(get(handles.length,'String'));
 s = str2double(get(handles.sigma,'String'));

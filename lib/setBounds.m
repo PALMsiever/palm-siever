@@ -13,10 +13,10 @@
 function handles = setBounds(handles, bounds)
 data = get(handles.tParameters,'Data');
 a = get(handles.tParameters,'RowName');
-data{cellfun(@(x) strcmp(x,handles.varx),a),1} = bounds(1);
-data{cellfun(@(x) strcmp(x,handles.varx),a),2} = bounds(2);
-data{cellfun(@(x) strcmp(x,handles.vary),a),1} = bounds(3);
-data{cellfun(@(x) strcmp(x,handles.vary),a),2} = bounds(4);
+data{cellfun(@(x) strcmp(x,handles.settings.varx),a),1} = bounds(1);
+data{cellfun(@(x) strcmp(x,handles.settings.varx),a),2} = bounds(2);
+data{cellfun(@(x) strcmp(x,handles.settings.vary),a),1} = bounds(3);
+data{cellfun(@(x) strcmp(x,handles.settings.vary),a),2} = bounds(4);
 %data=updateTable(handles,data)
 set(handles.tParameters,'Data',data);
 

@@ -1,3 +1,3 @@
 function Z = getZ(handles)
 
-Z = fetch(handles.varz);
+Z = fetch(handles.settings.varz);

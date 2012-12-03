@@ -117,16 +117,19 @@ if ~isempty(varargin)
     handles.settings.N=evalin('base',['length(' varargin{1} ')']);   
 else
     %workaround for calling palmsiever without arguments
-    X = rand(100,1); Y=X;sigmax = X;sigmay=X;
-    assignin('base','X',X);assignin('base','Y',Y);
+    nPts = 100;
+    X = rand(nPts,1); Y=X;sigmax = X;sigmay=X;
+    T = (1:nPts)';
+    assignin('base','X',X);assignin('base','Y',Y);assignin('base','T',T);
     assignin('base','Dummy_sigma_X',sigmax);assignin('base','Dummy_sigma_Y',sigmay);
     handles.settings.varx='X';
     handles.settings.vary='Y';
+    handles.settings.varFrame ='T';
     handles.settings.sigmax='Dummy_sigma_X';
     handles.settings.sigmay='Dummy_sigma_Y';
     handles.settings.N=size(X,1);
 end
-%guidata(handles.output, handles);
+guidata(handles.output, handles);
 handles=reloadData(handles);
 
 rows2 = get(handles.pXAxis,'String');
@@ -136,6 +139,10 @@ iy = find(cellfun(@(x) strcmp(x,handles.settings.vary),rows2),1); set(handles.pY
 % Update Z Axis too
 set(handles.pZAxis,'String',rows2);
 handles.settings.varz=rows2{1};
+%and frame!
+set(handles.pFrame,'String',rows2);
+iF = find(cellfun(@(f) strcmp(f,handles.settings.varFrame),rows2),1); set(handles.pFrame,'Value',iF);
+
 
 % Update handles structure
 guidata(hObject, handles);
@@ -361,6 +368,7 @@ watch_off
 
 function redrawHelper(handles)
 
+set(0,'CurrentFigure',handles.figure1);
 hold(handles.axes1,'off')
 
 XPosition=evalin('base',handles.settings.varx);

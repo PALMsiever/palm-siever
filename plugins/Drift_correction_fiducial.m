@@ -64,8 +64,16 @@ handles.roiList = {};
 % Update handles structure
 guidata(hObject, handles);
 
+set(hObject,'CloseRequestFcn',@(varargin) Drift_correction_fiducial_Closefcn(varargin{:}))
 % UIWAIT makes Drift_correction_fiducial wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
+
+%-------------------------------------------------
+function Drift_correction_fiducial_Closefcn(hObject,varargin)
+handles = guidata(hObject);
+pushbutton_deleteAllFiducial_Callback(hObject)
+delete(hObject);
+
 
 
 % --- Outputs from this function are returned to the command line.
@@ -74,6 +82,7 @@ function varargout = Drift_correction_fiducial_OutputFcn(hObject, eventdata, han
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
@@ -136,13 +145,12 @@ function pushbutton_deleteAllFiducial_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton_deleteAllFiducial (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-handles=guidata(handles.output);
+handles = guidata(hObject);
 for ii = 1:numel(handles.roiList)
    delete(handles.roiList{ii});
 end
 handles.roiList={};
 guidata(handles.output,handles);
-
 
 
 % --- Executes on button press in pushbutton_doDriftCorrection.
@@ -151,36 +159,42 @@ function pushbutton_doDriftCorrection_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 handles=guidata(handles.output);
+handles.handlesPsvGui = guidata(handles.handlesPsvGui.output);
 
-isWriteToCurrentVars = get(handles.radiobutton_useExistingVars, 'Value');
-varSuffix = get(handles.edit_newVarSuffix,'String');
-frameSmoothWindow = str2num(get(handles.edit_frameSmoothingWindow,'String'));
-isCorrectZ = get(handles.checkbox_correctZDrift,'Value');
-isShowDriftGraph = get(handles.checkbox_showDriftGraph,'Value');
+if numel(handles.roiList) % ie if any fiducials have been selected
+   isWriteToCurrentVars = get(handles.radiobutton_useExistingVars, 'Value');
+   varSuffix = get(handles.edit_newVarSuffix,'String');
+   frameSmoothWindow = str2num(get(handles.edit_frameSmoothingWindow,'String'));
+   isCorrectZ = get(handles.checkbox_correctZDrift,'Value');
+   isShowDriftGraph = get(handles.checkbox_showDriftGraph,'Value');
 
-handles.driftTracks = getDriftTracks(handles);
-guidata(handles.output,handles);
-
-XPosition=evalin('base',handles.handlesPsvGui.settings.varx);
-YPosition=evalin('base',handles.handlesPsvGui.settings.vary);
-Frame = evalin('base',handles.handlesPsvGui.settings.varFrame);
-if ~isCorrectZ
-    [xc,yc,handles.tDrift,handles.xDrift,handles.yDrift] = correctDrift(handles.driftTracks,frameSmoothWindow,Frame, XPosition,YPosition);
+   handles.driftTracks = getDriftTracks(handles);
    guidata(handles.output,handles);
-   assignVars(handles,xc,yc);
+   pushbutton_deleteAllFiducial_Callback(hObject, eventdata, handles)
+   handles=guidata(handles.output);
+
+   XPosition=evalin('base',handles.handlesPsvGui.settings.varx);
+   YPosition=evalin('base',handles.handlesPsvGui.settings.vary);
+   Frame = evalin('base',handles.handlesPsvGui.settings.varFrame);
+   if ~isCorrectZ
+       [xc,yc,handles.tDrift,handles.xDrift,handles.yDrift] = correctDrift(handles.driftTracks,frameSmoothWindow,Frame, XPosition,YPosition);
+      guidata(handles.output,handles);
+      assignVars(handles,xc,yc);
+   else
+      ZPosition=evalin('base',handles.handlesPsvGui.settings.varz);
+       [xc,yc,handles.tDrift,handles.xDrift,handles.yDrift,zc,handles.zDrift]  = correctDrift(handles.driftTracks,frameSmoothWindow,Frame, XPosition,YPosition,ZPosition);
+      guidata(handles.output,handles);
+      assignVars(handles,xc,yc,zc);
+   end
+
+
+   if isShowDriftGraph
+      plotDriftGraph(handles);
+   end
 else
-   ZPosition=evalin('base',handles.handlesPsvGui.settings.varz);
-    [xc,yc,handles.tDrift,handles.xDrift,handles.yDrift,zc,handles.zDrift]  = correctDrift(handles.driftTracks,frameSmoothWindow,Frame, XPosition,YPosition,ZPosition);
-   guidata(handles.output,handles);
-   assignVars(handles,xc,yc,zc);
+   errordlg('No fiducial ROI''s selected');
 end
 
-
-if isShowDriftGraph
-   plotDriftGraph(handles);
-end
-
-%pushbutton_deleteAllFiducial_Callback(hObject, eventdata, handles)
 
 
 function edit_newVarSuffix_Callback(hObject, eventdata, handles)
@@ -215,6 +229,7 @@ isCorrectZ = get(handles.checkbox_correctZDrift,'Value');
 nTrack = numel(handles.roiList);
 driftTracks = cell(nTrack,1);
 for ii = 1:nTrack
+   nTrack
    xyLim = getPosition(handles.roiList{ii});
    driftTracks{ii} = getTrack(handles, xyLim,isCorrectZ);
 end
@@ -277,6 +292,12 @@ end
 %update palmsiever handles
 guidata(handles.handlesPsvGui.output,handles.handlesPsvGui);
 PALMsiever('reloadData',(handles.handlesPsvGui));
+handles.handlesPsvGui = guidata(handles.handlesPsvGui.output);
+rows2 = get(handles.handlesPsvGui.pXAxis,'String');
+ix = find(cellfun(@(x) strcmp(x,handles.handlesPsvGui.settings.varx),rows2),1); set(handles.handlesPsvGui.pXAxis,'Value',ix);
+iy = find(cellfun(@(y) strcmp(y,handles.handlesPsvGui.settings.vary),rows2),1); set(handles.handlesPsvGui.pYAxis,'Value',iy);
+iz = find(cellfun(@(z) strcmp(z,handles.handlesPsvGui.settings.varz),rows2),1); set(handles.handlesPsvGui.pZAxis,'Value',iz);
+guidata(handles.handlesPsvGui.output,handles.handlesPsvGui);
 PALMsiever('redraw',(handles.handlesPsvGui));
       
 function plotDriftGraph(handles)
@@ -395,8 +416,8 @@ xDrift = xDrift - xDrift(1);
 
 function xc = removeAxisDrift(x,t,xDrift,tUn);
 xc =x;
-for ii = 1:tUn
-   xc(t==tUn) = x(t==tUn) - xDrift(ii);
+for ii = 1:numel(tUn)
+   xc(t==tUn(ii)) = x(t==tUn(ii)) - xDrift(ii);
 end
 
 function [xTr, yTr,tTr,zTr] = getTrackCell(driftTracks)

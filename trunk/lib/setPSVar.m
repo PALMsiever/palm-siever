@@ -21,10 +21,11 @@ for jj = 1:numel(varAssignment)
       set(handles.pZAxis,'Value',find(strcmp(get(handles.pXAxis,'String'),varAssignment{jj}{2})));
       handles.settings.varz = varAssignment{jj}{2};
    elseif strcmp('frame',varAssignment{jj}{1})
-      %DO NOTHING (for now...)
+      set(handles.pFrame,'Value',find(strcmp(get(handles.pXAxis,'String'),varAssignment{jj}{2})));
+      handles.settings.varFrame= varAssignment{jj}{2};
    elseif strcmp('id',varAssignment{jj}{1})
       set(handles.pID,'Value',find(strcmp(get(handles.pXAxis,'String'),varAssignment{jj}{2})));
-      set(handles.pID,'String',varAssignment{jj}{2});
+      handles.settings.varID = varAssignment{jj}{2};
    end
 end
 guidata(handles.output, handles);

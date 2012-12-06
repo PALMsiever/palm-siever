@@ -116,10 +116,21 @@ if ~isempty(varargin)
     end
     handles.settings.N=evalin('base',['length(' varargin{1} ')']);   
 else
+    N = 1000; R = 1000; s = 20;
+    T = linspace(0,2*pi,N)';
+    X = sin(T)*R;
+    Y = cos(T)*R;
+
+    X = X+randn(1000,1)*s;
+    Y = Y+randn(1000,1)*s;
+    Z = randn(1000,1)*s;
+    sigmax = s*ones(size(X));
+    sigmay = s*ones(size(Y));
+    
     %workaround for calling palmsiever without arguments
-    nPts = 100;
-    X = rand(nPts,1); Y=X;sigmax = X;sigmay=X;
-    T = (1:nPts)';
+    %nPts = 100;
+    %X = rand(nPts,1); Y=X;sigmax = X;sigmay=X;
+    %T = (1:nPts)';
     assignin('base','X',X);assignin('base','Y',Y);assignin('base','T',T);
     assignin('base','Dummy_sigma_X',sigmax);assignin('base','Dummy_sigma_Y',sigmay);
     handles.settings.varx='X';
@@ -141,8 +152,12 @@ set(handles.pZAxis,'String',rows2);
 handles.settings.varz=rows2{1};
 %and frame!
 set(handles.pFrame,'String',rows2);
-iF = find(cellfun(@(f) strcmp(f,handles.settings.varFrame),rows2),1); set(handles.pFrame,'Value',iF);
-
+try
+    iF = find(cellfun(@(f) strcmp(f,handles.settings.varFrame),rows2),1); set(handles.pFrame,'Value',iF);
+catch err
+    handles.settings.varFrame=rows2{1};
+    iF = find(cellfun(@(f) strcmp(f,handles.settings.varFrame),rows2),1); set(handles.pFrame,'Value',iF);
+end
 
 % Update handles structure
 guidata(hObject, handles);
@@ -1143,6 +1158,9 @@ function pShow_Callback(hObject, eventdata, handles)
 % Hints: contents = get(hObject,'String') returns pShow contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from pShow
 redraw(handles)
+autoMin(handles)
+autoMax(handles)
+redraw(handles)
 
 % --- Executes during object creation, after setting all properties.
 function pShow_CreateFcn(hObject, eventdata, handles)
@@ -1251,13 +1269,19 @@ redraw(handles)
 
 function autoMin(handles)
 switch get(handles.pShow,'Value')
+    case 1
+        1;
+    case 2 %'Histogram'
+        set(handles.minC,'String',num2str(0));
     case 3 %'KDE'
         set(handles.minC,'String',num2str(0));
     case 4 %'KDE contour'
         set(handles.minC,'String',num2str(1e-5));
-    case 2 %'Histogram'
+    case 5 %'Histogram + Gauss filter'
         set(handles.minC,'String',num2str(0));
-    case 7 %'Histogram + Gauss filter'
+    case 7 %'Histogram 3D'
+        set(handles.minC,'String',num2str(0));
+    case 8 %'Jittered histogram'
         set(handles.minC,'String',num2str(0));
     case 9 %'Delaunay Triangulation'
         Tr = getappdata(0,'Tri');
@@ -1290,17 +1314,19 @@ catch err
 end
 
 switch get(handles.pShow,'Value')
+    case 1
+        1;
+    case 2 %'Histogram'
+        set(handles.maxC,'String',val);
     case 3 %'KDE'
         set(handles.maxC,'String',val);
     case 4 %'KDE contour'
         set(handles.maxC,'String',val);
-    case 2 %'Histogram'
-        set(handles.maxC,'String',val);
-    case 8 %'Jittered histogram'
-        set(handles.maxC,'String',val);
     case 5 %'Histogram + Gauss filter'
         set(handles.maxC,'String',val);
     case 7 %'Histogram 3D'
+        set(handles.maxC,'String',val);
+    case 8 %'Jittered histogram'
         set(handles.maxC,'String',val);
     case 9 %'Delaunay Triangulation'
         Tr = getappdata(0,'Tri');

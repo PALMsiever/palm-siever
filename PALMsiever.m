@@ -31,8 +31,9 @@ function varargout = PALMsiever(varargin)
 
 % Edit the above text to modify the response to help PALMsiever
 
-addpath(fileparts(which('AreaAnalysis')));
-addpath(fileparts(fileparts(which('AreaAnalysis'))));
+if ~isappdata(0,'ps_initialized') || ~getappdata(0,'ps_initialized')
+    evalin('base','palmsiever_setup');
+end
 
 % Last Modified by GUIDE v2.5 06-Dec-2012 11:18:03
 
@@ -49,9 +50,8 @@ if nargin && ischar(varargin{1})
 end
 
 try
-    watch_on
+    %watch_on
     if nargout
-
         try
             javaaddpath(fileparts(which('AreaAnalysis')));
             ImageSelection([])
@@ -64,9 +64,9 @@ try
     else
         gui_mainfcn(gui_State, varargin{:});
     end
-    watch_off
+    %watch_off
 catch myerr
-    watch_off
+    %watch_off
     errordlg(myerr.message);
     rethrow(myerr)
 end
@@ -157,10 +157,14 @@ menuExport_refresh(hObject, eventdata, handles)
 % Set default action to Z
 set(handles.bgWheel,'SelectedObject',handles.rbZ);
 
+% Generate first image
+redraw(handles)
+
 % Auto display-range
 autoMin(handles)
 autoMax(handles)
 
+% Use adjusted min/max
 redraw(handles)
 
 % UIWAIT makes PALMsiever wait for user response (see UIRESUME)
@@ -1282,7 +1286,7 @@ function autoMax(handles)
 try
     a = getappdata(0,'KDE'); 
     val = num2str(max(a{3}(:)));
-catch
+catch err
 end
 
 switch get(handles.pShow,'Value')

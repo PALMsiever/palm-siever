@@ -34,7 +34,7 @@ function varargout = PALMsiever(varargin)
 addpath(fileparts(which('AreaAnalysis')));
 addpath(fileparts(fileparts(which('AreaAnalysis'))));
 
-% Last Modified by GUIDE v2.5 06-Dec-2012 10:29:16
+% Last Modified by GUIDE v2.5 06-Dec-2012 11:18:03
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -2472,15 +2472,41 @@ res = questdlg('This will keep only the selected points and delete the rest. Do 
 
 if strcmp(res,'Yes')
     N0 = handles.settings.N;
-    rows = getVariables(handles,N0);
-    for irow=1:length(rows)
-        evalin('base',[rows{irow} '=' rows{irow} '(subset);']);
-    end
-    evalin('base','subset=subset(subset);');
+    
+    sieve(handles);
     
     handles.settings.N = evalin('base','numel(subset)');
     msgbox(['Discarded ' num2str(N0-handles.settings.N) ' points. ' num2str(handles.settings.N) ' remaining.']);
 end
+
+
+% --------------------------------------------------------------------
+function mSieveNoXYZ_Callback(hObject, eventdata, handles)
+% hObject    handle to mSieveNoXYZ (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+res = questdlg('This will keep only the selected points and delete the rest. Do you wish to continue?','Sieve','Yes','No','No');
+
+if strcmp(res,'Yes')
+    pResetX_Callback(hObject, eventdata, handles)
+    pResetY_Callback(hObject, eventdata, handles)
+    pbRefreshZ_Callback(hObject, eventdata, handles)
+    
+    N0 = handles.settings.N;
+    
+    sieve(handles);
+    
+    handles.settings.N = evalin('base','numel(subset)');
+    msgbox(['Discarded ' num2str(N0-handles.settings.N) ' points. ' num2str(handles.settings.N) ' remaining.']);
+end
+
+function sieve(handles)
+
+rows = getVariables(handles,handles.settings.N);
+for irow=1:length(rows)
+    evalin('base',[rows{irow} '=' rows{irow} '(subset);']);
+end
+evalin('base','subset=subset(subset);');
 
 
 

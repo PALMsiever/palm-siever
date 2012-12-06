@@ -34,7 +34,7 @@ function varargout = PALMsiever(varargin)
 addpath(fileparts(which('AreaAnalysis')));
 addpath(fileparts(fileparts(which('AreaAnalysis'))));
 
-% Last Modified by GUIDE v2.5 28-Nov-2012 11:47:24
+% Last Modified by GUIDE v2.5 06-Dec-2012 10:29:16
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -156,6 +156,10 @@ menuExport_refresh(hObject, eventdata, handles)
 
 % Set default action to Z
 set(handles.bgWheel,'SelectedObject',handles.rbZ);
+
+% Auto display-range
+autoMin(handles)
+autoMax(handles)
 
 redraw(handles)
 
@@ -975,9 +979,17 @@ for irow=1:length(rows)
     for icol=3:length(cols)
         fev = evalin('base',[cols{icol} '(' rows{irow} '(subset))']);
         if strcmp(cols{icol},'min')
-            fev = fev * .999;
+            if fev>=0
+                fev = fev * .999;
+            else
+                fev = fev / .999;
+            end
         elseif strcmp(cols{icol},'max')
-            fev = fev * 1.001;
+            if fev >=0
+                fev = fev / .999;
+            else
+                fev = fev * .999;
+            end
         end
         data{irow,icol} = fev;
     end
@@ -2442,4 +2454,33 @@ if strcmp(res,'Yes')
 elseif strcmp(res,'No')
     delete(hObject);    
 end
+
+
+% --------------------------------------------------------------------
+function mPoints_Callback(hObject, eventdata, handles)
+% hObject    handle to mPoints (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function mSieve_Callback(hObject, eventdata, handles)
+% hObject    handle to mSieve (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+res = questdlg('This will keep only the selected points and delete the rest. Do you wish to continue?','Sieve','Yes','No','No');
+
+if strcmp(res,'Yes')
+    N0 = handles.settings.N;
+    rows = getVariables(handles,N0);
+    for irow=1:length(rows)
+        evalin('base',[rows{irow} '=' rows{irow} '(subset);']);
+    end
+    evalin('base','subset=subset(subset);');
+    
+    handles.settings.N = evalin('base','numel(subset)');
+    msgbox(['Discarded ' num2str(N0-handles.settings.N) ' points. ' num2str(handles.settings.N) ' remaining.']);
+end
+
+
 

@@ -229,7 +229,7 @@ isCorrectZ = get(handles.checkbox_correctZDrift,'Value');
 nTrack = numel(handles.roiList);
 driftTracks = cell(nTrack,1);
 for ii = 1:nTrack
-   nTrack
+   nTrack;
    xyLim = getPosition(handles.roiList{ii});
    driftTracks{ii} = getTrack(handles, xyLim,isCorrectZ);
 end

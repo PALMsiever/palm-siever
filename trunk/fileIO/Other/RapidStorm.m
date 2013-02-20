@@ -108,42 +108,34 @@ end
 if isempty(filename)
    error('File name not specified');
 else
-   [data semanticCell] = readRapidStorm(filename);
-   varNames =  parseVarNames(semanticCell);
+   [data dataSemanticCell] = readRapidStorm(filename);
+   varNames =  parseVarNames(dataSemanticCell);
    assignToWorkSpace(data,varNames,workspaceName);
-   varAssignment=assignVars(semanticCell);
+   varAssignment=assignVars(varNames);
 end
 %-------------------------------------------------
-function varAssignment=assignVars(semanticCell)
-
-varNames = getVarNames();
+function varAssignment=assignVars(varNames)
 
 varAssignment={};
-if any(strcmp('position in sample space in x dimension',semanticCell))
-   matches = find(strcmp('position in sample space in x dimension',semanticCell));
-   xVarName = varNames{matches(1)};
+if any(strcmp('x',varNames))
+   xVarName = 'x';
 else
    xVarName = varNames{1};
 end
 varAssignment = {varAssignment{:},{'x',xVarName}};
 
-if any(strcmp('position in sample space in y dimension',semanticCell))
-   matches = find(strcmp('position in sample space in y dimension',semanticCell));
-   yVarName = varNames{matches(1)};
+if any(strcmp('y',varNames))
+   yVarName = 'y';
 else
    yVarName = varNames{2};
 end
 varAssignment = {varAssignment{:},{'y',yVarName}};
 
-if any(strcmp('position in sample space in z dimension',semanticCell))
-   matches = find(strcmp('position in sample space in z dimension',semanticCell));
-   zVarName = varNames{matches(1)};
-   varAssignment = {varAssignment{:},{'z',zVarName}};
+if any(strcmp('z',varNames))
+   varAssignment = {varAssignment{:},{'z','z'}};
 end
-if  any(strcmp('frame number',semanticCell))
-   matches = find(strcmp('frame number',semanticCell));
-   frameVarName = varNames{matches(1)};
-   varAssignment = {varAssignment{:},{'frame',frameVarName}};
+if  any(strcmp('frame',varNames))
+   varAssignment = {varAssignment{:},{'frame','frame'}};
 end
 
 %-------------------------------------------------

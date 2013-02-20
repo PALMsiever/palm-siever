@@ -970,7 +970,6 @@ if ~isfield(handles.settings,'N')
 end
 % Set data
 [rows2 data] = getVariables(handles,handles.settings.N);
-
 set(handles.tParameters,'RowName',rows2);
 set(handles.tParameters, 'Data', data);
 

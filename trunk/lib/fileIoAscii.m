@@ -14,6 +14,7 @@ function [varargout] = fileIoAscii(fileSpec,ioMode, varargin)
 %      {'y',yColName},
 %      {'z',zColName}, (optional)
 %      {'frame',frameColName} (optional)}
+%      {'id',idColName} (optional)}
 %For export:
 %  Input arguments:
 %     'Filename',fileName, (optional) ('Workspace', workspaceName), (optional), 'ColAssingment', colAssignHash
@@ -198,6 +199,11 @@ if isfield(fs,'frameCol')&& any(strcmp(fs.frameCol,colNames))
    matches = find(strcmp(fs.frameCol,colNames));
    frameVarName = varNames{matches(1)};
    varAssignment = {varAssignment{:},{'frame',frameVarName}};
+end
+if isfield(fs,'idCol')&& any(strcmp(fs.frameCol,colNames))
+   matches = find(strcmp(fs.idCol,colNames));
+   frameVarName = varNames{matches(1)};
+   varAssignment = {varAssignment{:},{'id',frameVarName}};
 end
 
 %-------------------------------------------------

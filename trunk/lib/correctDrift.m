@@ -54,20 +54,36 @@ xTr = xTr(ia);
 xDr =splinefit(tTr,xTr,nSpline,'r');
 xTrSpline = ppval(xDr,tTr);
 x = interp1(tTr,xTrSpline,tUn);
-%hold off;
-%plot(tTr,xTr);
-%hold all;
-%plot(tTr,xTrSpline);
-%plot(tTr,x);
-%pause
 
 
 %-----------------------------------------------------
 function xc = removeAxisDrift(x,t,xDrift,tUn);
-xc =x;
-for ii = 1:numel(tUn)
-   xc(t==tUn(ii)) = x(t==tUn(ii)) - xDrift(ii);
+%first, sort x,t in time
+%then unsort at end
+
+[tSort ix]= sort(t);
+xSort=x(ix);
+
+kk=1;
+tCur = tUn(kk);
+for ii = 1:numel(tSort)
+   while tSort(ii)~=tCur  
+       kk = kk+1;
+       tCur = tUn(kk);
+   end
+   xDriftCur = xDrift(kk);
+   xSort(ii) = xSort(ii) - xDriftCur;
 end
+
+xc = unsort(xSort,ix);
+
+
+%-----------------------------------------------------
+function xOut = unsort(x,ix)
+
+unsorted = 1:numel(ix);
+newIx(ix) = unsorted;
+xOut = x(newIx);
 
 %-----------------------------------------------------
 function [xTr, yTr,tTr,zTr] = getTrackCell(driftTracks)

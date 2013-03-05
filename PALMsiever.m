@@ -1741,6 +1741,7 @@ function plugins_callback(name,varargin)
 
 try 
     feval(name,guidata(gcf))
+    redraw(guidata(gcf))
 catch err
     if strcmp(err.identifier,'MATLAB:scriptNotAFunction')
         evalin('base',name)

@@ -457,20 +457,21 @@ switch get(handles.pShow,'Value')
     case 1 % "Points"
         scatter(handles.axes1,XPosition(subset),YPosition(subset),r,ID(subset),'.');
     case 2 % "Histogram"
-        n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
-        if NP>0
-            RR = round((res-1)*[...
-                (XPosition(subset)-minX)/(maxX-minX) ...
-                (YPosition(subset)-minY)/(maxY-minY) ])+1;
-            RRok = all(RR<=res,2) & all(RR>=1,2) ;
-            pxx=(maxX-minX)/res; pxy=(maxY-minY)/res;
-            pxArea=pxx * pxy;
-            density = accumarray(RR(RRok,:),1,[res,res])/pxArea;
-            X = repmat(n,res,1); Y = repmat(m',1,res);
-        else
-            density = zeros(res+1);
-            X = repmat(n,res+1,1); Y = repmat(m',1,res+1);
-        end
+%         n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
+%         if NP>0
+%             RR = round((res-1)*[...
+%                 (XPosition(subset)-minX)/(maxX-minX) ...
+%                 (YPosition(subset)-minY)/(maxY-minY) ])+1;
+%             RRok = all(RR<=res,2) & all(RR>=1,2) ;
+%             pxx=(maxX-minX)/res; pxy=(maxY-minY)/res;
+%             pxArea=pxx * pxy;
+%             density = accumarray(RR(RRok,:),1,[res,res])/pxArea;
+%             X = repmat(n,res,1); Y = repmat(m',1,res);
+%         else
+%             density = zeros(res+1);
+%             X = repmat(n,res+1,1); Y = repmat(m',1,res+1);
+%         end
+        [density n m X Y] = calcHistogram(handles);
         density = gammaAdjust(density,gamma);
         imagesc(n,m,density',[minC maxC]); colormap hot
         setappdata(0,'KDE',{X,Y,density'})
@@ -1284,7 +1285,7 @@ switch get(handles.pShow,'Value')
         set(handles.minC,'String',num2str(0));
     case 9 %'Delaunay Triangulation'
         Tr = getappdata(0,'Tri');
-        set(handles.minC,'String',num2str(prctile(Tr{4},5)));
+        set(handles.minC,'String',num2str(quantile(Tr{4},.05)));
     otherwise
         msgbox('Not implemented yet for this visualization');
         return
@@ -1329,7 +1330,7 @@ switch get(handles.pShow,'Value')
         set(handles.maxC,'String',val);
     case 9 %'Delaunay Triangulation'
         Tr = getappdata(0,'Tri');
-        set(handles.maxC,'String',num2str(prctile(Tr{4},100)));
+        set(handles.maxC,'String',num2str(quantile(Tr{4},1))); % takes max..
     otherwise
         msgbox('Not implemented yet for this visualization');
         return

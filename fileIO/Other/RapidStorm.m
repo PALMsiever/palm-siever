@@ -143,9 +143,10 @@ end
 function assignToWorkSpace(data,varNames,workspaceName)
 
 if size(data,2)~=numel(varNames)
-   error('Number of column names not equal to number of data columns');
-else
-   for ii = 1:numel(varNames)
+   warning('Number of column names not equal to number of data columns, extra columns will be ignored');
+end
+for ii = 1:size(data,2)
+   if ii <= numel(varNames)
       assignin(workspaceName,varNames{ii},data(:,ii));
    end
 end
@@ -225,6 +226,25 @@ nCol = numel(parInfo.field);
 semanticCell = cell(nCol,1);
 for ii = 1:nCol
    semanticCell{ii} = parInfo.field(ii).ATTRIBUTE.semantic;
+end
+
+%also, for some reason sometimes some of the header files get put in the parInfo.localizations.field, append these too
+if isfield(parInfo,'localizations')&&  isfield(parInfo.localizations,'field')
+   % dont fully understand how repetitions are assigned
+   % this is my best guess!
+   if isfield(parInfo.localizations.ATTRIBUTE,'repetitions')
+      nRep = parInfo.localizations.ATTRIBUTE.repetitions;
+   else
+      nRep = 1;
+   end
+
+   for ii = 1:nRep
+      for ii = 1:numel(parInfo.localizations.field)
+         if isfield(parInfo.localizations.field,'ATTRIBUTE')
+            semanticCell = {semanticCell{:}, parInfo.localizations.field.ATTRIBUTE.semantic};
+         end
+      end
+   end
 end
 
 %------------------------------------------------------------

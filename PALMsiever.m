@@ -35,7 +35,7 @@ if ~isappdata(0,'ps_initialized') || ~getappdata(0,'ps_initialized')
     evalin('base','palmsiever_setup');
 end
 
-% Last Modified by GUIDE v2.5 06-Dec-2012 11:18:03
+% Last Modified by GUIDE v2.5 15-Mar-2013 15:18:00
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -510,69 +510,10 @@ switch get(handles.pShow,'Value')
         m=linspace(minY,maxY,res);
         ZPosition=evalin('base',handles.settings.varz);
         [minZ maxZ]=getZbounds(handles);
-        nz = 32; notrials = 1; % SET NOTRIALS TO 20 FOR JITTERING
-        NN = sum(subset);
-        amount = (evalin('base',handles.settings.sigmax)+evalin('base',handles.settings.sigmay))/2;
-        amount = amount*0; % TO AVOID JITTERING
-        density = zeros(res,res,nz);
-        setProgress(handles,0);
-        pxx=(maxX-minX)/res; pxy=(maxY-minY)/res; pxz=(maxZ-minZ)/res;
-        pxVol=pxx * pxy * pxz;
-        for i=1:notrials
-            RR = [round((res-1)*[...
-                (XPosition(subset)+randn(NN,1).*amount(subset)-minX)/(maxX-minX) ...
-                (YPosition(subset)+randn(NN,1).*amount(subset)-minY)/(maxY-minY) ])+1 ...
-                  round(nz*(ZPosition(subset)+randn(NN,1).*amount(subset)-minZ)/(maxZ-minZ))];
-            RRok = all(RR(:,1:2)<=res,2) & all(RR>=1,2) & RR(:,3)<=nz;
 
-            d = accumarray(RR(RRok,:),1,[res,res,nz])/pxVol;
-            if i==1
-                density = d;
-            else
-                density = density + d;
-            end
-
-            X = repmat(n,res,1); Y = repmat(m',1,res);
-            density = density/notrials;
-            
-            setProgress(handles,1/notrials)
-            drawnow
-        end
-
-        sigma = str2double(get(handles.sigma,'String'));
-        if nodiplib()
-            H = fspecial('gaussian',round(mean([sigma/pxx*6 sigma/pxy*6]))/2*2+1,mean([sigma/pxx sigma/pxy]));
-            density = imfilter(density/max(density(:)),H);
-        else
-            density = gaussf(density/max(density(:)),[sigma/pxx sigma/pxy 0]);
-        end
-        density = gammaAdjust(density,gamma);
-
-        if nodiplib()
-            hh = (cumsum(ones(size(density)),3)-1)/nz;
-            ss = ones(size(density));
-            vv = density/max(density(:));
-            RGB0 = reshape(hsv2rgb([hh(:) ss(:) vv(:)]),[size(density) 3]);
-            RGB = {squeeze(RGB0(:,:,:,1)) squeeze(RGB0(:,:,:,2)) squeeze(RGB0(:,:,:,3))};            
-            di=0;
-        else
-            HSV = joinchannels('HSV',zz(density,'corner')/(nz+1)*2*pi,1+newim(size(density)),density);
-            RGB = colorspace(HSV,'RGB');
-            di=1;
-        end
         a = .5; b=1; sbar = .625;
-
-        rgb = zeros(size(density,2),size(density,1),3);
-        for i=1:size(density,3)
-            for c=1:3
-                rgb(:,:,c) = rgb(:,:,c).*double(1-a*squeeze(density(:,:,i-di)))' + double(b*squeeze(RGB{c}(:,:,i-di)*density(:,:,i-di)))';
-            end
-        end
-        
-        rgb = (rgb/max(rgb(:)) - minC) / (maxC-minC);
-        
-        rgb(rgb<0)=0; 
-        rgb(rgb>1)=1;
+        rgb = plotZ_fast(handles,res,subset,XPosition,YPosition,ZPosition,minZ,maxZ,n,m,minX,maxX,minY,maxY,gamma,minC,maxC,a,b,sbar);%simplified version without jittering
+        %rgb = plotZ_fancy(handles,res,subset,XPosition,YPosition,ZPosition,minZ,maxZ,n,m,minX,maxX,minY,maxY,gamma,minC,maxC,a,b,sbar);%simplified version without jittering
         
         sz = [res/4 res/32]; 
         szt = [res/4 3]; 
@@ -2540,4 +2481,130 @@ end
 evalin('base','subset=subset(subset);');
 
 
+function rgb = plotZ_fancy(handles,res,subset,XPosition,YPosition,ZPosition,minZ,maxZ,n,m,minX,maxX,minY,maxY,gamma,minC,maxC,a,b,sbar)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%SH: turned jittering off for now - it was causing crashes
+% if sigmax, sigmay not defined.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% notrials = 1; % SET NOTRIALS TO 20 FOR JITTERING
+%amount = (evalin('base',handles.settings.sigmax)+evalin('base',handles.settings.sigmay))/2;
+%amount = amount*0; % TO AVOID JITTERING
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+nz = 32;
+notrials=1;
+amount = zeros(size(XPosition));
+NN = sum(subset);
+density = zeros(res,res,nz);
+setProgress(handles,0);
+pxx=(maxX-minX)/res; pxy=(maxY-minY)/res; pxz=(maxZ-minZ)/res;
+pxVol=pxx * pxy * pxz;
+for i=1:notrials
+   RR = [round((res-1)*[...
+       (XPosition(subset)+randn(NN,1).*amount(subset)-minX)/(maxX-minX) ...
+       (YPosition(subset)+randn(NN,1).*amount(subset)-minY)/(maxY-minY) ])+1 ...
+         round(nz*(ZPosition(subset)+randn(NN,1).*amount(subset)-minZ)/(maxZ-minZ))];
+   RRok = all(RR(:,1:2)<=res,2) & all(RR>=1,2) & RR(:,3)<=nz;
+
+   d = accumarray(RR(RRok,:),1,[res,res,nz])/pxVol;
+   if i==1
+       density = d;
+   else
+       density = density + d;
+   end
+
+   X = repmat(n,res,1); Y = repmat(m',1,res);
+   density = density/notrials;
+   
+   setProgress(handles,1/notrials)
+   drawnow
+end
+
+sigma = str2double(get(handles.sigma,'String'));
+if nodiplib()
+   H = fspecial('gaussian',round(mean([sigma/pxx*6 sigma/pxy*6]))/2*2+1,mean([sigma/pxx sigma/pxy]));
+   density = imfilter(density/max(density(:)),H);
+else
+   density = gaussf(density/max(density(:)),[sigma/pxx sigma/pxy 0]);
+end
+density = gammaAdjust(density,gamma);
+
+if nodiplib()
+   hh = (cumsum(ones(size(density)),3)-1)/nz;
+   ss = ones(size(density));
+   vv = density/max(density(:));
+   RGB0 = reshape(hsv2rgb([hh(:) ss(:) vv(:)]),[size(density) 3]);
+   RGB = {squeeze(RGB0(:,:,:,1)) squeeze(RGB0(:,:,:,2)) squeeze(RGB0(:,:,:,3))};            
+   di=0;
+else
+   HSV = joinchannels('HSV',zz(density,'corner')/(nz+1)*2*pi,1+newim(size(density)),density);
+   RGB = colorspace(HSV,'RGB');
+   di=1;
+end
+
+rgb = zeros(size(density,2),size(density,1),3);
+for i=1:size(density,3)
+   for c=1:3
+       rgb(:,:,c) = rgb(:,:,c).*double(1-a*squeeze(density(:,:,i-di)))' + double(b*squeeze(RGB{c}(:,:,i-di)*density(:,:,i-di)))';
+   end
+end
+
+rgb = (rgb/max(rgb(:)) - minC) / (maxC-minC);
+
+rgb(rgb<0)=0; 
+rgb(rgb>1)=1;
+
+
+
+function rgb = plotZ_fast(handles,res,subset,XPosition,YPosition,ZPosition,minZ,maxZ,n,m,minX,maxX,minY,maxY,gamma,minC,maxC,a,b,sbar)
+%ONLY works with dipimage for now
+
+nz = 32;
+NN = sum(subset);
+density = zeros(res,res,nz);
+pxx=(maxX-minX)/res; pxy=(maxY-minY)/res; pxz=(maxZ-minZ)/res;
+pxVol=pxx * pxy * pxz;
+
+RR = [round((res-1)*[...
+    (XPosition(subset)-minX)/(maxX-minX) ...
+    (YPosition(subset)-minY)/(maxY-minY) ])+1 ...
+      round(nz*(ZPosition(subset)-minZ)/(maxZ-minZ))];
+RRok = all(RR(:,1:2)<=res,2) & all(RR>=1,2) & RR(:,3)<=nz;
+
+density = accumarray(RR(RRok,:),1,[res,res,nz])/pxVol;
+X = repmat(n,res,1); Y = repmat(m',1,res);
+
+
+
+sigma = str2double(get(handles.sigma,'String'));
+sPix = sigma/pxx;
+gWindow = ceil(5*sPix);
+gKern = fspecial('gaussian',gWindow, sPix);
+dMax = max(density(:));
+density = density/max(density(:));
+for ii = 1:size(density,3)
+  density(:,:,ii) = imfilter(density(:,:,ii),gKern,'replicate');
+end
+
+% ADJUST GAMMA HERE
+density(density<0)=0;
+density = gammaAdjust(density,gamma);
+
+%convert density to dipimage
+density = dip_image(density);
+HSV = joinchannels('HSV',zz(density,'corner')/(nz+1)*2*pi,1+newim(size(density)),density);
+RGB = colorspace(HSV,'RGB');
+di=1;
+
+rgb = zeros(size(density,2),size(density,1),3);
+for i=1:size(density,3)
+   for c=1:3
+       rgb(:,:,c) = rgb(:,:,c).*double(1-a*squeeze(density(:,:,i-di)))' + double(b*squeeze(RGB{c}(:,:,i-di)*density(:,:,i-di)))';
+   end
+end
+
+rgb = (rgb/max(rgb(:)) - minC) / (maxC-minC);
+
+rgb(rgb<0)=0; 
+rgb(rgb>1)=1;
 

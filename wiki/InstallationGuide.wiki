@@ -28,7 +28,7 @@ PALMsiever
 
 If you're simply trying the software out, or don't wish to change your path, you can change your MATLAB working directory to _PALM_DIR_ and run PALMsiever from there.
 
-From the menu, you can import a number of different text file formats. If your particular format is not present, try the generic text import. Note that it might take some time to load and parse a long set of peaks.
+From the menu, you can import a number of different text file formats. If your particular format is not present, try the generic text import. Note that it might take some time to load and parse a long set of peaks. The data is loaded in the MATLAB workspace, with each column of the file as a separate variable.
 
-The data is loaded in the MATLAB workspace, with each column of the file as a separate variable.
-
+That's it! Feel free to tinker with the interface. The right-hand side shows the list of all variables, the left shows the rendered image.
+ 

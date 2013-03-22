@@ -19,4 +19,25 @@ Added file import and output!
   * new GUI layout
   * new file import and export. Supports a variety of ascii-based formats
 
-  
+ 
+= Mar 22 2013 =
+
+Many new features:
+  * state saving: you can save and resume exactly where you left
+  * save on exit dialog
+  * MAIN m-file for packaging
+  * added frame field
+  * "sieve" menu items
+  * no need for palmsiever_setup.m
+  * circle default pointset. rendering min/max fixed.
+  * redraw now forced each time a plugin is called
+  * now supports Leica GSD .ascii format
+  * removed dependency on prctile from stats toolbox
+  * added calcHistogram
+  * toNanometers now works on all XY var names
+
+New plugins
+  * drift correction with fiducials
+  * generic_command.m
+  * a plugin to tune the limits to achieve a specified pixels size
+

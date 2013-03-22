@@ -13,6 +13,7 @@ Added a few features for plugin support.
   * `fetch` also exposed. Can be used to retrieve a variable from the workspace. Use of this function is encouraged, as it future-proofs changes.
 
 = Nov 23 2012 =
+Version 1.0.2 alpha (  -r36)
 
 Added file import and output!
 
@@ -21,8 +22,10 @@ Added file import and output!
 
  
 = Mar 22 2013 =
+Version 1.1 alpha (r37-r59)
 
 Many new features:
+
   * state saving: you can save and resume exactly where you left
   * save on exit dialog
   * MAIN m-file for packaging
@@ -40,4 +43,3 @@ New plugins
   * drift correction with fiducials
   * generic_command.m
   * a plugin to tune the limits to achieve a specified pixels size
-

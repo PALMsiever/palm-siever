@@ -2,7 +2,7 @@
 
 == Requirements =
 
-PALM-siever is a MATLAB application. At the moment, it needs `DipImage` too to run. You can download it from [http://www.diplib.org]. Follow the instructions to install it on your platform. If you can't install it or don't want to, you can still use PALMsiever, but some parts will not work. See [NoDipImage].
+PALM-siever is a MATLAB application. At the moment, for some features it needs `DipImage` too to run. You can download it from [http://www.diplib.org]. Follow the instructions to install it on your platform. If you can't install it or don't want to, you can still use PALMsiever, but some parts will not work. See [NoDipImage].
 
 == Installation =
 
@@ -17,36 +17,18 @@ svn checkout http://palm-siever.googlecode.com/svn/trunk/ palm-siever-read-only
 addpath PALM_DIR
 }}}
   # Modify the `palmsiever_setup.m` file to reflect your _DIP_DIR_.
-  # Execute: `palmsiever_setup`
 
 == Quickstart =
-You need to run `palmsiever_setup` for each new MATLAB session (make sure to have _PALM_DIR_ in your path, or add it with `addpath`). Alternatively, you can add these two lines to your `startup.m` file.
-{{{
-addpath _PALM_DIR_
-palmsiever_setup
-}}}
 
-To open a PRM file, use the “importprm” command. The syntax is simply:
-{{{
-importprm filename
-}}}
-The filename should be the full path to your PRM file. Note: it works best on local files.
+Once you added _PALM_DIR_ to your MATLAB path, simply run:
 
-You can open a CSV with: 
-{{{
-importprm('filename',',')
-}}}
-
-The command will load the data, with each column of the file as a separate variable.
-
-To run the software, execute:
 {{{
 PALMsiever
 }}}
 
-It will ask to specify what variables are X position, Y position, localization precision for X and localization precision for Y.
+If you're simply trying the software out, or don't wish to change your path, you can change your MATLAB working directory to _PALM_DIR_ and run PALMsiever from there.
 
-You can specify them when opening the application.
-{{{
-PALMsiever(‘xVar’,’yVar’,’sigmaX’,’sigmaY’)
-}}}
+From the menu, you can import a number of different text file formats. If your particular format is not present, try the generic text import. Note that it might take some time to load and parse a long set of peaks.
+
+The data is loaded in the MATLAB workspace, with each column of the file as a separate variable.
+

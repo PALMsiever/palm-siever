@@ -4,14 +4,14 @@
 % Web:      http://code.google.com/p/palm-siever
 % Licence:  GPL-v.3
 
-usediplib = false;
+usediplib = true;
 
 % Find out where we are
 palm_siever = fileparts(which('palmsiever_setup'));
 
 if usediplib
   % Initialize Dipimage
-  diplib_directory = 'C:\Program Files\Dipimage 2.3'; % Change me if necess.
+  diplib_directory = 'C:\Program Files\DIPimage 2.4.1'; % Change me if necess.
   addpath(diplib_directory); dipstart
 end
 
@@ -24,7 +24,7 @@ addpath(fullfile(palm_siever,'lib'))
 javaaddpath(fullfile(palm_siever,'lib','utils.jar'))
 javaaddpath(fullfile(palm_siever,'lib'))
 
-setappdata(0,'usediblib',false)
+setappdata(0,'usediblib',usediplib)
 
 setappdata(0,'ps_initialized',true)
 

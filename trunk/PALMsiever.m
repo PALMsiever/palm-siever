@@ -548,10 +548,9 @@ switch get(handles.pShow,'Value')
         imagesc(n,m,rgb);
         
         if ~nodiplib()
-            text(minX+cbx*pxx,minY+pxy*(cby-5*(res/256)),num2str(minZ),'Color','w', 'HorizontalAlignment','left')
-            text(minX+(cbx+sz(1))*pxx,minY+pxy*(cby-5*(res/256)),num2str(maxZ),'Color','w', 'HorizontalAlignment','right')
-            text(minX+pxx*(sby+szs(1)/2),minY+pxy*(sbx-5*(res/256)),[num2str(100) ' nm'],'Color','w', 'HorizontalAlignment','center')
-            %text(minY+pxy*(cbx+sz(1)),minX+pxx*(cby-5),num2str(maxZ),'Color','w', 'HorizontalAlignment','right')
+            text(minX+cbx*pxx,minY+pxy*(cby-5*(res/256)),sprintf('%3.f',minZ),'Color','w', 'HorizontalAlignment','left')
+            text(minX+(cbx+sz(1))*pxx,minY+pxy*(cby-5*(res/256)),sprintf('%3.f',maxZ),'Color','w', 'HorizontalAlignment','right')
+            %text(minX+pxx*(sby+szs(1)/2),minY+pxy*(sbx-5*(res/256)),[num2str(100) ' nm'],'Color','w', 'HorizontalAlignment','center')
         end        
     case 3 % "KDE"
         if NP>0

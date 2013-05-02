@@ -2335,10 +2335,10 @@ cp.setContents(ims,[]);
 
 
 function doit = doScalebar(handles)
-doit = strcmp(get(handles.miScalebar,'Checked'),'on')
+doit = strcmp(get(handles.miScalebar,'Checked'),'on');
 
 function doit = doColorbar(handles)
-doit = strcmp(get(handles.miScalebar,'Checked'),'on')
+doit = strcmp(get(handles.miColorbar,'Checked'),'on');
 
 % --------------------------------------------------------------------
 function MenuImport_Callback(hObject, eventdata, handles)
@@ -2661,9 +2661,6 @@ else
     set(hObject,'Checked','on')
 end
 
-handles.settings.doColorbar = strcmp(get(hObject,'Checked'),'on');
-guidata(gcf,handles)
-
 redraw(handles)
 
 % --------------------------------------------------------------------
@@ -2676,8 +2673,6 @@ if strcmp(get(hObject,'Checked'),'on')
 else
     set(hObject,'Checked','on')
 end
-
-guidata(gcf,handles)
 
 redraw(handles)
 

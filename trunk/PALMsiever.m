@@ -102,9 +102,6 @@ assignin('base','drawing','false')
 % Choose default command line output for PALMsiever
 handles.output = hObject;
 
-% Defaults
-handles.settings.doColorbar = false;
-handles.settings.doScalebar = false;
 
 if ~isempty(varargin)
     handles.settings.varx=varargin{1};
@@ -654,12 +651,12 @@ switch get(handles.pShow,'Value')
 end
 
 % Add the scalebar
-if handles.settings.doScalebar
+if doScalebar
     add_scalebar(handles)
 end
 
 % Add color bar
-if handles.settings.doColorbar
+if doColorbar
     add_colorbar(handles)
 end
 
@@ -2326,7 +2323,7 @@ maxC = str2double(get(handles.maxC,'String'));
 
 xxi=uint8((density'-minC)*2^8/(maxC-minC))';
 
-if handles.settings.doScalebar
+if doScalebar(handles)
     sb = add_scalebar(handles,density);
     xxi(sb>0)=255;
 end
@@ -2336,6 +2333,12 @@ tk=javaMethod('getDefaultToolkit','java.awt.Toolkit');
 cp=tk.getSystemClipboard;
 cp.setContents(ims,[]);
 
+
+function doit = doScalebar(handles)
+doit = strcmp(get(hObject,'Checked'),'on')
+
+function doit = doColorbar(handles)
+doit = strcmp(get(hObject,'Checked'),'on')
 
 % --------------------------------------------------------------------
 function MenuImport_Callback(hObject, eventdata, handles)
@@ -2674,7 +2677,6 @@ else
     set(hObject,'Checked','on')
 end
 
-handles.settings.doScalebar = strcmp(get(hObject,'Checked'),'on');
 guidata(gcf,handles)
 
 redraw(handles)

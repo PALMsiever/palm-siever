@@ -651,12 +651,12 @@ switch get(handles.pShow,'Value')
 end
 
 % Add the scalebar
-if doScalebar
+if doScalebar(handles)
     add_scalebar(handles)
 end
 
 % Add color bar
-if doColorbar
+if doColorbar(handles)
     add_colorbar(handles)
 end
 
@@ -2335,10 +2335,10 @@ cp.setContents(ims,[]);
 
 
 function doit = doScalebar(handles)
-doit = strcmp(get(hObject,'Checked'),'on')
+doit = strcmp(get(handles.miScalebar,'Checked'),'on')
 
 function doit = doColorbar(handles)
-doit = strcmp(get(hObject,'Checked'),'on')
+doit = strcmp(get(handles.miScalebar,'Checked'),'on')
 
 % --------------------------------------------------------------------
 function MenuImport_Callback(hObject, eventdata, handles)

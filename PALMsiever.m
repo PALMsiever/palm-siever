@@ -35,7 +35,7 @@ if ~isappdata(0,'ps_initialized') || ~getappdata(0,'ps_initialized')
     evalin('base','palmsiever_setup');
 end
 
-% Last Modified by GUIDE v2.5 15-Mar-2013 15:18:00
+% Last Modified by GUIDE v2.5 02-May-2013 15:09:00
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -101,6 +101,10 @@ assignin('base','drawing','false')
 
 % Choose default command line output for PALMsiever
 handles.output = hObject;
+
+% Defaults
+handles.settings.doColorbar = false;
+handles.settings.doScalebar = false;
 
 if ~isempty(varargin)
     handles.settings.varx=varargin{1};
@@ -560,7 +564,7 @@ switch get(handles.pShow,'Value')
             pxArea=(maxX-minX)/res * (maxY-minY)/res;
             density = density*sum(subset)/pxArea;
             
-            fprintf('Bandwidth: %f\n', bandwidth);
+            logger(['Bandwidths: ', num2str(bandwidth)]);
         else
             density = zeros(res);
         end
@@ -647,6 +651,16 @@ switch get(handles.pShow,'Value')
         caxis([minC maxC]);
         set(gca,'Color',[0 0 0])
         setappdata(0,'Tri',{X,Y,T,C})
+end
+
+% Add the scalebar
+if handles.settings.doScalebar
+    add_scalebar(handles)
+end
+
+% Add color bar
+if handles.settings.doColorbar
+    add_colorbar(handles)
 end
 
 axis ij
@@ -1949,7 +1963,7 @@ if numel(Trace)<2
 end
 
 axes(handles.axes1);
-line(Trace(:,1)',Trace(:,2)','Marker','+','Color','r');
+line(Trace(:,1)',Trace(:,2)','Marker','+','Color','g');
 
 
 % --------------------------------------------------------------------
@@ -2062,12 +2076,19 @@ r = str2double(get(handles.radius,'String'));
 
 [A centersY , ~, centersX] = trace_histogram(Trace, X, Y, r, nbins, 0);
 [sX sY]=trace_collect(Trace, X, Y, r, 1);
-[ sigmas means gofs ]= trace_sigmas(A, centersY);
-Y = interp1(centersX,abs(sigmas),sX,'nearest','extrap');
+[ sigmas means gofs ns sigmas_outliers ]= trace_sigmas(A, centersY);
 
-figure; scatter(sX,sY,10,Y, 'filled'); axis equal
+% Plot
+Y = interp1(centersX,abs(sigmas),sX,'nearest','extrap');
+figure; scatter(sX,sY,2,Y, 'filled'); axis equal
+set(gca,'PlotBoxAspectRatioMode','auto')
 colormap(hot); caxis((caxis-mean(caxis))*1.3+mean(caxis))
 colorbar('SouthOutside')
+
+% Output some info on the fit
+logger(['Sigmas: ' num2str(sigmas(:)',4)])
+logger(['Ns: ' num2str(ns(:)')])
+logger(['Sigmas: ' num2str(mean(sigmas),4) ' +-' num2str(std(sigmas),4)])
 
 % --------------------------------------------------------------------
 function miTubeFit_Callback(hObject, eventdata, handles)
@@ -2293,7 +2314,7 @@ switch strs{get(handles.pShow,'Value')}
     case 'Histogram + Gauss filter'
     case 'Jittered histogram'
     otherwise
-        msgbox('Not implemented yet, only works with KDE.');
+        msgbox('Not implemented yet, only works with histograms & KDE.');
         return
 end  
 
@@ -2304,6 +2325,12 @@ minC = str2double(get(handles.minC,'String'));
 maxC = str2double(get(handles.maxC,'String'));
 
 xxi=uint8((density'-minC)*2^8/(maxC-minC))';
+
+if handles.settings.doScalebar
+    sb = add_scalebar(handles,density);
+    xxi(sb>0)=255;
+end
+
 ims = ImageSelection(im2java(xxi));
 tk=javaMethod('getDefaultToolkit','java.awt.Toolkit');
 cp=tk.getSystemClipboard;
@@ -2611,4 +2638,44 @@ rgb = (rgb/max(rgb(:)) - minC) / (maxC-minC);
 
 rgb(rgb<0)=0; 
 rgb(rgb>1)=1;
+
+
+% --------------------------------------------------------------------
+function mOptions_Callback(hObject, eventdata, handles)
+% hObject    handle to mOptions (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function miColorbar_Callback(hObject, eventdata, handles)
+% hObject    handle to miColorbar (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if strcmp(get(hObject,'Checked'),'on')
+    set(hObject,'Checked','off')
+else
+    set(hObject,'Checked','on')
+end
+
+handles.settings.doColorbar = strcmp(get(hObject,'Checked'),'on');
+guidata(gcf,handles)
+
+redraw(handles)
+
+% --------------------------------------------------------------------
+function miScalebar_Callback(hObject, eventdata, handles)
+% hObject    handle to miScalebar (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if strcmp(get(hObject,'Checked'),'on')
+    set(hObject,'Checked','off')
+else
+    set(hObject,'Checked','on')
+end
+
+handles.settings.doScalebar = strcmp(get(hObject,'Checked'),'on');
+guidata(gcf,handles)
+
+redraw(handles)
 

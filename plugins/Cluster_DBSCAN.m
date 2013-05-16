@@ -153,8 +153,8 @@ minPts  = str2double(get(handles.editMinPts,'String'));
 eps     = str2double(get(handles.editEps,'String'));
 useZ = get(handles.checkboxIncludeZ,'Value');
 
-XPos=evalin('base',handles.handlesPsvGui.settings.varx);
-YPos=evalin('base',handles.handlesPsvGui.settings.vary);
+XPos=getX(handles.handlesPsvGui);
+YPos=getY(handles.handlesPsvGui);
 
 varDim = size(XPos);
 

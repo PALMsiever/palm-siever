@@ -25,11 +25,13 @@ ZI(ZI<1) = 1; ZI(ZI>res) = res;
 
 VOL = accumarray([XI YI ZI],1,[res res res]);
 VOLs = gaussf(VOL,[5 5 .8*50/(1000/256)]);
-
+%xR = [1:256];yR=xR;zR=xR;
+%sliceomatic(double(VOLs),xR,yR,zR)
 %dipshow(gaussf(VOL,[5 5 .8*50/(1000/256)]))
 %isosurfaceplot(gaussf(VOL,[5 5 .8*50/(1000/256)]),1e-4)
 
-figure;
+h1 = figure;
+set(0,'CurrentFigure',h1);
 fv = isosurface(double(VOLs),1e-4); 
 p = patch(fv);
 set(p,'FaceColor','green','EdgeColor','none');

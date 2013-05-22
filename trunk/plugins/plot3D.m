@@ -5,4 +5,6 @@ Y = getY(handles);
 Z = getZ(handles);
 subset = getSubset(handles);
 
-figure; plot3(X(subset), Y(subset), Z(subset), '.')
+h1 = figure; plot3(X(subset), Y(subset), Z(subset), '.');
+set(0,'CurrentFigure',h1);
+axis equal;

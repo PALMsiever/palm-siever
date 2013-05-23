@@ -146,7 +146,7 @@ function pushbuttonRunDBSCAN_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbuttonRunDBSCAN (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-handles = guidata(handles.output);
+%handles = guidata(handles.output);
 
 %get current input settings
 minPts  = str2double(get(handles.editMinPts,'String'));
@@ -177,12 +177,14 @@ typeName = 'dbscan_type';
 assignin('base', idName,dbscan_id);
 assignin('base', typeName,dbscan_type);
 
-%set the ID column
-handles.handlesPsvGui.settings.varID=idName;
-guidata(handles.handlesPsvGui.output,handles.handlesPsvGui);
-PALMsiever('reloadData',(handles.handlesPsvGui));
-handles.handlesPsvGui = guidata(handles.handlesPsvGui.output);
-rows2 = get(handles.handlesPsvGui.pID,'String');
-iId = find(cellfun(@(z) strcmp(z,handles.handlesPsvGui.settings.varID),rows2),1); 
-set(handles.handlesPsvGui.pID,'Value',iId);
-PALMsiever('redraw',(handles.handlesPsvGui));
+% Set the ID column
+h = getPalmSiever(); handlesPS = guidata(h);
+handlesPS.settings.varID=idName;
+guidata(h,handlesPS);
+PALMsiever('reloadData',handlesPS);
+rows2 = get(handlesPS.pID,'String');
+iId = find(cellfun(@(z) strcmp(z,handlesPS.settings.varID),rows2),1); 
+set(handlesPS.pID,'Value',iId);
+set(handlesPS.pShow,'Value',1); % Set 'Points'
+PALMsiever('redraw',handlesPS);
+

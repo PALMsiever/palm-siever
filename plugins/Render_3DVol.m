@@ -85,7 +85,12 @@ setIsoVal(handles,isoVal);
 handles = guidata(handles.output);
 
 updatePlot(handles)
+handles = guidata(handles.output);
 % Update handles structure
+set(0,'CurrentFigure',hObject);
+cameratoolbar(hObject,'NoReset');
+camlight ;
+view(3);
 guidata(hObject, handles);
 
 % UIWAIT makes Render_3DVol wait for user response (see UIRESUME)
@@ -120,6 +125,7 @@ setIsoVal(handles,isoVal);
 handles = guidata(handles.output);
 
 updatePlot(handles)
+handles = guidata(handles.output);
 % Update handles structure
 guidata(hObject, handles);
 
@@ -158,6 +164,7 @@ setIsoVal(handles,isoVal);
 handles = guidata(handles.output);
 
 updatePlot(handles)
+handles = guidata(handles.output);
 % Update handles structure
 guidata(hObject, handles);
 
@@ -252,6 +259,7 @@ YI(YI<1) = 1; YI(YI>res) = res;
 ZI(ZI<1) = 1; ZI(ZI>res) = res;
 
 handles.VOL = accumarray([XI YI ZI],1,[res res res]);
+
 guidata(handles.output, handles);
 
 %--------------------------------------
@@ -298,10 +306,14 @@ guidata(handles.output, handles);
 %--------------------
 function updatePlot(handles)
 handles = guidata(handles.output);
+
+if isfield(handles,'patch');
+   delete(handles.patch);
+end
+
 axes(handles.axes1);
 fv = isosurface(double(handles.VOL_blur),handles.isoVal); 
-p = patch(fv);
+handles.patch = patch(fv);
 axis equal;
-set(p,'FaceColor','green','EdgeColor','none');
-camlight ;
-view(3);
+set(handles.patch,'FaceColor','green','EdgeColor','none');
+guidata(handles.output, handles);

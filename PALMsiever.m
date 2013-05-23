@@ -92,8 +92,7 @@ function PALMsiever_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to PALMsiever (see VARARGIN)
-
-setappdata(0,'self',handles.figure1);
+assignin('base','PS_FIGURE',handles.figure1);
 
 % Add 'range' function to base
 assignin('base','range',@(x) max(x)-min(x))
@@ -458,21 +457,27 @@ switch get(handles.pShow,'Value')
     case 1 % "Points"
         scatter(handles.axes1,XPosition(subset),YPosition(subset),r,ID(subset),'.');
     case 2 % "Histogram"
-%         n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
-%         if NP>0
-%             RR = round((res-1)*[...
-%                 (XPosition(subset)-minX)/(maxX-minX) ...
-%                 (YPosition(subset)-minY)/(maxY-minY) ])+1;
-%             RRok = all(RR<=res,2) & all(RR>=1,2) ;
-%             pxx=(maxX-minX)/res; pxy=(maxY-minY)/res;
-%             pxArea=pxx * pxy;
-%             density = accumarray(RR(RRok,:),1,[res,res])/pxArea;
-%             X = repmat(n,res,1); Y = repmat(m',1,res);
-%         else
-%             density = zeros(res+1);
-%             X = repmat(n,res+1,1); Y = repmat(m',1,res+1);
-%         end
-        [density n m X Y] = calcHistogram(handles);
+        n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
+
+        if NP>0
+            RR = round((res-1)*[...
+                (XPosition(subset)-minX)/(maxX-minX) ...
+                (YPosition(subset)-minY)/(maxY-minY) ])+1;
+            RRok = all(RR<=res,2) & all(RR>=1,2) ;
+            pxx=(maxX-minX)/res; pxy=(maxY-minY)/res;
+            pxArea=pxx * pxy;
+            density = accumarray(RR(RRok,:),1,[res,res])/pxArea;
+            X = repmat(n,res,1); Y = repmat(m',1,res);
+        else
+            density = zeros(res+1);
+            X = repmat(n,res+1,1); Y = repmat(m',1,res+1);
+        end
+
+        %[density n m] = calcHistogram(handles);
+        
+        %[density px] = histn([XPosition YPosition], res, [minX minY], [maxX maxY]);
+        
+        %X = repmat(n,res,1); Y = repmat(m',1,res);
         density = gammaAdjust(density,gamma);
         imagesc(n,m,density',[minC maxC]); colormap hot
         setappdata(0,'KDE',{X,Y,density'})
@@ -2018,7 +2023,7 @@ figure;
     hold;
     h=plot(fit); set(h,'Color','r'); legend off;
     h=plot(sg_fit(b',a')); set(h,'Color','g'); legend off;
-    [ ~, ~, th_fit] = jth_fit(b',a');
+    [ dummy__, dummy__, th_fit] = jth_fit(b',a');
     h=plot(th_fit); set(h,'Color','b'); legend off;
     ylabel(gca,'Density'); xlabel(gca,'[nm]');
     set(gcf, 'PaperUnits', 'inches');
@@ -2071,7 +2076,7 @@ X=X(subset); Y=Y(subset);
 nbins = str2double(get(handles.tBins,'String'));
 r = str2double(get(handles.radius,'String'));
 
-[A centersY , ~, centersX] = trace_histogram(Trace, X, Y, r, nbins, 0);
+[A centersY , dummy__, centersX] = trace_histogram(Trace, X, Y, r, nbins, 0);
 [sX sY]=trace_collect(Trace, X, Y, r, 1);
 [ sigmas means gofs ns sigmas_outliers ]= trace_sigmas(A, centersY);
 

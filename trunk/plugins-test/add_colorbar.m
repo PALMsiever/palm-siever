@@ -1,7 +1,7 @@
 % Add colorbar
-function add_colorbar(handles)
+function add_colorbar(handles, col)
 
 axes(handles.axes1)
-colorbar('location','East','XColor','white','YColor','white')
+colorbar('location','East','XColor',col,'YColor',col)
 
 

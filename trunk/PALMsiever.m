@@ -35,7 +35,7 @@ if ~isappdata(0,'ps_initialized') || ~getappdata(0,'ps_initialized')
     evalin('base','palmsiever_setup');
 end
 
-% Last Modified by GUIDE v2.5 02-May-2013 15:09:00
+% Last Modified by GUIDE v2.5 31-Jul-2013 18:15:03
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -396,6 +396,7 @@ hold(handles.axes1,'off')
 
 XPosition=evalin('base',handles.settings.varx);
 YPosition=evalin('base',handles.settings.vary);
+ZPosition=evalin('base',handles.settings.varz);
 
 if isfield(handles.settings,'varID')
     ID=evalin('base',handles.settings.varID);
@@ -412,10 +413,15 @@ subset0 = true(length(XPosition),1);
 rows = get(handles.tParameters,'RowName');
 for irow=1:length(rows)
     try
-        curSubset = evalin('base',[rows{irow} ' >= ' num2str(data{irow,1}) ' & ' ...
-            rows{irow} ' <= ' num2str(data{irow,2})]);
+        rv = fetch(rows{irow});
+        
+        m = data{irow,1};
+        M = data{irow,2};
+        
+        curSubset = rv>=m & rv<=M;
 
         subset = subset & curSubset;
+
         if rows{irow}(end)=='_' 
             % Skip
         else
@@ -427,7 +433,20 @@ for irow=1:length(rows)
 end
 assignin('base','subset',subset);
 
+if get(handles.pbGrouped,'Value')
+    % Group data if necessary
+    XPosition = groupBy(XPosition(subset), ID(subset)); 
+    YPosition = groupBy(YPosition(subset), ID(subset));
+    ZPosition = groupBy(ZPosition(subset), ID(subset));
+    XPosition=XPosition(~isnan(XPosition));
+    YPosition=YPosition(~isnan(YPosition));
+    ZPosition=ZPosition(~isnan(ZPosition));
+    ID = 1:sum(ID(subset));
+    subset = true(size(XPosition));
+end
+    
 [minX maxX minY maxY] = getBounds(handles);
+[minZ maxZ]=getZbounds(handles);
 
 minC = str2double(get(handles.minC,'String'));
 maxC = str2double(get(handles.maxC,'String'));
@@ -438,13 +457,13 @@ setappdata(0,'pointsetsubset',subset);
 NP = sum(subset);
 
 if NP<1
-    warning('No points to display')
-    return
+    logger('Warning: no points to display. Press ''Fit'' to reset the field of view.')
+    %return
 end
 
 set(handles.tNumPoints,'String',num2str(NP));
 
-is3D = get(handles.pShow,'Value') == 7;
+is3D = get(handles.pShow,'Value') == 6;
 
 res = getRes(handles);
 
@@ -453,9 +472,11 @@ r = str2double(get(handles.radius,'String'));
 % Calculate pixel sizes
 pxx = (maxX-minX)/res; pxy = (maxY-minY)/res;
 set(handles.lPxSize,'String',[num2str(pxx) 'x' num2str(pxy)]);
+cbcol = 'white';
 switch get(handles.pShow,'Value')
     case 1 % "Points"
         scatter(handles.axes1,XPosition(subset),YPosition(subset),r,ID(subset),'.');
+        cbcol = 'black';
     case 2 % "Histogram"
         n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
 
@@ -481,7 +502,81 @@ switch get(handles.pShow,'Value')
         density = gammaAdjust(density,gamma);
         imagesc(n,m,density',[minC maxC]); colormap hot
         setappdata(0,'KDE',{X,Y,density'})
-    case 8 % "Jittered histogram"
+    case 3 % "KDE"
+        if NP>0
+            [bandwidth,density,X,Y]=kde2d([XPosition(subset) YPosition(subset)],res,...
+                [min(XPosition(subset)) min(YPosition(subset))],...
+                [max(XPosition(subset)) max(YPosition(subset))]);
+            pxArea=(maxX-minX)/res * (maxY-minY)/res;
+            density = density*sum(subset)/pxArea;
+            
+            logger(['Bandwidths: ', num2str(bandwidth)]);
+        else
+            density = zeros(res);
+        end
+        density = gammaAdjust(density,gamma);
+        imagesc(X(1,:),Y(:,1),density,[minC maxC])
+        setappdata(0,'KDE',{X,Y,density})
+        set(handles.axes1,'Color',[0 0 0])
+    case 4 % "KDE contour"
+        if NP>0            
+            [bandwidth,density,X,Y]=kde2d([XPosition(subset) YPosition(subset)],res,...
+                [min(XPosition(subset)) min(YPosition(subset))],...
+                [max(XPosition(subset)) max(YPosition(subset))]);
+            pxArea=(maxX-minX)/res * (maxY-minY)/res;
+            density = density*sum(subset)/pxArea;
+            if nodiplib()
+                H = fspecial('gaussian',7,2);
+                density = imfilter(density,H);
+            else
+                density = double(gaussf(density,2));
+            end
+        else
+            n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
+            density = zeros(res);
+            X = repmat(n,res,1); Y = repmat(m',1,res);
+        end
+        density = gammaAdjust(density,gamma);
+        contour(handles.axes1,X,Y,density,linspace(minC,maxC,nbins))
+        setappdata(0,'KDE',{X,Y,density})
+    case 5 % "Histogram + Gauss"
+        n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
+        if NP>0
+            RR = round((res-1)*[...
+                (XPosition(subset)-minX)/(maxX-minX) ...
+                (YPosition(subset)-minY)/(maxY-minY) ])+1;
+            RRok = all(RR<=res,2) & all(RR>=1,2) ;
+            pxx=(maxX-minX)/res; pxy=(maxY-minY)/res;
+            pxArea=pxx * pxy;
+            sigma = str2double(get(handles.sigma,'String'));
+            A = accumarray(RR(RRok,:),1,[res,res])/pxArea;
+            if nodiplib()
+                H = fspecial('gaussian',round(sigma/pxy*6)/2*2+1,sigma/pxx);
+                density = imfilter(A,H);
+            else
+                density = double(gaussf(A,[sigma/pxy sigma/pxx]));
+            end
+            X = repmat(n,res,1); Y = repmat(m',1,res);
+        else
+            density = zeros(res+1);
+            X = repmat(n,res+1,1); Y = repmat(m',1,res+1);
+        end
+        density = gammaAdjust(density,gamma);
+        imagesc(n,m,density',[minC maxC]); colormap hot
+        setappdata(0,'KDE',{X,Y,density'})
+    case 6 % Histogram 3D Hue Opacity
+        n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
+        a = .5; b=1;
+        rgb = plotZ_fast(handles,res,subset,XPosition,YPosition,ZPosition,minZ,maxZ,minX,maxX,minY,maxY,gamma,minC,maxC,a,b);%simplified version without jittering
+        
+        imagesc(n,m,rgb);
+    case 9 % Histogram 3D Hue
+        n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
+        a = 0; b=1;
+        rgb = plotZ_fast(handles,res,subset,XPosition,YPosition,ZPosition,minZ,maxZ,minX,maxX,minY,maxY,gamma,minC,maxC,a,b);%simplified version without jittering
+        
+        imagesc(n,m,rgb);
+    case 7 % "Jittered histogram"
 %        n=linspace(minX,maxX,res+1); m=linspace(minY,maxY,res+1);
         n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
         if NP>0
@@ -511,139 +606,7 @@ switch get(handles.pShow,'Value')
         density = gammaAdjust(density,gamma);
         imagesc(n,m,density',[minC maxC]); colormap hot
         setappdata(0,'KDE',{X,Y,density'})
-    case 7 % Histogram 3D Hue Opacity
-        n=linspace(minX,maxX,res);
-        m=linspace(minY,maxY,res);
-        ZPosition=evalin('base',handles.settings.varz);
-        [minZ maxZ]=getZbounds(handles);
-
-        a = .5; b=1; sbar = .625;
-        rgb = plotZ_fast(handles,res,subset,XPosition,YPosition,ZPosition,minZ,maxZ,n,m,minX,maxX,minY,maxY,gamma,minC,maxC,a,b,sbar);%simplified version without jittering
-        %rgb = plotZ_fancy(handles,res,subset,XPosition,YPosition,ZPosition,minZ,maxZ,n,m,minX,maxX,minY,maxY,gamma,minC,maxC,a,b,sbar);%simplified version without jittering
-        
-        sz = [res/4 res/32]; 
-        szt = [res/4 3]; 
-        cbx = 10; cby = res-sz(2)-10*(res/256);
-        szs = [round(sbar/pxx) res/128];
-        sbx = res-5*(res/256)-szs(1); sby = res-szs(2)-20*(res/256);
-
-        maxc = max(rgb(:));
-
-        if ~nodiplib()
-            tickss = colorspace(...
-            joinchannels('HSV',...
-            xx(szt,'corner')/szt(1)*2*pi,...
-            newim(szt)+1,...
-            newim(szt)+maxc),'RGB');
-        
-            for i=0:10:(szt(1)-1)
-                tickss{:}(i,:)=1;
-            end
-
-            colb = colorspace(...
-                joinchannels('HSV',...
-                xx(sz,'corner')/sz(1)*2*pi,...
-                newim(sz)+.5,...
-                (1-yy(sz,'corner')/sz(2))*maxc),'RGB');
-
-            rgb(cby+(1:sz(2)),cbx+(1:sz(1)),:)=cat(3,double(colb{1}),double(colb{2}),double(colb{3}));
-            rgb(cby+(1:szt(2))-3,cbx+(1:szt(1)),:)=cat(3,double(tickss{1}),double(tickss{2}),double(tickss{3}));
-            rgb(sbx+(1:szs(2)),sby+(1:szs(1)),:)=maxc;
-        end
-        
-        imagesc(n,m,rgb);
-        
-        if ~nodiplib()
-            text(minX+cbx*pxx,minY+pxy*(cby-5*(res/256)),sprintf('%3.f',minZ),'Color','w', 'HorizontalAlignment','left')
-            text(minX+(cbx+sz(1))*pxx,minY+pxy*(cby-5*(res/256)),sprintf('%3.f',maxZ),'Color','w', 'HorizontalAlignment','right')
-            %text(minX+pxx*(sby+szs(1)/2),minY+pxy*(sbx-5*(res/256)),[num2str(100) ' nm'],'Color','w', 'HorizontalAlignment','center')
-        end        
-    case 3 % "KDE"
-        if NP>0
-            [bandwidth,density,X,Y]=kde2d([XPosition(subset) YPosition(subset)],res,...
-                [min(XPosition(subset)) min(YPosition(subset))],...
-                [max(XPosition(subset)) max(YPosition(subset))]);
-            pxArea=(maxX-minX)/res * (maxY-minY)/res;
-            density = density*sum(subset)/pxArea;
-            
-            logger(['Bandwidths: ', num2str(bandwidth)]);
-        else
-            density = zeros(res);
-        end
-        density = gammaAdjust(density,gamma);
-        imagesc(X(1,:),Y(:,1),density,[minC maxC])
-        setappdata(0,'KDE',{X,Y,density})
-        set(gca,'Color',[0 0 0])
-    case 4 % "KDE contour"
-        if NP>0            
-            [bandwidth,density,X,Y]=kde2d([XPosition(subset) YPosition(subset)],res,...
-                [min(XPosition(subset)) min(YPosition(subset))],...
-                [max(XPosition(subset)) max(YPosition(subset))]);
-            pxArea=(maxX-minX)/res * (maxY-minY)/res;
-            density = density*sum(subset)/pxArea;
-            if nodiplib()
-                H = fspecial('gaussian',7,2);
-                density = imfilter(density,H);
-            else
-                density = double(gaussf(density,2));
-            end
-        else
-            n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
-            density = zeros(res);
-            X = repmat(n,res,1); Y = repmat(m',1,res);
-        end
-        density = gammaAdjust(density,gamma);
-        contour(handles.axes1,X,Y,density,linspace(minC,maxC,nbins))
-        setappdata(0,'KDE',{X,Y,density})
-    case 6 % Gaussians
-%         if NP>0
-%             points = [XPosition(subset)-minX YPosition(subset)-minY];
-%             % Convert points to indexes from 1:n and 1:m
-%             [xi X]= quantization(XPosition(subset),minX,maxX,res);
-%             [yi Y]= quantization(YPosition(subset),minY,maxY,res);
-%             pxSize = [(maxX-minX)/res (maxY-minY)/res];
-%             sigmaX = evalin('base',handles.settings.sigmax);
-%             sigmaY = evalin('base',handles.settings.sigmay);
-%             sigmaX=sigmaX(subset);sigmaY=sigmaY(subset);
-%             offX = (XPosition(subset)-minX)/(maxX-minX) - xi/res;
-%             offY = (YPosition(subset)-minY)/(maxY-minY) - yi/res;
-% 
-%             density = render_gauss(pxSize,[xi yi],[sigmaX sigmaY],[offX offY],[res res],...
-%                 [minX minY (maxX-minX) (maxY-minY)]);
-%             offset = points-ceil(points); points = ceil(points);
-%         else
-%             n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
-%             density = zeros(res);
-%             X = repmat(n,res,1); Y = repmat(m',1,res);
-%         end
-%         imagesc(X,Y,density,[minC maxC])
-%         setappdata(0,'KDE',{X,Y,density})
-    case 5 % "Histogram + Gauss"
-        n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
-        if NP>0
-            RR = round((res-1)*[...
-                (XPosition(subset)-minX)/(maxX-minX) ...
-                (YPosition(subset)-minY)/(maxY-minY) ])+1;
-            RRok = all(RR<=res,2) & all(RR>=1,2) ;
-            pxx=(maxX-minX)/res; pxy=(maxY-minY)/res;
-            pxArea=pxx * pxy;
-            sigma = str2double(get(handles.sigma,'String'));
-            A = accumarray(RR(RRok,:),1,[res,res])/pxArea;
-            if nodiplib()
-                H = fspecial('gaussian',round(sigma/pxy*6)/2*2+1,sigma/pxx);
-                density = imfilter(A,H);
-            else
-                density = double(gaussf(A,[sigma/pxy sigma/pxx]));
-            end
-            X = repmat(n,res,1); Y = repmat(m',1,res);
-        else
-            density = zeros(res+1);
-            X = repmat(n,res+1,1); Y = repmat(m',1,res+1);
-        end
-        density = gammaAdjust(density,gamma);
-        imagesc(n,m,density',[minC maxC]); colormap hot
-        setappdata(0,'KDE',{X,Y,density'})
-    case 9 %"Delaunay Triangulation"
+    case 8 %"Delaunay Triangulation"
         X=XPosition(subset); Y=YPosition(subset);
         T = delaunay(X,Y);
         Ax = X(T(:,1)); Bx = X(T(:,2)); Cx = X(T(:,3)); Ay = Y(T(:,1)); By = Y(T(:,2)); Cy = Y(T(:,3));
@@ -651,28 +614,29 @@ switch get(handles.pShow,'Value')
         cla(handles.axes1);
         patch('Faces',T,'Vertices',[X Y],'FaceColor','flat','EdgeColor','none','FaceVertexCData',C,'CDataMapping','scaled');
         caxis([minC maxC]);
-        set(gca,'Color',[0 0 0])
+        set(handles.axes1,'Color',[0 0 0])
         setappdata(0,'Tri',{X,Y,T,C})
 end
 
+axis(handles.axes1,'ij');
+if ~is3D
+    updateColormap(handles)
+end
+set(handles.axes1,'ButtonDownFcn',@axes1_ButtonDownFcn);
+set(allchild(handles.axes1),'ButtonDownFcn',@axes1_ButtonDownFcn);
+axis(handles.axes1,'manual');
+set(handles.axes1,'XLim', [minX maxX], 'YLim', [minY maxY])
+
 % Add the scalebar
 if doScalebar(handles)
-    add_scalebar(handles)
+    add_scalebar(handles,cbcol)
 end
 
 % Add color bar
 if doColorbar(handles)
-    add_colorbar(handles)
+    add_colorbar(handles,cbcol)
 end
 
-axis ij
-if ~is3D
-    updateColormap(handles)
-end
-set(gca,'ButtonDownFcn',@axes1_ButtonDownFcn);
-set(allchild(gca),'ButtonDownFcn',@axes1_ButtonDownFcn);
-axis manual
-set(gca,'XLim', [minX maxX], 'YLim', [minY maxY])
 
 function updateColormap(handles)
 cmps = get(handles.pColormap,'String');
@@ -686,7 +650,7 @@ function axes1_ButtonDownFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 handles = guidata(hObject);
 
-XYZ=get(gca,'CurrentPoint');
+XYZ=get(handles.axes1,'CurrentPoint');
 x = XYZ(1,1);
 y = XYZ(1,2);
 r = str2double(get(handles.radius,'String'));
@@ -1082,14 +1046,19 @@ function tParameters_CellSelectionCallback(hObject, eventdata, handles)
 %	Indices: row and column indices of the cell(s) currently selecteds
 % handles    structure with handles and user data (see GUIDATA)
 
+handles.selectedCell = eventdata.Indices;
+guidata(gcf,handles)
+
 if isempty(eventdata.Indices)
     return
 end
 
 rows = get(handles.tParameters,'RowName');
 data = evalin('base',[rows{eventdata.Indices(1)} '(subset)']);
+tabl = get(handles.tParameters,'Data');
 
-hist(handles.axes1,data,100);
+hist(handles.axes2,data,100);
+set(handles.axes2,'XLim',[tabl{eventdata.Indices(1),1} tabl{eventdata.Indices(1),2}]);
 
 % --- Executes on button press in bRedraw.
 function bRedraw_Callback(hObject, eventdata, handles)
@@ -1235,11 +1204,13 @@ switch get(handles.pShow,'Value')
         set(handles.minC,'String',num2str(1e-5));
     case 5 %'Histogram + Gauss filter'
         set(handles.minC,'String',num2str(0));
-    case 7 %'Histogram 3D'
+    case 6 %'Histogram 3D opacity'
         set(handles.minC,'String',num2str(0));
-    case 8 %'Jittered histogram'
+    case 9 %'Histogram 3D'
         set(handles.minC,'String',num2str(0));
-    case 9 %'Delaunay Triangulation'
+    case 7 %'Jittered histogram'
+        set(handles.minC,'String',num2str(0));
+    case 8 %'Delaunay Triangulation'
         Tr = getappdata(0,'Tri');
         set(handles.minC,'String',num2str(quantile(Tr{4},.05)));
     otherwise
@@ -1280,11 +1251,13 @@ switch get(handles.pShow,'Value')
         set(handles.maxC,'String',val);
     case 5 %'Histogram + Gauss filter'
         set(handles.maxC,'String',val);
-    case 7 %'Histogram 3D'
+    case 6 %'Histogram 3D opacity'
         set(handles.maxC,'String',val);
-    case 8 %'Jittered histogram'
+    case 9 %'Histogram 3D'
         set(handles.maxC,'String',val);
-    case 9 %'Delaunay Triangulation'
+    case 7 %'Jittered histogram'
+        set(handles.maxC,'String',val);
+    case 8 %'Delaunay Triangulation'
         Tr = getappdata(0,'Tri');
         set(handles.maxC,'String',num2str(quantile(Tr{4},1))); % takes max..
     otherwise
@@ -1302,7 +1275,7 @@ function figure1_WindowScrollWheelFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 handles = guidata(hObject);
 
-XYZ=get(gca,'CurrentPoint');
+XYZ=get(handles.axes1,'CurrentPoint');
 x = XYZ(1,1);
 y = XYZ(1,2);
 
@@ -1407,6 +1380,7 @@ function tParameters_ButtonDownFcn(hObject, eventdata, handles)
 % hObject    handle to tParameters (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
 
 
 % --- Executes on key press with focus on figure1 or any of its controls.
@@ -1568,9 +1542,7 @@ end
 
 function res = isPoints(handles)
 
-renderings = get(handles.pShow,'String');
-i = get(handles.pShow,'Value');
-res = strcmp(renderings{i},'Points');
+res = strcmp(getSelectedRendering(handles),'Points');
 
 
 % --- Executes on button press in pbRefreshZ.
@@ -2019,13 +1991,13 @@ a = sum(a); % Get the total histogram
 
 figure;
     fit = dg_fit(b,a);
-    area(b,a,'EdgeColor','none','FaceColor',[.8 .8 .8]); set(gca,'YTickLabel',[]);
+    area(b,a,'EdgeColor','none','FaceColor',[.8 .8 .8]); set(handles.axes1,'YTickLabel',[]);
     hold;
     h=plot(fit); set(h,'Color','r'); legend off;
     h=plot(sg_fit(b',a')); set(h,'Color','g'); legend off;
     [ dummy__, dummy__, th_fit] = jth_fit(b',a');
     h=plot(th_fit); set(h,'Color','b'); legend off;
-    ylabel(gca,'Density'); xlabel(gca,'[nm]');
+    ylabel(handles.axes1,'Density'); xlabel(handles.axes1,'[nm]');
     set(gcf, 'PaperUnits', 'inches');
     set(gcf, 'PaperPosition', [0 0 2.5 2.5]);   
     fit
@@ -2061,7 +2033,7 @@ h=figure;
 % redraw(handles)
 
 copyobj(handles.axes1,h);
-set(gca,'OuterPosition',[0 0 1 1]);
+set(handles.axes1,'OuterPosition',[0 0 1 1]);
 
 
 % --------------------------------------------------------------------
@@ -2083,7 +2055,7 @@ r = str2double(get(handles.radius,'String'));
 % Plot
 Y = interp1(centersX,abs(sigmas),sX,'nearest','extrap');
 figure; scatter(sX,sY,2,Y, 'filled'); axis equal
-set(gca,'PlotBoxAspectRatioMode','auto')
+set(handles.axes1,'PlotBoxAspectRatioMode','auto')
 colormap(hot); caxis((caxis-mean(caxis))*1.3+mean(caxis))
 colorbar('SouthOutside')
 
@@ -2595,12 +2567,9 @@ rgb(rgb>1)=1;
 
 
 
-function rgb = plotZ_fast(handles,res,subset,XPosition,YPosition,ZPosition,minZ,maxZ,n,m,minX,maxX,minY,maxY,gamma,minC,maxC,a,b,sbar)
-%ONLY works with dipimage for now
-
+function rgb = plotZ_fast(handles,res,subset,XPosition,YPosition,ZPosition,minZ,maxZ,minX,maxX,minY,maxY,gamma,minC,maxC,a,b)
 nz = 32;
-NN = sum(subset);
-density = zeros(res,res,nz);
+
 pxx=(maxX-minX)/res; pxy=(maxY-minY)/res; pxz=(maxZ-minZ)/res;
 pxVol=pxx * pxy * pxz;
 
@@ -2610,17 +2579,14 @@ RR = [round((res-1)*[...
       round(nz*(ZPosition(subset)-minZ)/(maxZ-minZ))];
 RRok = all(RR(:,1:2)<=res,2) & all(RR>=1,2) & RR(:,3)<=nz;
 
-density = accumarray(RR(RRok,:),1,[res,res,nz])/pxVol;
-X = repmat(n,res,1); Y = repmat(m',1,res);
-
-
+density = accumarray(RR(RRok,[2 1 3]),1,[res,res,nz])/pxVol;
 
 sigma = str2double(get(handles.sigma,'String'));
 sPix = sigma/pxx;
 gWindow = ceil(5*sPix);
 gKern = fspecial('gaussian',gWindow, sPix);
 dMax = max(density(:));
-density = density/max(density(:));
+density = density/dMax;
 for ii = 1:size(density,3)
   density(:,:,ii) = imfilter(density(:,:,ii),gKern,'replicate');
 end
@@ -2629,24 +2595,19 @@ end
 density(density<0)=0;
 density = gammaAdjust(density,gamma);
 
-%convert density to dipimage
-density = dip_image(density);
-HSV = joinchannels('HSV',zz(density,'corner')/(nz+1)*2*pi,1+newim(size(density)),density);
-RGB = colorspace(HSV,'RGB');
-di=1;
-
+rgbc = hsv(nz);
 rgb = zeros(size(density,2),size(density,1),3);
 for i=1:size(density,3)
-   for c=1:3
-       rgb(:,:,c) = rgb(:,:,c).*double(1-a*squeeze(density(:,:,i-di)))' + double(b*squeeze(RGB{c}(:,:,i-di)*density(:,:,i-di)))';
-   end
+    D = squeeze(density(:,:,i));
+    for c=1:3
+        rgb(:,:,c) = rgb(:,:,c).*(1-a*D) + b*rgbc(i,c).*D;
+    end
 end
 
 rgb = (rgb/max(rgb(:)) - minC) / (maxC-minC);
 
 rgb(rgb<0)=0; 
 rgb(rgb>1)=1;
-
 
 % --------------------------------------------------------------------
 function mOptions_Callback(hObject, eventdata, handles)
@@ -2681,3 +2642,142 @@ end
 
 redraw(handles)
 
+
+% --------------------------------------------------------------------
+function mAnalyze_Callback(hObject, eventdata, handles)
+% hObject    handle to mAnalyze (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function mFIRE_Callback(hObject, eventdata, handles)
+% hObject    handle to mFIRE (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+ss0=getSubset(handles);
+res = getRes(handles);
+[minX maxX] = getBounds(handles);
+
+linx = linspace(0,res/(maxX-minX)/2,res/2+1)'; dx=linx(2)-linx(1);
+nTrials = 3;
+frcprofile = zeros(nTrials,res/2+1);
+for trials=1:nTrials
+    iss0 = find(ss0);
+    iss0 = iss0(randperm(length(iss0)));
+
+    iss1 = iss0(1:end/2);
+    iss2 = iss0(end/2+1:end);
+
+    ss1 = false(size(ss0)); ss1(iss1)=true;
+    ss2 = false(size(ss0)); ss2(iss2)=true;
+
+    assignin('base','subset',ss1);
+    D1 = calcHistogram(handles);
+
+    assignin('base','subset',ss2);
+    D2 = calcHistogram(handles);
+
+    assignin('base','subset',ss0);
+
+    frcprofile(trials,:)=double(frc(cat(3,D1,D2)));
+end
+
+X = linx;
+for trials=1:nTrials
+    Y = frcprofile(trials,:); Y=Y(:);
+    P = polyfit(X,Y,5);
+    R = roots(P-[0 0 0 0 0 1/7]);
+    FIRE_ = R(abs(imag(R))<100*eps & real(R)<max(linx) & real(R)>0);
+    if isempty(FIRE_)
+        logger('The resolution threshold of 1/7 was not attained. You can probably use a finer grid to bin your data.');
+        return
+    end
+    FIREs(trials)=FIRE_;
+end
+
+FIRE = mean(FIREs);
+se = std(FIREs)/sqrt(nTrials);
+
+X = [linx;linx+dx/3;linx+dx/3*2]; % DEPENDS ON nTrials
+Y = frcprofile'; Y=Y(:);
+P = polyfit(X,Y,5);
+R = roots(P-[0 0 0 0 0 1/7]);
+%FIRE = R(abs(imag(R))<100*eps & real(R)<max(linx) & real(R)>0);
+
+% ss = (X-FIRE).^2+(Y-1/7).^2 < .3^2;
+
+% % Find first three points with Y~1/7
+% Qx = sort(X(abs(Y-1/7)<.1)); Qx=median(Qx(1:3)); Qy = 1/7;
+% 
+% % Project along normal to the vector from the origin to that point
+% %P = [-Qy;Qx];
+% %P_ = [X(:) Y(:)] * P;
+% %ss = abs(P_)<.05;
+% 
+% % Collect points in a radius of .1 around that point into ss
+% ss = (X-Qx).^2+(Y-Qy).^2 < .1^2;
+% 
+% % Collect points around centroid into ss
+% Qx = mean(X(ss)); Qy= mean(Y(ss));
+% ss = (X-Qx).^2+(Y-Qy).^2 < .1^2;
+% 
+% % Linear interpolate points in ss to y=1/7
+% P = polyfit(X(ss),Y(ss),1);
+% Qx = roots(P-[0 1/7]);
+% 
+% % Find points around .1 that and re-extrapolate to y=1/7
+% ss = (X-Qx).^2+(Y-Qy).^2 < .1^2;
+% P = polyfit(X(ss),Y(ss),1);
+% R = roots(P-[0 1/7]);
+% 
+% % Calculate principal direction and its normal
+% [V,D] = eig(cov(X(ss),Y(ss)));
+% mainDir = V(:,2);
+% pMainDir = [-mainDir(2); mainDir(1)];
+% 
+% % Project and calc std error
+% P_ = [X(ss) Y(ss)] * pMainDir;
+% se = std(P_)/sqrt(nnz(ss));
+
+fitx = sort(X); fity = polyval(P,fitx);
+
+figure; plot(linx,frcprofile','b.',fitx,fity,'r-'); axis([0 max(linx) 0 1]); hold;
+% quiver(R,1/7,V(1,2),V(2,2));
+% plot(X(ss),Y(ss),'g.')
+
+FIRE=1/min(FIRE);
+line([0 max(linx)],[1/7 1/7],'Color','g');
+line([1/FIRE 1/FIRE],[0 1],'Color','g');
+s = sprintf('FIRE = %2.1f +-%.2f [U]\n', FIRE, se);
+logger(s);
+text(mean(linx),.5,s);
+
+
+% --- Executes on button press in pbGrouped.
+function pbGrouped_Callback(hObject, eventdata, handles)
+% hObject    handle to pbGrouped (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of pbGrouped
+redraw(handles)
+
+
+% --- Executes on button press in pbCQ.
+function pbCQ_Callback(hObject, eventdata, handles)
+% hObject    handle to pbCQ (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+if isfield(handles,'selectedCell') && ~isempty(handles.selectedCell)
+    rows = get(handles.tParameters,'RowName');
+    data = evalin('base',[rows{handles.selectedCell(1)} '(subset)']);
+    q = quantile(data,[.05 .95]);
+
+    setMin(handles, rows{handles.selectedCell(1)},q(1));
+    setMax(handles, rows{handles.selectedCell(1)},q(2));
+    
+    redraw(handles)
+end

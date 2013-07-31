@@ -12,5 +12,9 @@ q = (1:length(d))/length(d);
 
 q = q(id1f)*.5+q(id2l)*.5;
 
-q = interp1(q,d1,quantiles,'spline','extrap');
+if length(q)>1
+    q = interp1(q,d1,quantiles,'spline','extrap');
+else
+    q = repmat(q,size(quantiles));
+end
 

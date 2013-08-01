@@ -640,9 +640,7 @@ end
 
 
 function updateColormap(handles)
-cmps = get(handles.pColormap,'String');
-cmpi = get(handles.pColormap,'Value');
-colormap(eval(cmps{cmpi}))
+colormap(getColormapName(handles))
 
 % --- Executes on mouse press over axes background.
 function axes1_ButtonDownFcn(hObject, eventdata, handles)
@@ -1054,12 +1052,28 @@ if isempty(eventdata.Indices)
     return
 end
 
+drawhist(handles, eventdata.Indices(1));
+
+function drawhist(handles,rown)
 rows = get(handles.tParameters,'RowName');
-data = evalin('base',[rows{eventdata.Indices(1)} '(subset)']);
+data = evalin('base',[rows{rown} '(subset)']);
 tabl = get(handles.tParameters,'Data');
 
-hist(handles.axes2,data,100);
-set(handles.axes2,'XLim',[tabl{eventdata.Indices(1),1} tabl{eventdata.Indices(1),2}]);
+[n bins] = hist(data,linspace(tabl{rown,1},tabl{rown,2},100));
+bar(handles.axes2, bins, n, 1);
+set(handles.axes2,'XLim',[tabl{rown,1} tabl{rown,2}]);
+set(handles.axes2,'YLim',[0 max(n)]);
+
+% Highlight u/l 5%
+l = q05(data);
+h = q95(data);
+m = median(data);
+
+axes(handles.axes2)
+line([l l],[0 max(n)/8],'Color','r');
+line([h h],[0 max(n)/8],'Color','r');
+line([m m],[0 max(n)/8],'Color','b');
+axes(handles.axes1)
 
 % --- Executes on button press in bRedraw.
 function bRedraw_Callback(hObject, eventdata, handles)
@@ -2302,11 +2316,11 @@ maxC = str2double(get(handles.maxC,'String'));
 xxi=uint8((density'-minC)*2^8/(maxC-minC))';
 
 if doScalebar(handles)
-    sb = add_scalebar(handles,density);
+    sb = add_scalebar(handles,'white',density);
     xxi(sb>0)=255;
 end
 
-ims = ImageSelection(im2java(xxi));
+ims = ImageSelection(im2java(xxi,feval(getColormapName(handles),256)));
 tk=javaMethod('getDefaultToolkit','java.awt.Toolkit');
 cp=tk.getSystemClipboard;
 cp.setContents(ims,[]);
@@ -2596,7 +2610,8 @@ end
 density(density<0)=0;
 density = gammaAdjust(density,gamma);
 
-rgbc = hsv(nz);
+rgbc = hsv(round(nz*3/2));
+rgbc = rgbc(1:nz,:);
 rgb = zeros(size(density,2),size(density,1),3);
 for i=1:size(density,3)
     D = squeeze(density(:,:,i));
@@ -2780,5 +2795,5 @@ if isfield(handles,'selectedCell') && ~isempty(handles.selectedCell)
     setMin(handles, rows{handles.selectedCell(1)},q(1));
     setMax(handles, rows{handles.selectedCell(1)},q(2));
     
-    redraw(handles)
+    redraw(handles); drawhist(handles, handles.selectedCell(1));
 end

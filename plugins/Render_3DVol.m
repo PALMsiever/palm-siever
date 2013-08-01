@@ -469,10 +469,10 @@ fv = isosurface(handles.xGrid,handles.yGrid,handles.zGrid,double(handles.VOL_blu
 handles.patch = patch(fv);
 axis equal;
 set(handles.patch,'FaceColor','green','EdgeColor','none');
-set(handles.patch,'AmbientStrength',0.2,'SpecularStrength',0.2,'DiffuseStrength',1);
+set(handles.patch,'AmbientStrength',0.2,'SpecularStrength',0.2,'DiffuseStrength',1,'SpecularExponent',20);
 set(handles.patch,'BackFaceLighting','lit');
 lighting gouraud
-camlight('headlight'); 
+camlight(); 
 guidata(handles.output, handles);
 
 %---------------------------------------------------

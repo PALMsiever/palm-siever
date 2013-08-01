@@ -1,13 +1,11 @@
-function [drift corAmplitude correctedStormData correctedStormImage  oldStormImage h] = getStormDrift2(stormData,minImPointPerArea,stormPixSize,SccfWindowArea,imSize)
+function [drift corAmplitude ] = getStormDrift3(stormData,minImPointPerArea,minFrame,stormPixSize,SccfWindowArea,imSize)
 % [drift corAmplitude correctedStormData correctedStormImage  oldStormImage h] = getStormDrift2(stormData,minImPointPerArea,stormPixSize,SccfWindowArea,imSize)
 % [drift corAmplitude correctedStormData correctedStormImage  oldStormImage] = getStormDrift(stormData,minImPointPerArea,stormPixSize,SccfWindowArea,imSize)
-%    Author: SJ Holden, Dept of Physics, University of Oxford
-%    Written: 23/03/11
-%    Last update: 28/03/11
-%    Copyright (C) 2011 
-%    Email: s.holden1@physics.ox.ac.uk
-%    Copyright (c) 2010, The Chancellor, Masters and Scholars of the University of Oxford.
-%    NB: For now, please do not redisribute without permission.
+%    Author: SJ Holden, EPFL
+%    Written: 110323
+%    Last update: 130801
+%    Email: seamus.holden@epfl.ch
+%    Copyright (C) 2013, EPFL
 %
 % PURPOSE:
 %  Extract and correct for drift in SR localization data using image cross correlation spectroscopy, (roughly) as per Huang 2008, Science, and using the formalism of Srivastava and Petersen, Methods in cell science, 1996.
@@ -103,6 +101,7 @@ isFirstImage=true;
 if nPoint > 2*minImPointImage %ie if theres enough to do one image correlation
   %for each frame
   i = 1;
+  frameSinceLast =0;
   while i <= nFrame
     currentFrame = frameList(i);
     currentFrameData = stormData(find(stormData(:,1)==currentFrame),:);
@@ -113,7 +112,7 @@ if nPoint > 2*minImPointImage %ie if theres enough to do one image correlation
     nImPoint = nImPoint + nCurrentPoint;
     pointLeft = pointLeft - nCurrentPoint;
   
-    if nImPoint >= minImPointImage %once we have enough points, go ahead and form the image
+    if nImPoint >= minImPointImage  &frameSinceLast>minFrame %once we have enough points, go ahead and form the image
 
       if pointLeft < minImPointImage %if there are only a few leftover points, add these to the current list as well
          leftOverFrame = frameList(i+1:end);
@@ -179,8 +178,10 @@ if nPoint > 2*minImPointImage %ie if theres enough to do one image correlation
       %reset the drift correction image
       nImPoint =0;
       imPointList = imPointList.*0;
+      frameSinceLast=0;
     end
     i = i+1;
+    frameSinceLast = frameSinceLast+1;
   end
 
   %apply interpolation between drift corrected data points
@@ -205,23 +206,23 @@ if nPoint > 2*minImPointImage %ie if theres enough to do one image correlation
   corAmplitude(:,2) = yi;
 
   %apply drift correction to the data
-  [correctedStormData correctedStormImage oldStormImage] = applyDriftCorrection(stormData,xLim,yLim,drift);
-  % show the drift plot
-  h=figure;
-  ax(1)=subplot(2,1,1);
-  plot(drift(:,1),drift(:,2));
-  hold all;
-  plot(drift(:,1),drift(:,3));
-  legend('x drift','y drift');
-  ylabel('drift');
-  ax(2)=subplot(2,1,2);
-  plot(corAmplitude(:,1),corAmplitude(:,2));
-  ylabel('Cross correlation amplitude (unit area)');
-  xlabel('time');
-  linkaxes(ax,'x');
-  %set(ax(1),'Title', text('String',['delta frame =',num2str(deltaFrame)]));
-  axes(ax(1));
-  title(['\rho_{min} =',num2str(minImPointPerArea)]);
+  %[correctedStormData correctedStormImage oldStormImage] = applyDriftCorrection(stormData,xLim,yLim,drift);
+  %% show the drift plot
+  %h=figure;
+  %ax(1)=subplot(2,1,1);
+  %plot(drift(:,1),drift(:,2));
+  %hold all;
+  %plot(drift(:,1),drift(:,3));
+  %legend('x drift','y drift');
+  %ylabel('drift');
+  %ax(2)=subplot(2,1,2);
+  %plot(corAmplitude(:,1),corAmplitude(:,2));
+  %ylabel('Cross correlation amplitude (unit area)');
+  %xlabel('time');
+  %linkaxes(ax,'x');
+  %%set(ax(1),'Title', text('String',['delta frame =',num2str(deltaFrame)]));
+  %axes(ax(1));
+  %title(['\rho_{min} =',num2str(minImPointPerArea)]);
 else 
   error('Not enough localizations to form at least 2 images!');
 end
@@ -244,8 +245,8 @@ end
 % extract the drift by fitting a gaussian to the SCCF
 % careful with (i,j) vs (x,y)!!
 
-%[corrMaxPos corAmplitude] =   getPeakPosGauss2d(C,zeroCoord,windowSize);
-[corrMaxPos corAmplitude] =   getPeakPosCentroid(C,zeroCoord,windowSize); %this does not seem sufficiently accurate!
+[corrMaxPos corAmplitude] =   getPeakPosGauss2d(C,zeroCoord,windowSize);
+%[corrMaxPos corAmplitude] =   getPeakPosCentroid(C,zeroCoord,windowSize); %this does not seem sufficiently accurate!
 drift = zeroCoord  - corrMaxPos;
 
 %OPTIONAL PLOTTING OF THE CORRELATION IMAGES

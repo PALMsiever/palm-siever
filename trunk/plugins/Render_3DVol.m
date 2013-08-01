@@ -94,14 +94,8 @@ handles = guidata(handles.output);
 % Update handles structure
 set(0,'CurrentFigure',hObject);
 cameratoolbar(hObject,'NoReset');
-camlight ;
-view(3);
-
-cameratoolbar;
 camproj('perspective')
 view(3);
-hlight = camlight('headlight'); 
-lighting gouraud
 set(gcf,'Renderer','OpenGL')
 set(gcf, 'InvertHardCopy', 'off');
 set(gcf,'Color','k');
@@ -346,9 +340,28 @@ function editVoxSzZ_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-%---------------------------------------
+%---------------------------------------------------
+% --- Executes on button press in pushbutton_autoIso.
+function pushbutton_autoIso_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_autoIso (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles = guidata(handles.output);
+isoVal = autoIso(handles.VOL_blur);
+
+setIsoVal(handles,isoVal);
+handles = guidata(handles.output);
+
+updatePlot(handles)
+handles = guidata(handles.output);
+% Update handles structure
+guidata(hObject, handles);
+
+%-------------------------------------------------------------------
+%-------------------------------------------------------------------
 %helper functions
-%-----------------------
+%-------------------------------------------------------------------
+%-------------------------------------------------------------------
 function updateVolData(handles)
 handles = guidata(handles.output);
 handlesPsvGui=handles.handlesPsvGui;
@@ -390,11 +403,13 @@ xInt(nanPts) = [];
 yInt(nanPts) = [];
 zInt(nanPts) = [];
 
+
 handles.VOL = accumarray([xInt, yInt, zInt],1,[nx,ny,nz]);
 %%%
 handles.xEdge=xEdge;
 handles.yEdge=yEdge;
 handles.zEdge=zEdge;
+[handles.xGrid,handles.yGrid,handles.zGrid] = ndgrid(xEdge,yEdge,zEdge);
 
 set(handles.editVoxSzXY,'String',num2str(handles.voxelSzXY));
 set(handles.editVoxSzZ,'String',num2str(handles.voxelSzZ));
@@ -450,12 +465,14 @@ if isfield(handles,'patch');
 end
 
 axes(handles.axes1);
-fv = isosurface(double(handles.VOL_blur),handles.isoVal); 
+fv = isosurface(handles.xGrid,handles.yGrid,handles.zGrid,double(handles.VOL_blur),handles.isoVal); 
 handles.patch = patch(fv);
 axis equal;
 set(handles.patch,'FaceColor','green','EdgeColor','none');
-set(handles.patch,'AmbientStrength',0.2,'SpecularStrength',0.2,'DiffuseStrength',.7);
+set(handles.patch,'AmbientStrength',0.2,'SpecularStrength',0.2,'DiffuseStrength',1);
 set(handles.patch,'BackFaceLighting','lit');
+lighting gouraud
+camlight('headlight'); 
 guidata(handles.output, handles);
 
 %---------------------------------------------------
@@ -471,20 +488,4 @@ while nPts < 10
    end
 end
 voxSzX = voxSz;
-%---------------------------------------------------
-% --- Executes on button press in pushbutton_autoIso.
-function pushbutton_autoIso_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton_autoIso (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-handles = guidata(handles.output);
-isoVal = autoIso(handles.VOL_blur);
-
-setIsoVal(handles,isoVal);
-handles = guidata(handles.output);
-
-updatePlot(handles)
-handles = guidata(handles.output);
-% Update handles structure
-guidata(hObject, handles);
 

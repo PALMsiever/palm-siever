@@ -116,14 +116,14 @@ if ~isempty(varargin)
     end
     handles.settings.N=evalin('base',['length(' varargin{1} ')']);   
 else
-    N = 1000; R = 1000; s = 20;
+    N = 1000; R = 1000; s = 20;sZ = 100;
     T = linspace(0,2*pi,N)';
     X = sin(T)*R;
     Y = cos(T)*R;
 
     X = X+randn(1000,1)*s;
     Y = Y+randn(1000,1)*s;
-    Z = randn(1000,1)*s;
+    Z = randn(1000,1)*sZ;
     sigmax = s*ones(size(X));
     sigmay = s*ones(size(Y));
     
@@ -131,10 +131,11 @@ else
     %nPts = 100;
     %X = rand(nPts,1); Y=X;sigmax = X;sigmay=X;
     %T = (1:nPts)';
-    assignin('base','X',X);assignin('base','Y',Y);assignin('base','T',T);
+    assignin('base','X',X);assignin('base','Y',Y);assignin('base','T',T);assignin('base','Z',Z);
     assignin('base','Dummy_sigma_X',sigmax);assignin('base','Dummy_sigma_Y',sigmay);
     handles.settings.varx='X';
     handles.settings.vary='Y';
+    handles.settings.varz='Z';
     handles.settings.varFrame ='T';
     handles.settings.sigmax='Dummy_sigma_X';
     handles.settings.sigmay='Dummy_sigma_Y';
@@ -149,7 +150,7 @@ iy = find(cellfun(@(x) strcmp(x,handles.settings.vary),rows2),1); set(handles.pY
 
 % Update Z Axis too
 set(handles.pZAxis,'String',rows2);
-handles.settings.varz=rows2{1};
+iz = find(cellfun(@(x) strcmp(x,handles.settings.varz),rows2),1); set(handles.pZAxis,'Value',iz);
 %and frame!
 set(handles.pFrame,'String',rows2);
 try

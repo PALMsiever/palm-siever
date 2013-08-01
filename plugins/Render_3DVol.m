@@ -22,7 +22,7 @@ function varargout = Render_3DVol(varargin)
 
 % Edit the above text to modify the response to help Render_3DVol
 
-% Last Modified by GUIDE v2.5 22-May-2013 18:38:39
+% Last Modified by GUIDE v2.5 01-Aug-2013 12:47:21
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -65,9 +65,14 @@ handles.handlesPsvGui = handlesPsvGui;
 handles.sigmaXY = 15;
 handles.sigmaZ = 50;
 
+handles.voxelSzXY= 10;
+handles.voxelSzZ = 25;
+
 %assign defaults to checkboxes
 set(handles.editSigmaXY,'String',num2str(handles.sigmaXY));
 set(handles.editSigmaZ,'String',num2str(handles.sigmaZ));
+set(handles.editVoxSzXY,'String',num2str(handles.voxelSzXY));
+set(handles.editVoxSzZ,'String',num2str(handles.voxelSzZ));
 
 
 % Update handles structure
@@ -79,7 +84,7 @@ handles = guidata(handles.output);
 updateBlur(handles);
 handles = guidata(handles.output);
 %guess isosurface
-isoVal = guessIsoVal(handles.VOL_blur);
+isoVal = autoIso(handles.VOL_blur);
 handles = guidata(handles.output);
 setIsoVal(handles,isoVal);
 handles = guidata(handles.output);
@@ -91,6 +96,20 @@ set(0,'CurrentFigure',hObject);
 cameratoolbar(hObject,'NoReset');
 camlight ;
 view(3);
+
+cameratoolbar;
+camproj('perspective')
+view(3);
+hlight = camlight('headlight'); 
+lighting gouraud
+set(gcf,'Renderer','OpenGL')
+set(gcf, 'InvertHardCopy', 'off');
+set(gcf,'Color','k');
+set(gca,'Color','k');
+set(gca,'XColor','w');
+set(gca,'YColor','w');
+set(gca,'ZColor','w');
+set(gca,'TickDir','out');
 guidata(hObject, handles);
 
 % UIWAIT makes Render_3DVol wait for user response (see UIRESUME)
@@ -150,7 +169,7 @@ function editIsoVal_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of editIsoVal as text
 %        str2double(get(hObject,'String')) returns contents of editIsoVal as a double
 handles = guidata(handles.output);
-isoVal = num2str(get(handles.editIsoVal,'String'));
+isoVal = str2num(get(handles.editIsoVal,'String'));
 
 minIso = handles.minIso ;
 maxIso = handles.maxIso ;
@@ -189,7 +208,23 @@ function editSigmaXY_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of editSigmaXY as text
 %        str2double(get(hObject,'String')) returns contents of editSigmaXY as a double
+handles = guidata(handles.output);
+handles.sigmaXY = str2num(get(handles.editSigmaXY,'String'));
+% Update handles structure
+guidata(hObject, handles);
 
+updateVolData(handles);
+handles = guidata(handles.output);
+
+updateBlur(handles);
+handles = guidata(handles.output);
+%guess isosurface
+isoVal = autoIso(handles.VOL_blur);
+handles = guidata(handles.output);
+setIsoVal(handles,isoVal);
+handles = guidata(handles.output);
+
+updatePlot(handles);
 
 % --- Executes during object creation, after setting all properties.
 function editSigmaXY_CreateFcn(hObject, eventdata, handles)
@@ -209,14 +244,100 @@ function editSigmaZ_Callback(hObject, eventdata, handles)
 % hObject    handle to editSigmaZ (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+handles = guidata(handles.output);
+handles.sigmaZ = str2num(get(handles.editSigmaZ,'String'));
+% Update handles structure
+guidata(hObject, handles);
 
-% Hints: get(hObject,'String') returns contents of editSigmaZ as text
-%        str2double(get(hObject,'String')) returns contents of editSigmaZ as a double
+updateVolData(handles);
+handles = guidata(handles.output);
+
+updateBlur(handles);
+handles = guidata(handles.output);
+%guess isosurface
+isoVal = autoIso(handles.VOL_blur);
+handles = guidata(handles.output);
+setIsoVal(handles,isoVal);
+handles = guidata(handles.output);
+
+updatePlot(handles);
 
 
 % --- Executes during object creation, after setting all properties.
 function editSigmaZ_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to editSigmaZ (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+function editVoxSzXY_Callback(hObject, eventdata, handles)
+% hObject    handle to editVoxSzXY (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles = guidata(handles.output);
+handles.voxelSzXY= str2num(get(handles.editVoxSzXY,'String'));
+% Update handles structure
+guidata(hObject, handles);
+
+updateVolData(handles);
+handles = guidata(handles.output);
+
+updateBlur(handles);
+handles = guidata(handles.output);
+%guess isosurface
+isoVal = autoIso(handles.VOL_blur);
+handles = guidata(handles.output);
+setIsoVal(handles,isoVal);
+handles = guidata(handles.output);
+
+updatePlot(handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function editVoxSzXY_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to editVoxSzXY (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function editVoxSzZ_Callback(hObject, eventdata, handles)
+% hObject    handle to editVoxSzZ (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles = guidata(handles.output);
+handles.voxelSzZ= str2num(get(handles.editVoxSzZ,'String'));
+% Update handles structure
+guidata(hObject, handles);
+
+updateVolData(handles);
+handles = guidata(handles.output);
+
+updateBlur(handles);
+handles = guidata(handles.output);
+%guess isosurface
+isoVal = autoIso(handles.VOL_blur);
+handles = guidata(handles.output);
+setIsoVal(handles,isoVal);
+handles = guidata(handles.output);
+
+updatePlot(handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function editVoxSzZ_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to editVoxSzZ (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -243,31 +364,48 @@ X=X(subset);
 Y=Y(subset);
 Z=Z(subset);
 
-res = getRes(handlesPsvGui);
-handles.res =res;
-
 [minX maxX minY maxY] = getBounds(handlesPsvGui);
 [minZ maxZ] = getZbounds(handlesPsvGui);
 
 
-XI = floor( (X-minX)/(maxX-minX)*res );
-YI = floor( (Y-minY)/(maxY-minY)*res );
-ZI = floor( (Z-minZ)/(maxZ-minZ)*res );
+[xEdge, handles.voxelSzXY] = setEdge(minX,maxX,handles.voxelSzXY,'X');
+[yEdge, voxSzY] = setEdge(minY,maxY,handles.voxelSzXY,'Y');
+if voxSzY < handles.voxelSzXY
+   [xEdge, handles.voxelSzXY] = setEdge(minX,maxX,voxSzY,'X');
+   warning(['Resetting x voxel size to match updated y, voxSzXY=',num2str(handles.voxelSzXY)]);
+end
+[zEdge, handles.voxelSzZ] = setEdge(minZ,maxZ,handles.voxelSzZ,'Z'); 
 
-XI(XI<1) = 1; XI(XI>res) = res;
-YI(YI<1) = 1; YI(YI>res) = res;
-ZI(ZI<1) = 1; ZI(ZI>res) = res;
+nx = numel(xEdge);
+ny = numel(yEdge);
+nz = numel(zEdge);
 
-handles.VOL = accumarray([XI YI ZI],1,[res res res]);
+xInt = interp1(xEdge,1:nx,X,'nearest');
+yInt = interp1(yEdge,1:ny,Y,'nearest');
+zInt = interp1(zEdge,1:nz,Z,'nearest');
 
+%delete any nan points - indicates out of range points
+nanPts = isnan(xInt) | isnan(yInt) | isnan(zInt);
+xInt(nanPts) = [];
+yInt(nanPts) = [];
+zInt(nanPts) = [];
+
+handles.VOL = accumarray([xInt, yInt, zInt],1,[nx,ny,nz]);
+%%%
+handles.xEdge=xEdge;
+handles.yEdge=yEdge;
+handles.zEdge=zEdge;
+
+set(handles.editVoxSzXY,'String',num2str(handles.voxelSzXY));
+set(handles.editVoxSzZ,'String',num2str(handles.voxelSzZ));
 guidata(handles.output, handles);
 
 %--------------------------------------
 function updateBlur(handles)
 handles = guidata(handles.output);
-blurX = handles.sigmaXY*handles.res/1000;
-blurZ = handles.sigmaZ*handles.res/1000;
-VOL_blur = gaussf(handles.VOL,[blurX blurX blurZ]);
+blurXY = handles.sigmaXY/handles.voxelSzXY;
+blurZ = handles.sigmaZ/handles.voxelSzZ;
+VOL_blur = gaussf(handles.VOL,[blurXY blurXY blurZ]);
 VOL_blur(VOL_blur<0)=0; %doesn't make sense to have -ive density
 handles.VOL_blur = VOL_blur;
 
@@ -316,4 +454,37 @@ fv = isosurface(double(handles.VOL_blur),handles.isoVal);
 handles.patch = patch(fv);
 axis equal;
 set(handles.patch,'FaceColor','green','EdgeColor','none');
+set(handles.patch,'AmbientStrength',0.2,'SpecularStrength',0.2,'DiffuseStrength',.7);
+set(handles.patch,'BackFaceLighting','lit');
 guidata(handles.output, handles);
+
+%---------------------------------------------------
+function [xEdge voxSzX] = setEdge(minX,maxX,voxSz, dimStr)
+
+nPts = 0;
+while nPts < 10
+   xEdge = minX:voxSz:maxX;
+   nPts = numel(xEdge);
+   if nPts < 10
+      voxSz = voxSz/10;
+      warning(['number of points in ',dimStr,'-dimension insufficient, decreasing voxel size in ',dimStr,' to ',num2str(voxSz)]);
+   end
+end
+voxSzX = voxSz;
+%---------------------------------------------------
+% --- Executes on button press in pushbutton_autoIso.
+function pushbutton_autoIso_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_autoIso (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles = guidata(handles.output);
+isoVal = autoIso(handles.VOL_blur);
+
+setIsoVal(handles,isoVal);
+handles = guidata(handles.output);
+
+updatePlot(handles)
+handles = guidata(handles.output);
+% Update handles structure
+guidata(hObject, handles);
+

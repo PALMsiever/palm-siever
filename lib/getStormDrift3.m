@@ -245,8 +245,8 @@ end
 % extract the drift by fitting a gaussian to the SCCF
 % careful with (i,j) vs (x,y)!!
 
-[corrMaxPos corAmplitude] =   getPeakPosGauss2d(C,zeroCoord,windowSize);
-%[corrMaxPos corAmplitude] =   getPeakPosCentroid(C,zeroCoord,windowSize); %this does not seem sufficiently accurate!
+%[corrMaxPos corAmplitude] =   getPeakPosGauss2d(C,zeroCoord,windowSize);
+[corrMaxPos corAmplitude] =   getPeakPosCentroid(C,zeroCoord,windowSize); %this does not seem sufficiently accurate!
 drift = zeroCoord  - corrMaxPos;
 
 %OPTIONAL PLOTTING OF THE CORRELATION IMAGES

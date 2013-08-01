@@ -20,6 +20,9 @@ fprintf('Done\n');
 drift.t = driftXY(:,1);
 drift.x = driftXY(:,2);
 drift.y = driftXY(:,3);
+tDrift = drift.t;
+xDrift = drift.x;
+yDrift = drift.y;
 
 if is3d
    fprintf('Calculating drift XZ...\n');
@@ -29,6 +32,7 @@ if is3d
    [driftYZ] = getStormDrift3([t,y,z],minImPointPerArea,minFrame,stormPixSize,SccfWindowArea);
    fprintf('Done\n');
    drift.z= mean([driftXZ(:,3),driftYZ(:,3)],2);
+   zDrift = drift.z;
 end
 
 
@@ -51,5 +55,8 @@ if plotOn
    else
       legend('x','y');
    end
+   title('Drift (xCor estimated)');
+   xlabel('Time');
+   ylabel('Drift');
 end
 

@@ -35,7 +35,7 @@ if ~isappdata(0,'ps_initialized') || ~getappdata(0,'ps_initialized')
     evalin('base','palmsiever_setup');
 end
 
-% Last Modified by GUIDE v2.5 31-Jul-2013 18:15:03
+% Last Modified by GUIDE v2.5 01-Aug-2013 18:04:21
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -1367,9 +1367,43 @@ function pRefreshVariables_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+rows_prev = get(handles.tParameters,'RowName');
+tabl_prev = get(handles.tParameters,'Data');
+
+% Save X,Y,Frame,Z,ID
+vars = get(handles.pXAxis,'String');
+xvar = vars{get(handles.pXAxis,'Value')};
+yvar = vars{get(handles.pYAxis,'Value')};
+zvar = vars{get(handles.pZAxis,'Value')};
+fvar = vars{get(handles.pFrame,'Value')};
+idvar = vars{get(handles.pID,'Value')};
+
 handles = reloadData(handles);
+
+rows_new = get(handles.tParameters,'RowName');
+tabl_new = get(handles.tParameters,'Data');
+
+% Try to set everything as before...
+nvars = get(handles.pXAxis,'String');
+for i=1:length(rows_new)
+    if ismember(rows_new{i},rows_prev)
+        ri_prev = find(ismember(rows_prev,rows_new{i}),1);
+        tabl_new(i,:) = tabl_prev(ri_prev,:);
+    end
+end
+set(handles.tParameters,'Data',tabl_new);
+
+f = @(vars,varname) max(find(ismember([varname;vars],varname),1,'last')-1,1);
+
+set(handles.pXAxis,'Value',f(nvars,xvar)); handles.settings.varx = nvars{f(nvars,xvar)};
+set(handles.pYAxis,'Value',f(nvars,yvar)); handles.settings.vary = nvars{f(nvars,yvar)};
+set(handles.pZAxis,'Value',f(nvars,zvar)); handles.settings.varz = nvars{f(nvars,zvar)};
+set(handles.pFrame,'Value',f(nvars,fvar)); handles.settings.varFrame = nvars{f(nvars,fvar)};
+set(handles.pID,'Value',f(nvars,idvar)); handles.settings.varID = nvars{f(nvars,idvar)};
+
 guidata(gcf,handles);
 
+redraw(handles);
 
 % --- Executes on button press in pFit.
 function pFit_Callback(hObject, eventdata, handles)
@@ -2797,3 +2831,23 @@ if isfield(handles,'selectedCell') && ~isempty(handles.selectedCell)
     
     redraw(handles); drawhist(handles, handles.selectedCell(1));
 end
+
+
+% --------------------------------------------------------------------
+function miGroup_Callback(hObject, eventdata, handles)
+% hObject    handle to miGroup (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+grouping(handles)
+
+handles = reloadData(handles);
+
+set(handles.pID,'Value',find(ismember(get(handles.pID,'String'),'group_ID')));
+
+redraw(handles)
+
+
+
+
+

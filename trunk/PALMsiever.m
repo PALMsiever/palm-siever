@@ -105,15 +105,11 @@ handles.output = hObject;
 if ~isempty(varargin)
     handles.settings.varx=varargin{1};
     handles.settings.vary=varargin{2};
-    if numel(varargin)>2
-        handles.settings.sigmax=varargin{3};
-        handles.settings.sigmay=varargin{4};
-    else
-        handles.settings.sigmax=['Dummy_sigma_' varargin{1}];
-        handles.settings.sigmay=['Dummy_sigma_' varargin{2}];
-        assignin('base',handles.settings.sigmax,ones(size(evalin('base',varargin{1}))));
-        assignin('base',handles.settings.sigmay,ones(size(evalin('base',varargin{2}))));
-    end
+    handles.settings.varz=varargin{1}; % Change?
+    handles.settings.sigmax=['Dummy_sigma_' varargin{1}];
+    handles.settings.sigmay=['Dummy_sigma_' varargin{2}];
+    assignin('base',handles.settings.sigmax,ones(size(evalin('base',varargin{1}))));
+    assignin('base',handles.settings.sigmay,ones(size(evalin('base',varargin{2}))));
     handles.settings.N=evalin('base',['length(' varargin{1} ')']);   
 else
     N = 1000; R = 1000; s = 20;sZ = 100;
@@ -442,7 +438,7 @@ if get(handles.pbGrouped,'Value')
     XPosition=XPosition(~isnan(XPosition));
     YPosition=YPosition(~isnan(YPosition));
     ZPosition=ZPosition(~isnan(ZPosition));
-    ID = 1:sum(ID(subset));
+    ID = 1:sum(subset);
     subset = true(size(XPosition));
 end
     

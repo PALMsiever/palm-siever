@@ -35,6 +35,7 @@ if maxF>max(frame)
 end
 
 t0 = cputime;
+t00 = t0;
 cons = zeros(size(x));
 for ff = min(frame):max(frame)-maxF
     ss = subset & frame>=ff & frame<=(ff+maxF);
@@ -52,7 +53,8 @@ for ff = min(frame):max(frame)-maxF
     end
     
     if cputime-t0 >1
-       progress(ff,max(frame)-maxF); drawnow;
+       logger(sprintf('%d/%d frames done. ETA: %.2f secs',ff,max(frame)-maxF,(max(frame-maxF)-ff)/ff*(cputime-t00)));
+       drawnow
        t0=cputime;
     end
 end

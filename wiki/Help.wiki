@@ -1,0 +1,16 @@
+#summary The main help page.
+
+= PALMsiever =
+The *PALM-siever* platform is designed to facilitate interactive exploration and analysis of single-molecule localization microscopy data. 
+
+  * The GUI
+  * [Rendering]
+  * How [Sieving] works
+
+
+Thomas Pengo
+
+<p align="right">
+[http://www.gnu.org/graphics/gplv3-127x51.png]
+<a href="http://leb.epfl.ch"><img src="http://leb.epfl.ch/files/content/sites/leb/files/Images/LEBlogo_RGB%E2%80%93horizontal2-2.jpg" width="256">
+<a href="http://www.epfl.ch"><img src="http://palm-siever.googlecode.com/files/EPFL_LOG_RVB-55.png" width="120">

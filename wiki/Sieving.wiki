@@ -1,0 +1,11 @@
+#summary Finding the good localizations in your data.
+
+= Sieving =
+
+Sieving (or filtering) is choosing the good localizations and discarding the false ones. This operation is performed by inspecting the distribution of the localizations' fitted parameters and changing the "min" and "max" accordingly.
+
+The right panel is composed of a table and the histogram window. The table shows all available parameters for each localization, as loaded from your data, with some basic statistics. Only the min and max columns are editable. Whenever you change the minimum and maximum columns, you change the visible range of the parameters and the corresponding rendering is generated immediately.
+
+= The histogram =
+
+The histogram is shown as soon as you click on any cell of the parameter you wish to analyze. If all localizations seem to be squashed to the left, it is most probably because your data range is too wide. Try changing the maximum column to a lower value.

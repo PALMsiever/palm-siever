@@ -1,6 +1,8 @@
 #summary Description of the various rendering techniques available.
 
-Rendering is the way the data is displayed in the viewport. It translates the list of localizations into an image. 
+= Rendering =
+
+Rendering is the way the data is displayed in the viewport. It translates the list of localizations into an image or a plot. 
 
 PALMsiever currently provides the following rendering techniques.
   * Points

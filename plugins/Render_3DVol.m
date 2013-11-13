@@ -22,7 +22,7 @@ function varargout = Render_3DVol(varargin)
 
 % Edit the above text to modify the response to help Render_3DVol
 
-% Last Modified by GUIDE v2.5 01-Aug-2013 12:47:21
+% Last Modified by GUIDE v2.5 25-Sep-2013 17:16:02
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -420,7 +420,14 @@ function updateBlur(handles)
 handles = guidata(handles.output);
 blurXY = handles.sigmaXY/handles.voxelSzXY;
 blurZ = handles.sigmaZ/handles.voxelSzZ;
-VOL_blur = gaussf(handles.VOL,[blurXY blurXY blurZ]);
+if nodiplib()
+   H = fspecial('gaussian',ceil(blurXY*6)/2*2+1,blurXY);
+   J = fspecial('gaussian',ceil(blurZ*6)/2*2+1,blurZ);
+   VOL_blur = imfilter(handles.VOL,H);
+   VOL_blur = imfilter(VOL_blur,reshape(J(round(end/2),:),[1 1 size(J,1)]));
+else
+   VOL_blur = gaussf(handles.VOL,[blurXY blurXY blurZ]);
+end
 VOL_blur(VOL_blur<0)=0; %doesn't make sense to have -ive density
 handles.VOL_blur = VOL_blur;
 
@@ -465,14 +472,31 @@ if isfield(handles,'patch');
 end
 
 axes(handles.axes1);
-fv = isosurface(handles.xGrid,handles.yGrid,handles.zGrid,double(handles.VOL_blur),handles.isoVal); 
-handles.patch = patch(fv);
+% if ~isfield(handles,'light')
+%     handles.light = [pi/2 0];
+% else
+%     pos = get(handles.light,'Position');
+%     [az el] = cart2sph(pos(1),pos(2),pos(3));
+%     handles.light = [-az -el];
+% end
+cla
+%fv = isosurface(handles.xGrid,handles.yGrid,handles.zGrid,double(handles.VOL_blur),handles.isoVal,handles.zGrid); 
+%handles.patch = patch(fv);
+[faces verts colors] = isosurface(handles.xGrid,handles.yGrid,handles.zGrid,double(handles.VOL_blur),handles.isoVal,-handles.zGrid); 
+handles.patch = patch('Vertices', verts, 'Faces', faces, ... 
+    'FaceVertexCData', colors, ... 
+    'FaceColor','interp', ... 
+    'edgecolor', 'interp');
 axis equal;
-set(handles.patch,'FaceColor','green','EdgeColor','none');
+
+%set(handles.patch,'FaceColor','green','EdgeColor','none');
+set(handles.patch,'EdgeColor','none');
 set(handles.patch,'AmbientStrength',0.2,'SpecularStrength',0.2,'DiffuseStrength',1,'SpecularExponent',20);
 set(handles.patch,'BackFaceLighting','lit');
 lighting gouraud
-camlight(); 
+% handles.light=camlight(handles.light(1),handles.light(2)); 
+%view(120, 180-130)
+camlight %(90,180)
 guidata(handles.output, handles);
 
 %---------------------------------------------------
@@ -489,3 +513,31 @@ while nPts < 10
 end
 voxSzX = voxSz;
 
+
+% --------------------------------------------------------------------
+function Untitled_1_Callback(hObject, eventdata, handles)
+% hObject    handle to Untitled_1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function miCopy_Callback(hObject, eventdata, handles)
+% hObject    handle to miCopy (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+ca = gca;
+nf = figure;
+copyobj(ca,nf);
+
+ss =  get(0,'ScreenSize');
+res = 1024;
+while res>min(ss(ss>1))
+    res = res/2;
+end
+set(gcf,'Position',[0 0 res res])
+set(gca,'Position',[0 0 1 1])
+
+print(nf,'-dbitmap','-noui');
+close(nf);

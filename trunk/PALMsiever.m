@@ -171,7 +171,7 @@ menuImport_refresh(hObject, eventdata, handles)
 menuExport_refresh(hObject, eventdata, handles)
 
 % Set default action to Z
-set(handles.bgWheel,'SelectedObject',handles.rbZ);
+set(handles.bgWheel,'SelectedObject',handles.rbZoom);
 
 % Generate first image
 redraw(handles)

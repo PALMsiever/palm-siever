@@ -2,12 +2,10 @@ function FIRE(handles)
 
 X=getX(handles);
 Y=getY(handles);
-ss=getSubset(handles);
-res = getRes(handles);
+ss=subset(handles);
+[minx maxx]= getBounds(handles);
+pxx = (maxx-minx)/getRes(handles);
 
-r = inputdlg('Original image size (pixels) ');
-imgSize = str2double(r{1});
-
-[fire_value, ~, fireH, fireL] = postoresolution([X(ss) Y(ss)],res,res/imgSize);
+[fire_value, ~, fireH, fireL] = postoresolution([X(ss) Y(ss)], pxx, superzoom); % in super-resolution pixels
 logger(sprintf('FIRE value %2.1f +- %2.2f [px]\n', fire_value, (fireL-fireH)/2));
-
+logger(sprintf('FIRE value %2.1f +- %2.2f [nm]\n', fire_value*pixelsize/superzoom, (fireL-fireH)/2*pixelsize/superzoom));

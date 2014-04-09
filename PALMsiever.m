@@ -2658,13 +2658,32 @@ function mFIRE_Callback(hObject, eventdata, handles)
 % hObject    handle to mFIRE (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+ss0=getSubset(handles);
+res = getRes(handles);
+[minX maxX minY maxY] = getBounds(handles);
+X = getX(handles);
+Y = getY(handles);
 
+nTrials = 3;
+
+[ FIRE se frcprofile linx ] = calcFIRE(X(ss0), Y(ss0), res, minX, maxX, minY, maxY, nTrials);
+
+figure; plot(linx,frcprofile','b.'); %,fitx,fity,'r-');
+axis([0 max(linx) 0 1]); hold;
+
+line([0 max(linx)],[1/7 1/7],'Color','g');
+line([1/FIRE 1/FIRE],[0 1],'Color','g');
+s = sprintf('FIRE = %2.1f +-%.5f [U]\n', FIRE, se);
+logger(s);
+text(mean(linx),.5,s);
+
+
+function [ frcprofile linx ] = calcFIREh__(handles, nTrials)
 ss0=getSubset(handles);
 res = getRes(handles);
 [minX maxX] = getBounds(handles);
 
 linx = linspace(0,res/(maxX-minX)/2,res/2+1)'; dx=linx(2)-linx(1);
-nTrials = 3;
 frcprofile = zeros(nTrials,res/2+1);
 for trials=1:nTrials
     iss0 = find(ss0);
@@ -2686,50 +2705,6 @@ for trials=1:nTrials
 
     frcprofile(trials,:)=double(frc(cat(3,D1,D2)));
 end
-
-X = linx;
-for trials=1:nTrials
-    Y = frcprofile(trials,:); Y=Y(:);
-    
-    % Method 1 : polynomial fit
-    %P = polyfit(X,Y,5);
-    %R = roots(P-[0 0 0 0 0 1/7]);
-    %FIRE_ = R(abs(imag(R))<100*eps & real(R)<max(linx) & real(R)>0);
-    %if isempty(FIRE_)
-    %    logger('The resolution threshold of 1/7 was not attained. You can probably use a finer grid to bin your data.');
-    %    return
-    %end
-    
-    % Another method...
-    f = @(x) sum(Y(X>x)-1/7)-sum(Y(X<x)-1/7);
-    FIRE_ = fminbnd(f,min(X),max(X));
-    if sum(X>FIRE_)<5 % We require at least 5 curve points to the right of the crossing point
-        logger('The resolution threshold of 1/7 was not attained. You can probably use a finer grid to bin your data.');
-        return
-    end
-
-    FIREs(trials)=FIRE_;
-end
-
-FIRE = 1/mean(FIREs);
-se = std(FIREs)/sqrt(nTrials);
-
-%X = [linx;linx+dx/3;linx+dx/3*2]; % DEPENDS ON nTrials
-%Y = frcprofile'; Y=Y(:);
-%P = polyfit(X,Y,5);
-%R = roots(P-[0 0 0 0 0 1/7]);
-
-%fitx = sort(X); fity = polyval(P,fitx);
-
-figure; plot(linx,frcprofile','b.'); %,fitx,fity,'r-');
-axis([0 max(linx) 0 1]); hold;
-
-line([0 max(linx)],[1/7 1/7],'Color','g');
-line([1/FIRE 1/FIRE],[0 1],'Color','g');
-s = sprintf('FIRE = %2.1f +-%.2f [U]\n', FIRE, se);
-logger(s);
-text(mean(linx),.5,s);
-
 
 % --- Executes on button press in pbGrouped.
 function pbGrouped_Callback(hObject, eventdata, handles)

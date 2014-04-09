@@ -43,3 +43,17 @@ New plugins
   * drift correction with fiducials
   * generic_command.m
   * a plugin to tune the limits to achieve a specified pixels size
+
+= Apr 09 2014 =
+Version 1.2 alpha (r60-r99)
+
+  * Some bug exterminating
+  * new 3D isosurface plugin
+  * new DBSCAN plugin
+  * FIRE
+  * new double Gaussian fitting plugin
+
+
+
+
+

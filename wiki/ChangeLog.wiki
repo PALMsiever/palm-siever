@@ -1,5 +1,6 @@
 #summary Project changelog.
 #labels Featured
+#sidebar Changelog
 
 = Aug 29 2012 =
 
@@ -52,8 +53,6 @@ Version 1.2 alpha (r60-r99)
   * new DBSCAN plugin
   * FIRE
   * new double Gaussian fitting plugin
-
-
 
 
 

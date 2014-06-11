@@ -2,7 +2,7 @@
 
 = Sieving =
 
-Sieving (or filtering) is choosing the good localizations and discarding the false ones. This operation is performed by inspecting the distribution of the localizations' fitted parameters and changing the "min" and "max" accordingly.
+Sieving (or filtering) is _choosing the good localizations and discarding the false ones_. This operation is performed by inspecting the distribution of the localizations' fitted parameters and changing the `min` and `max` accordingly.
 
 The right panel is composed of a table and the histogram window. The table shows all available parameters for each localization, as loaded from your data, with some basic statistics. Only the min and max columns are editable. Whenever you change the minimum and maximum columns, you change the visible range of the parameters and the corresponding rendering is generated immediately.
 

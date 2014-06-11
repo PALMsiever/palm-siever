@@ -2,7 +2,7 @@
 
 [NoDipImage]
 
-[Sieving
+[Sieving]
 
 [Rendering]
 

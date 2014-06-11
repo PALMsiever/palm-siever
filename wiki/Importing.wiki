@@ -2,13 +2,12 @@
 
 PALMsiever supports a variety of different file formats out-of-the-box. They are all imported using the "File/Import" menu. If your format is not present, you can easily extend it (see [ExtendingPALMsiever]).
 
-[http://146.185.146.69/ImportMenu.png]
 
-|| QuickPALM ||
-|| RapidSTORM ||
-|| Octane || 
-|| Leica_GSD || 
-|| PeakSelector ||
-|| UTrack_Julia ||
-|| Vutara ||
-|| Generic text file ||
+  * QuickPALM
+  * RapidSTORM
+  * Octane 
+  * Leica_GSD 
+  * PeakSelector
+  * UTrack_Julia
+  * Vutara
+  * Generic text file

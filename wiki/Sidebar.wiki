@@ -2,6 +2,8 @@
 
   * [NoDipImage Install without DipImage]
 
+* [Importing]
+
 * [Sieving]
 
 * [Rendering]

@@ -1,11 +1,6 @@
-[InstallationGuide]
-
-[NoDipImage]
-
-[Sieving]
-
-[Rendering]
-
-[Help]
-
-[ChangeLog]
+* [InstallationGuide Installation Guide]
+  * [NoDipImage Install without DipImage]
+* [Sieving]
+* [Rendering]
+* [Help]
+* [ChangeLog]

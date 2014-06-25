@@ -1945,7 +1945,7 @@ if numel(Trace)<2
     msgbox('No trace found. Try increasing the radius or the length.','modal')
 end
 
-axes(handles.axes1);
+%axes(handles.axes1);
 line(Trace(:,1)',Trace(:,2)','Marker','+','Color','g');
 
 

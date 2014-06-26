@@ -1,15 +1,15 @@
-* [InstallationGuide Installation Guide]
+  * [InstallationGuide Installation Guide]
 
-  * [NoDipImage Install without DipImage]
+    * [NoDipImage Install without DipImage]
 
-* [Importing]
+  * [Importing]
 
-* [Sieving]
+  * [Sieving]
 
-* [Rendering]
+  * [Rendering]
 
-* [Help]
+  * [Help]
 
-  * [ExtendingPALMsiever Extending PALMsiever]
+    * [ExtendingPALMsiever Extending PALMsiever]
 
-* [ChangeLog]
+  * [ChangeLog]

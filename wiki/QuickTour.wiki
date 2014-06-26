@@ -1,0 +1,9 @@
+#summary A quick tour of the operation of PALMsiever.
+
+PALMsiever has been designed with the idea of being as easy as possible to use. It wants you to focus on your data, so most of the interface is covered by the rendered data.
+
+==The interface==
+
+The interface is divided into two parts
+
+_To be continued..._

@@ -1,0 +1,11 @@
+#summary A summary of help pointers
+
+In case you get lost
+
+  # You can have a look at these wiki pages to check if you find something
+    # Try the [FAQ]
+    # or the [Help] page
+  # You can ask the [https://groups.google.com/forum/#!forum/palm-siever-development forum]
+  # If all fails, you can still write me at thomas.pengo at gmail dot com.
+
+Enjoy!

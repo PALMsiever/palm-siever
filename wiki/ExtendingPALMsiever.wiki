@@ -2,7 +2,7 @@
 
 There are different ways you can extend the functionality of PALMsiever.
 
-  * You can create a [PlugIn plugin]
+  * You can create a plugin
   * You can add support for an additional file format
   * You can add another rendering algorithm
 
@@ -66,3 +66,13 @@ The definition for the various fields is the following:
 || numberFormat || specifies how to read the numbers ||
 
 In addition, you can specify how to assign the `X`, `Y`, `Z` and `frame` variables to the corresponding columns in your data.
+
+==Add another rendering algorithm==
+
+At the moment, the procedure is not the most user-friendly one. In the future, we plan to make it simpler. If you feel adventurous enough, you can try the following:
+
+  # Add an item to the drop-down menu, note down it's position (e.g. 5 for the 5th element)
+  # Add the specified handling mechanism to the `PALMsiever.m` file, in the `renderHelper` function, as an additional item of the `case`.
+
+If you need assistance, don't hesitate to write to the [https://groups.google.com/forum/#!forum/palm-siever-development forum].
+

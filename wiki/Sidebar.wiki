@@ -7,7 +7,7 @@
 
   * [Rendering]
 
-  * [Help]
+  * [Help Help]
     * [ExtendingPALMsiever Extending PALMsiever]
 
   * [ChangeLog]

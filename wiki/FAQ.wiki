@@ -8,8 +8,6 @@ A. You can copy the current rendering, at the current resolution to the system c
 
 B. You can save the image into a TIFF file, then open it with a program that supports 16-bit TIFF files.
 
-===Can I make a video out of it?===
+===Can I make a video out of my data?===
 
 Sure, your "time" dimension in the video can be any column of your data. So you can read through time, z, or anything you selected in the combo-box.
-
-

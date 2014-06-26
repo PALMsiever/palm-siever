@@ -1,5 +1,4 @@
   * [InstallationGuide Installation Guide]
-
     * [NoDipImage Install without DipImage]
 
   * [Importing]

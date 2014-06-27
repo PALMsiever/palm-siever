@@ -2,6 +2,7 @@
 
 PALMsiever supports a variety of different file formats out-of-the-box. They are all imported using the "File/Import" menu. If your format is not present, you can easily extend it (see [ExtendingPALMsiever]).
 
+|| _Software_ || _Extension_ || _Notes_ ||
 || QuickPALM || txt || -- ||
 || RapidSTORM || txt || everything except the metadata ||
 || Octane || txt || -- ||
@@ -12,4 +13,3 @@ PALMsiever supports a variety of different file formats out-of-the-box. They are
 || Generic text file || * || can be used on most tabular data ||
 
 Please refer to [ExtendingPALMsiever Extending PALMsiever] to find out how to add support for additional file formats.
-

@@ -4,13 +4,16 @@ PALMsiever has been designed with the idea of putting the data in the foreground
 
 ==Basic concepts==
 
-_PALMsiever works on the variables in the workspace_
+||_PALMsiever works on the variables in the workspace_||
+
 You don't need to be a MATLAB expert, but if you know MATLAB, you can benefit from that idea. In other words, you can modify the variables in the workspace and you will see (after a Redraw) the effect in the viewport. You can also call PALMsiever with two arguments, specifying the names of the two variables in the workspace that correspond you the X (horizontal coorodinate) and the Y (vertical coordinate). You can even add a new variable as a combination of the previous ones, and after the Refresh variables you will see it in the list.
 
-_The rendered image is of a constant size_
+||_The rendered image is of a constant size_||
+
 That means that if your image is 256x256, when you zoom in using the '+' button, it'll still have 256x256, but each pixel will represent only a fraction of the area of the original pixel. You can check the size of the pixel in data units by reading the label at the top of the screen, next to the resolution drop-down list.
 
-_You keep the entire dataset until you decide to discard_
+||_You keep the entire dataset until you decide to discard_||
+
 You can filter using the siever (see below) and the corresponding fraction will be shown. The original data is still there, until you remove it with the menu 'Point/Sieve!'. Only after using the sieve menu item you effectively discard all points that have not been selected.
 
 ==The interface==

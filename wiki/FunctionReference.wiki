@@ -1,0 +1,73 @@
+#summary The reference to each function in the library
+
+WIP... This is automatically generated from the .m files. Not perfect yet... Please refer to the corresponding .m file for additional documentation.
+
+||add_scalebar||mask ||Adding a scalebar||
+||autoIso||isoVal ||||
+||calcHistogram||[density n m X Y] ||Calculate histogram||
+||combineAllDriftTracks||[xDrift, xAllCor] ||||
+||correctDrift||[xc,yc,tDrift,xDrift,yDrift,zc,zDrift]  ||||
+||crossCorrect3D||[xc,yc,tDrift,xDrift,yDrift,zc,zDrift] ||||
+||dbscan||[class,type]||||
+||dg_fit||[fitresult, gof] ||||
+||fetch||varargout ||Fetch variables from the workspace by name||
+||fileIoAscii||[varargout] ||||
+||fileIoOther||varargout ||||
+||freedmanDiaconis||nBins||||
+||fsize||siz ||Get file size.||
+||gammaAdjust||imG ||||
+||get_static_plugins||plugins ||Returns a list of plugins which should be||
+||getBounds||[minX, maxX, minY, maxY] ||||
+||getColHash||varargout ||||
+||getColormapName||cmap ||||
+||getDensity||[density X Y] ||||
+||getF||frame ||||
+||getFramebounds||[minFrame maxFrame] ||[minFrame maxFrame] = getFramebounds(handles)||
+||getGamma||gamma ||Get the current gamma||
+||getPalmSiever||h ||||
+||getPeakPosCentroid||[pos amplitude]||||
+||getPeakPosGauss2d||[pos amplitude]||||
+||getRes||res ||This function gets the chosen image size in the resolution box||
+||getSelectedRendering||str ||||
+||getStormDrift3||[drift corAmplitude ] ||||
+||getSubset||subset ||||
+||getVariables||[rows2 data N] ||||
+||getX||X ||||
+||getY||Y ||||
+||getZ||Z ||||
+||getZbounds||[minZ maxZ] ||[minZ maxZ] = getZbounds(handles)||
+||groupBy||gX ||||
+||getX||||||
+||histn||[D px] ||||
+||importprm||Nr ||importprm(filename,delim)||
+||jdg_fit||[coeff scoeff fitresult] ||||
+||jhist||[H b H2]||Jittered histogram||
+||kde2d||[bandwidth,density,X,Y]||||
+||kden||[D px] ||||
+||=0||nargin||Logger function||
+||matrix2html||str ||Matrix to HTML table||
+||ppdiff||qq ||||
+||ppint||output ||||
+||q05||q ||q05||
+||q95||q ||q95||
+||quantile||q ||QUANTILE||
+||quantization||[i X] ||Quantization of signal x between xmin and xmax in N segments, indexed||
+||radialSpectrum||[ PR PRx ] ||Calculate radial spectrum||
+||removeAxisDrift||xc ||-----------------------------------------------------||
+||render_gauss||im ||||
+||render_histogram||[density X Y] ||Render a histogram of the current view||
+||serialize||ohandles||||
+||setBounds||handles ||Sets the X,Y bounds||
+||setFramebounds||handles ||Sets the Frame bounds||
+||get||||Set maximum for a specified variable||
+||get||||Set minimum for a specified variable||
+||get||||function setVar(handles, varAssignment)||
+||setZbounds||handles ||Sets the Z bounds||
+||sg_fit||[fitresult, gof] ||Single Gaussian fit||
+||splinefit||pp ||||
+||stringToVarName||varNames ||||
+||sumsqr||[s,n] ||Elementwise sum of squares.||
+||trace||Trace ||Tracing algorithm||
+||trace_collect||[ sX sY visited ] ||Straighten and collect points along trace||
+||trace_histogram||[ A centersY visited centersX  ]||Calculate the histogram along a trace||
+||trace_sigmas||[ sigmas means gofs ns sigmas_outliers] ||Calculate sigmas along trace||

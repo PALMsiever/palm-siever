@@ -1,9 +1,40 @@
 #summary A quick tour of the operation of PALMsiever.
 
-PALMsiever has been designed with the idea of being as easy as possible to use. It wants you to focus on your data, so most of the interface is covered by the rendered data.
+PALMsiever has been designed with the idea of putting the data in the foreground and let you explore it in the most easy possible way.
+
+==Basic concepts==
+
+_PALMsiever works on the variables in the workspace_
+You don't need to be a MATLAB expert, but if you know MATLAB, you can benefit from that idea. In other words, you can modify the variables in the workspace and you will see (after a Redraw) the effect in the viewport. You can also call PALMsiever with two arguments, specifying the names of the two variables in the workspace that correspond you the X (horizontal coorodinate) and the Y (vertical coordinate). You can even add a new variable as a combination of the previous ones, and after the Refresh variables you will see it in the list.
+
+_The rendered image is of a constant size_
+That means that if your image is 256x256, when you zoom in using the '+' button, it'll still have 256x256, but each pixel will represent only a fraction of the area of the original pixel. You can check the size of the pixel in data units by reading the label at the top of the screen, next to the resolution drop-down list.
+
+_You keep the entire dataset until you decide to discard_
+You can filter using the siever (see below) and the corresponding fraction will be shown. The original data is still there, until you remove it with the menu 'Point/Sieve!'. Only after using the sieve menu item you effectively discard all points that have not been selected.
 
 ==The interface==
 
-The interface is divided into two parts
+The interface is divided into two parts: the viewport and the siever. The viewport is where your data is rendered, while the siever is where you can adjust the limits of what is displayed.
+
+===The viewport===
+
+The viewport provides a view on your current data. It renders the current subset of your data according to the limits specified on the sieving part.
+
+There are a few fundamental controls: 
+
+  * the variable selection drop-down lists allow you to select what variable is used for X, Y, Z, frame and ID.
+  * the resolution drop-down (256x256 by default) selects the image size
+  * the rendering drop-down list selects which rendering algorithm to use
+  * the Min, Max and Gamma decide what are the minimum and maximum densities to display, while the gamma box changes the linearity between the density and the color scale
+
+For more information you can have a look at the [GUIreference GUI reference].
+
+===The siever===
+
+This part of the interface allows you to select what subset of the data to display. The main table provides a list of all the variables (columns) of your dataset and the limits for each one. It also displays some basic statistic variables.
+
+
+
 
 _To be continued..._

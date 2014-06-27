@@ -3,13 +3,13 @@
 PALMsiever supports a variety of different file formats out-of-the-box. They are all imported using the "File/Import" menu. If your format is not present, you can easily extend it (see [ExtendingPALMsiever]).
 
 || _Software_ || _Extension_ || _Notes_ ||
+|| Generic text file || * || can be used on most tabular data ||
+|| Leica_GSD || ascii || reads the 2D version, can be extended, please contact me if you need it ||
+|| Octane || txt || -- ||
+|| PeakSelector || prm || reads in all data. Note it's better to export it in nanometers, as the text looses precision if you export it in pixel units. ||
 || QuickPALM || txt || -- ||
 || RapidSTORM || txt || everything except the metadata ||
-|| Octane || txt || -- ||
-|| Leica_GSD || ascii || reads the 2D version, can be extended, please contact me if you need it ||
-|| PeakSelector || prm || reads in all data. Note it's better to export it in nanometers, as the text looses precision if you export it in pixel units. ||
 || UTrack_Julia || -- || -- ||
 || Vutara || csv || reads all 3D data  ||
-|| Generic text file || * || can be used on most tabular data ||
 
 Please refer to [ExtendingPALMsiever Extending PALMsiever] to find out how to add support for additional file formats.

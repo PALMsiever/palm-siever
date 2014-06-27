@@ -1,11 +1,12 @@
   * User Guide
-    * [InstallationGuide Installation Guide]
+    * Installation
+      * [InstallationGuide Installation Guide]
       * [NoDipImage Install without DipImage]
     * [QuickTour A quick tour]
     * [Importing Importing data]
     * [Rendering]
     * [Sieving]
-    * [WhoToAsk Who to ask for help]
+  * [WhoToAsk Who to ask for help]
   * [ChangeLog]
   * Developer Guide
     * [ExtendingPALMsiever Extending PALMsiever]

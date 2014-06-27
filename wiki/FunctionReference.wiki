@@ -2,6 +2,7 @@
 
 WIP... This is automatically generated from the .m files. Not perfect yet... Please refer to the corresponding .m file for additional documentation.
 
+|| Function name || output || Description ||
 ||add_scalebar||mask ||Adding a scalebar||
 ||autoIso||isoVal ||||
 ||calcHistogram||[density n m X Y] ||Calculate histogram||

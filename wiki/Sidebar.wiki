@@ -1,9 +1,12 @@
-  * [Help Help]
-    * [WhoToAsk Who to ask for help]
-    * [ExtendingPALMsiever Extending PALMsiever]
+  * User Guide
     * [InstallationGuide Installation Guide]
       * [NoDipImage Install without DipImage]
-  * [Importing]
-  * [Sieving]
-  * [Rendering]
+    * [QuickTour A quick tour]
+    * [Importing Importing data]
+    * [Rendering]
+    * [Sieving]
+    * [WhoToAsk Who to ask for help]
   * [ChangeLog]
+  * Developer Guide
+    * [ExtendingPALMsiever Extending PALMsiever]
+    

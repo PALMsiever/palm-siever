@@ -2,23 +2,23 @@
 
 ||adaptVisibleRangeForPixelSize||Plugin to set the limits for the size manually||
 ||averageDensity||Otsu thresholding and average density calculation||
-||Box_Zoom||Box zoom||
-||Cluster_DBSCAN||nction varargout = Cluster_DBSCAN(varargin)||
-||density_column||nction density_column(handles)||
-||density_plot||nction density_plot(handles)||
+||Box_Zoom||Allows the user to zoom into a region specified with a box. Double-click on the border to accept the zoom-box.||
+||Cluster_DBSCAN||Opens the GUI to perform DBSCAN clustering. See the corresponding documentation for details.||
+||density_column||Adds a new variable corresponding to the density at each localization, measured from the last density-based rendering.||
+||density_plot||Performs a density plot around a specified position, across the spread of the point distribution.||
 ||double_Gaussian_fit||Perform a double Gaussian fit and plot the results||
-||Drift_correction_fiducial||nction varargout = Drift_correction_fiducial(varargin)||
-||Drift_correction_xCor||nction varargout = Drift_correction_xCor(varargin)||
+||Drift_correction_fiducial||Opens the GUI to perform drift correction with fiducials. See corresponding documentation for details.||
+||Drift_correction_xCor||Opens the GUI to perform drift correction with cross-correlation. See the corresponding documentation for details.||
 ||frcLoop|| Torus (!! note that if you execute this section you will clear existing X,Y variables)||
-||generic_command||Generic command||
-||hello_message||nction hello_message(handles)||
+||generic_command||Opens a mini-prompt to perform a generic MATLAB command||
+||hello_message||Simplest possible plugin example.||
 ||meanDensity||nction meanDensity(handles)||
 ||myFIRE||nction myFIRE(handles)||
-||plot3D||nction plot3D(handles)||
+||plot3D||Creates a new 3D scatterplot of the data||
 ||pspectrum||Power spectrum of the current rendering||
-||Render_3DVol||nction varargout = Render_3DVol(varargin)||
-||toNanometers||nction toNanometers(handles)||
+||Render_3DVol||Opens the GUI for the 3D iso-surface rendering plugin. See corresponding documentation for details.||
+||toNanometers||Converts the XYZ data from generic units to nanometers.||
 ||Transform3D||nction varargout = Transform3D(varargin)||
-||vol3D||nction vol3D(handles)||
+||vol3D||Creates a 3D volume from the data. Please use the Render_3DVol plugin.||
 
  Automatically generated (2014-07-11)

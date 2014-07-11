@@ -1,3 +1,4 @@
+% Calculate the FIRE fetching the parameters from the GUI
 function [ frcprofile linx ] = calcFIREh(handles, nTrials)
 X = getX(handles); Y = getY(handles);
 ss0=getSubset(handles); res = getRes(handles);

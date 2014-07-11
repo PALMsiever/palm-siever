@@ -1,3 +1,4 @@
+% Opens the GUI to perform DBSCAN clustering. See the corresponding documentation for details.
 function varargout = Cluster_DBSCAN(varargin)
 % CLUSTER_DBSCAN MATLAB code for Cluster_DBSCAN.fig
 %      CLUSTER_DBSCAN, by itself, creates a new CLUSTER_DBSCAN or raises the existing

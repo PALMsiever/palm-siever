@@ -1,3 +1,4 @@
+% Adds a new variable corresponding to the density at each localization, measured from the last density-based rendering.
 function density_column(handles)
 
 XPosition = getX(handles);

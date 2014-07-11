@@ -1,3 +1,4 @@
+%%% Internal function for the drift correction plugin
 function [xc,yc,tDrift,xDrift,yDrift,zc,zDrift] = crossCorrect3D(stormData, minImPointPerArea,minFrame,stormPixSize,SccfWindowArea,plotOn)
 
 if ~exist('plotOn','var')

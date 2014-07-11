@@ -17,43 +17,43 @@
 || freedmanDiaconis.m || nBins ||  freedmanDiaconis || data || Calculates the Freedman-Diaconis choice for the bin width. 'data' is assumed to be a single column vector. ||
 || fsize.m || siz  ||  fsize || filename || Get file size. ||
 || gammaAdjust.m || imG  ||  gammaAdjust || im gammaVal || Calculates gamma-adjusted image ||
-|| gaussian_fit_1D.m ||  ||  ||  ||  ---  ||
+|| gaussian_fit_1D.m || mu sigma gof fit ||  gaussian_fit_1D  || xs ys ||  ---  ||
 || gaussian_fit_1D_plot.m ||  ||  ||  || Plots a gaussian fit for datapoints (xs,ys) in a new figure and returns ||
-|| getBounds.m ||  ||  ||  ||  ---  ||
-|| getColHash.m ||  ||  ||  ||  ---  ||
-|| getColormapName.m ||  ||  ||  ||  ---  ||
-|| getDensity.m ||  ||  ||  ||  ---  ||
-|| getF.m ||  ||  ||  ||  ---  ||
+|| getBounds.m || minX  maxX  minY  max ||  getBounds || handles ||  ---  ||
+|| getColHash.m || varargout  ||  getColHash || varargin ||  ---  ||
+|| getColormapName.m || cmap  ||  getColormapName || handles ||  ---  ||
+|| getDensity.m || density X  ||  getDensity || handles ||  ---  ||
+|| getF.m || frame  ||  getF || handles ||  ---  ||
 || getFramebounds.m ||  ||  ||  || [minFrame maxFrame] = getFramebounds(handles) ||
 || getGamma.m || gamma  ||  getGamma || handles || Get the current gamma ||
-|| getID.m ||  ||  ||  ||  ---  ||
+|| getID.m || frame  ||  getID || handles ||  ---  ||
 || getLength.m || L  ||  getLength || handles || Get the current radius ||
-|| getPalmSiever.m ||  ||  ||  ||  ---  ||
-|| getPeakPosCentroid.m ||  ||  ||  ||  ---  ||
-|| getPeakPosGauss2d.m ||  ||  ||  ||  ---  ||
+|| getPalmSiever.m || h  ||  getPalmSiever || handles ||  ---  ||
+|| getPeakPosCentroid.m || pos amplitud ||  getPeakPosCentroid || im  posGuess  windowRadius ||  ---  ||
+|| getPeakPosGauss2d.m || pos amplitud ||  getPeakPosGauss2d || im  zeroCoord   windowSize ||  ---  ||
 || getRadius.m || R  ||  getRadius || handles || Get the current radius ||
 || getRes.m ||  ||  ||  || This function gets the chosen image size in the resolution box ||
-|| getSelectedRendering.m ||  ||  ||  ||  ---  ||
-|| getStormDrift3.m ||  ||  ||  ||  ---  ||
-|| getSubset.m ||  ||  ||  ||  ---  ||
-|| getVariables.m ||  ||  ||  ||  ---  ||
-|| getX.m ||  ||  ||  ||  ---  ||
-|| getY.m ||  ||  ||  ||  ---  ||
-|| getZ.m ||  ||  ||  ||  ---  ||
+|| getSelectedRendering.m || str  ||  getSelectedRendering || handles ||  ---  ||
+|| getStormDrift3.m || drift corAmplitude ||  getStormDrift3 || stormData minImPointPerArea minFrame stormPixSize SccfWindowArea imSize ||  ---  ||
+|| getSubset.m || subset  ||  getSubset || handles ||  ---  ||
+|| getVariables.m || rows2 data  ||  getVariables || handles N ||  ---  ||
+|| getX.m || X  ||  getX || handles ||  ---  ||
+|| getY.m || Y  ||  getY || handles ||  ---  ||
+|| getZ.m || Z  ||  getZ || handles ||  ---  ||
 || getZbounds.m ||  ||  ||  || [minZ maxZ] = getZbounds(handles) ||
 || get_static_plugins.m || plugins  ||  get_static_plugin || function plugins = get_static_plugin || Returns a list of plugins which should be ||
-|| groupBy.m ||  ||  ||  ||  ---  ||
-|| grouping.m ||  ||  ||  ||  ---  ||
+|| groupBy.m || gX  ||  groupBy || X  ID ||  ---  ||
+|| grouping.m ||  || grouping || handles ||  ---  ||
 || importprm.m ||  ||  ||  ||  importprm(filename,delim) ||
-|| jdg_fit.m ||  ||  ||  ||  ---  ||
+|| jdg_fit.m || coeff scoeff fitresul ||  jdg_fit || x  y  amount  N ||  ---  ||
 || jhist.m ||  ||  ||  || Jittered histogram ||
-|| kde2d.m ||  ||  ||  ||  ---  ||
+|| kde2d.m || bandwidth density X  || kde2d || data n MIN_XY MAX_XY ||  ---  ||
 || limit80.m ||  || limit80 || handles  variable || Limits to central 80% of the data ||
 || logger.m ||  ||  ||  || Logger function ||
 || matrix2html.m || str  ||  matrix2html || M precision || Matrix to HTML table ||
-|| nodiplib.m ||  ||  ||  ||  ---  ||
-|| ppdiff.m ||  ||  ||  ||  ---  ||
-|| ppint.m ||  ||  ||  ||  ---  ||
+|| nodiplib.m || ndl  ||  nodiplib ||  ||  ---  ||
+|| ppdiff.m || qq  ||  ppdiff || pp j ||  ---  ||
+|| ppint.m || output  ||  ppint || pp a b ||  ---  ||
 || q05.m || q  ||  q05 || x || q05 ||
 || q10.m || q  ||  q10 || x || q10 ||
 || q90.m || q  ||  q90 || x || q90 ||
@@ -62,21 +62,21 @@
 || quantization.m ||  ||  ||  || Quantization of signal x between xmin and xmax in N segments, indexed ||
 || radialSpectrum.m ||  PR PRx ||  radialSpectrum || X1 Y1 pxSize imSize || Calculate radial spectrum ||
 || removeAxisDrift.m || xc  ||  removeAxisDrift || x t xDrift tUn || ---------------------------------------------------- ||
-|| render_gauss.m ||  ||  ||  ||  ---  ||
+|| render_gauss.m || im  ||  render_gauss || pxSize  peaks  sigma  offsets  outSize  bounds ||  ---  ||
 || render_histogram.m || density X  ||  render_histogram || handles || Render a histogram of the current view ||
-|| serialize.m ||  ||  ||  ||  ---  ||
+|| serialize.m || ohandles || serialize || handles filename ||  ---  ||
 || setBounds.m ||  ||  ||  || Sets the X,Y bounds ||
 || setFramebounds.m ||  ||  ||  || Sets the Frame bounds ||
 || setMax.m ||  || setMax || handles  variable  maximum || Set maximum for a specified variable ||
 || setMin.m ||  || setMin || handles  variable  minimum || Set minimum for a specified variable ||
-|| setPSVar.m ||  ||  ||  ||  ---  ||
-|| setX.m ||  ||  ||  ||  ---  ||
-|| setY.m ||  ||  ||  ||  ---  ||
-|| setZ.m ||  ||  ||  ||  ---  ||
+|| setPSVar.m ||  || setPSVar || handles  varAssignment ||  ---  ||
+|| setX.m ||  || setX || handles X ||  ---  ||
+|| setY.m ||  || setY || handles Y ||  ---  ||
+|| setZ.m ||  || setZ || handles Z ||  ---  ||
 || setZbounds.m ||  ||  ||  || Sets the Z bounds ||
 || sg_fit.m ||  ||  ||  || Single Gaussian fit ||
-|| splinefit.m ||  ||  ||  ||  ---  ||
-|| stringToVarName.m ||  ||  ||  ||  ---  ||
+|| splinefit.m || pp  ||  splinefit || varargin ||  ---  ||
+|| stringToVarName.m || varNames  ||  stringToVarName || strings ||  ---  ||
 || sumsqr.m ||  ||  ||  || Elementwise sum of squares. ||
 || testImportAscii.m ||  ||  ||  ||  ---  ||
 || trace.m ||  ||  ||  || Tracing algorithm ||

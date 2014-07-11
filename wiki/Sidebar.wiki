@@ -1,3 +1,6 @@
+  * [Help Main help page]
+  * [WhoToAsk Who to ask for help]
+  * [ChangeLog]
   * User Guide
     * Installation
       * [InstallationGuide Installation Guide]
@@ -7,8 +10,6 @@
     * [Rendering]
     * [Sieving]
     * [GUIreference GUI reference]
-  * [WhoToAsk Who to ask for help]
-  * [ChangeLog]
   * Developer Guide
     * [ExtendingPALMsiever Extending PALMsiever]
     * [FunctionReference Function reference]

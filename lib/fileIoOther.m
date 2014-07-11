@@ -1,3 +1,4 @@
+%%% Internal function for the import infrastructure
 function varargout = fileIoOther(fileSpec,ioMode, varargin)
 % function fileIoAscii(fileSpec,varargin)
 % Parses a fileSpec ini file, and uses it to read in PALM data

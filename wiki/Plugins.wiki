@@ -11,7 +11,6 @@
 ||Drift_correction_xCor||Opens the GUI to perform drift correction with cross-correlation. See the corresponding documentation for details.||
 ||generic_command||Opens a mini-prompt to perform a generic MATLAB command||
 ||hello_message||Simplest possible plugin example.||
-||meanDensity||nction meanDensity(handles)||
 ||plot3D||Creates a new 3D scatterplot of the data||
 ||pspectrum||Power spectrum of the current rendering||
 ||Render_3DVol||Opens the GUI for the 3D iso-surface rendering plugin. See corresponding documentation for details.||

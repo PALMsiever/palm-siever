@@ -1,3 +1,4 @@
+% Calculates the Freedman-Diaconis choice for the bin width. 'data' is assumed to be a single column vector.
 function nBins= freedmanDiaconis(data)
 %	1 Use Freedman-Diaconis' choice (1981)doi:10.1007/BF01025868
 % 	to calculate the common bin width, h

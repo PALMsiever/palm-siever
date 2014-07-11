@@ -1,4 +1,4 @@
-
+% Performs a double-gaussian fit on the x and y vectors, with an optional initial estimation of the width w0.
 function [fitresult, gof] = dg_fit(x, y, w0)
 %CREATEFIT(X,Y)
 %  Create a fit.

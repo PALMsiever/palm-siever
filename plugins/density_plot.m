@@ -1,3 +1,4 @@
+% Performs a density plot around a specified position, across the spread of the point distribution.
 function density_plot(handles)
 
 axes(handles.axes1)

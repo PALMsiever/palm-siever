@@ -1,3 +1,4 @@
+% Creates a new 3D scatterplot of the data 
 function plot3D(handles)
 
 X = getX(handles); 

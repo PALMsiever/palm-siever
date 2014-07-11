@@ -1,3 +1,4 @@
+%%% Internal function for the drift correction plugin
 function [xDrift, xAllCor] = combineAllDriftTracks(xAll,tUn)
 
 xDrift = NaN*ones(numel(tUn),1);

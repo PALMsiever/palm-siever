@@ -1,17 +1,16 @@
 #summary The reference to each function in the library
-
 || *Filename* || *Output* || *Function name* || *Parameters* || *Description* ||
 || add_colorbar.m ||  || add_colorbar || handles, col || Add colorbar ||
 || add_scalebar.m || mask  ||  add_scalebar || handles,cbcol,img || Adding a scalebar ||
 || autoIso.m || isoVal  ||  autoIso || vol || Automatic calculation of iso-surface value for volumetric data using Otsu's method ||
-|| calcFIRE.m || [ FIRE se frcprofile frcprofile_f ]  ||  calcFIRE || X, Y, res, minX, maxX, minY, maxY, nTrials || Calculate the FIRE value from the specified X and Y vectors. ||
-|| calcFIREh.m || [ frcprofile linx ]  ||  calcFIREh || handles, nTrials || Calculate the FIRE fetching the parameters from the GUI ||
-|| calcFIRE_1D.m || [ FIRE se frcprofile frcprofile_f F frcprofile_est fSNR fSNR_RES]  ||  calcFIRE_1D || X, res, minX, maxX, nTrials || Calculate a variation of the FIRE for 1-dimensional data ||
-|| calcHistogram.m || [density n m X Y]  ||  calcHistogram || handles || Calculate histogram ||
-|| calcHistogram_.m || [density n m X Y]  ||  calcHistogram_ || XPosition, YPosition, res, minX, maxX, minY, maxY || Calculates the histogram from the two vectors, within the specified bounds and with 'res' number of bins. ||
-|| dbscan.m || [class,type] || dbscan || x,k,Eps || Clustering the data with Density-Based Scan Algorithm with Noise (DBSCAN) ||
-|| dg_fit.m || [fitresult, gof]  ||  dg_fit || x, y, w0 || Performs a double-gaussian fit on the x and y vectors, with an optional initial estimation of the width w0. ||
-|| double_gaussian_fit_1D.m || [mu sigma w gof fits]  ||  double_gaussian_fit_1D  || xs,ys || Fits the data to a double Gaussian function ||
+|| calcFIRE.m ||  FIRE se frcprofile frcprofile_f ||  calcFIRE || X, Y, res, minX, maxX, minY, maxY, nTrials || Calculate the FIRE value from the specified X and Y vectors. ||
+|| calcFIREh.m ||  frcprofile linx ||  calcFIREh || handles, nTrials || Calculate the FIRE fetching the parameters from the GUI ||
+|| calcFIRE_1D.m ||  FIRE se frcprofile frcprofile_f F frcprofile_est fSNR fSNR_RE ||  calcFIRE_1D || X, res, minX, maxX, nTrials || Calculate a variation of the FIRE for 1-dimensional data ||
+|| calcHistogram.m || density n m X  ||  calcHistogram || handles || Calculate histogram ||
+|| calcHistogram_.m || density n m X  ||  calcHistogram_ || XPosition, YPosition, res, minX, maxX, minY, maxY || Calculates the histogram from the two vectors, within the specified bounds and with 'res' number of bins. ||
+|| dbscan.m || class,typ || dbscan || x,k,Eps || Clustering the data with Density-Based Scan Algorithm with Noise (DBSCAN) ||
+|| dg_fit.m || fitresult, go ||  dg_fit || x, y, w0 || Performs a double-gaussian fit on the x and y vectors, with an optional initial estimation of the width w0. ||
+|| double_gaussian_fit_1D.m || mu sigma w gof fit ||  double_gaussian_fit_1D  || xs,ys || Fits the data to a double Gaussian function ||
 || double_gaussian_fit_1D_plot.m || f || double_gaussian_fit_1D_plot || xs,ys || Plots a gaussian fit for datapoints (xs,ys) in a new figure and returns the handle ||
 || fetch.m || varargout  ||  fetch || varargin || Fetch variables from the workspace by name ||
 || freedmanDiaconis.m || nBins ||  freedmanDiaconis || data || Calculates the Freedman-Diaconis choice for the bin width. 'data' is assumed to be a single column vector. ||
@@ -60,13 +59,13 @@
 || q95.m || q  ||  q95 || x || q95 ||
 || quantile.m || q  ||  quantile || data,quantiles || QUANTILE ||
 || quantization.m || q  ||  quantile || data,quantiles || Quantization of signal x between xmin and xmax in N segments, indexed ||
-|| radialSpectrum.m || [ PR PRx ]  ||  radialSpectrum || X1,Y1,pxSize,imSize || Calculate radial spectrum ||
+|| radialSpectrum.m ||  PR PRx ||  radialSpectrum || X1,Y1,pxSize,imSize || Calculate radial spectrum ||
 || removeAxisDrift.m || xc  ||  removeAxisDrift || x,t,xDrift,tUn || ---------------------------------------------------- ||
 || render_gauss.m || xc  ||  removeAxisDrift || x,t,xDrift,tUn || nction im = render_gauss(pxSize, peaks, sigma, offsets, outSize, bounds) ||
-|| render_histogram.m || [density X Y]  ||  render_histogram || handles || Render a histogram of the current view ||
-|| serialize.m || [density X Y]  ||  render_histogram || handles || nction ohandles=serialize(handles,filename) ||
-|| setBounds.m || [density X Y]  ||  render_histogram || handles || Sets the X,Y bounds ||
-|| setFramebounds.m || [density X Y]  ||  render_histogram || handles || Sets the Frame bounds ||
+|| render_histogram.m || density X  ||  render_histogram || handles || Render a histogram of the current view ||
+|| serialize.m || density X  ||  render_histogram || handles || nction ohandles=serialize(handles,filename) ||
+|| setBounds.m || density X  ||  render_histogram || handles || Sets the X,Y bounds ||
+|| setFramebounds.m || density X  ||  render_histogram || handles || Sets the Frame bounds ||
 || setMax.m ||  || setMax || handles, variable, maximum || Set maximum for a specified variable ||
 || setMin.m ||  || setMin || handles, variable, minimum || Set minimum for a specified variable ||
 || setPSVar.m ||  || setMin || handles, variable, minimum || nction setPSVar(handles, varAssignment) ||

@@ -1,4 +1,6 @@
 % Get file size.
+function siz = fsize(filename)
+% Get file size.
 %
 %   siz = fsize(filename)
 % 
@@ -6,7 +8,6 @@
 % warranty is given.
 %
 % Author: Thomas Pengo, 2012
-function siz = fsize(filename)
 
 fd = fopen(filename,'r');
 fseek(fd,0,'eof');

@@ -1,6 +1,5 @@
   * [Help Homepage]
   * [WhoToAsk Who to ask for help]
-  * [ChangeLog]
   * User Guide
     * Installation
       * [InstallationGuide Installation Guide]
@@ -14,3 +13,4 @@
     * [ExtendingPALMsiever Extending PALMsiever]
     * [FunctionReference Function reference]
   * [FAQ]
+  * [ChangeLog]

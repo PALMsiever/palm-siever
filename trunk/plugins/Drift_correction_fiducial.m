@@ -1,3 +1,4 @@
+% Opens the GUI to perform drift correction with fiducials. See corresponding documentation for details.
 function varargout = Drift_correction_fiducial(varargin)
 % DRIFT_CORRECTION_FIDUCIAL MATLAB code for Drift_correction_fiducial.fig
 %      DRIFT_CORRECTION_FIDUCIAL, by itself, creates a new DRIFT_CORRECTION_FIDUCIAL or raises the existing

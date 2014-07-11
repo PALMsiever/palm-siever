@@ -17,21 +17,71 @@
 || freedmanDiaconis.m || nBins ||  freedmanDiaconis || data || Calculates the Freedman-Diaconis choice for the bin width. 'data' is assumed to be a single column vector. ||
 || fsize.m || siz  ||  fsize || filename || Get file size. ||
 || gammaAdjust.m || imG  ||  gammaAdjust || im gammaVal || Calculates gamma-adjusted image ||
+|| gaussian_fit_1D.m ||  ||  ||  || nction [mu sigma gof fits] = gaussian_fit_1D (xs,ys) ||
+|| gaussian_fit_1D_plot.m ||  ||  ||  || Plots a gaussian fit for datapoints (xs,ys) in a new figure and returns ||
+|| getBounds.m ||  ||  ||  || nction [minX, maxX, minY, maxY] = getBounds(handles) ||
+|| getColHash.m ||  ||  ||  || nction varargout = getColHash(varargin) ||
+|| getColormapName.m ||  ||  ||  || nction cmap = getColormapName(handles) ||
+|| getDensity.m ||  ||  ||  || nction [density X Y] = getDensity(handles) ||
+|| getF.m ||  ||  ||  || nction frame = getF(handles) ||
+|| getFramebounds.m ||  ||  ||  || [minFrame maxFrame] = getFramebounds(handles) ||
 || getGamma.m || gamma  ||  getGamma || handles || Get the current gamma ||
+|| getID.m ||  ||  ||  || nction frame = getID(handles) ||
 || getLength.m || L  ||  getLength || handles || Get the current radius ||
+|| getPalmSiever.m ||  ||  ||  || nction h = getPalmSiever(handles) ||
+|| getPeakPosCentroid.m ||  ||  ||  || nction [pos amplitude]= getPeakPosCentroid(im, posGuess, windowRadius) ||
+|| getPeakPosGauss2d.m ||  ||  ||  || nction [pos amplitude]= getPeakPosGauss2d(im, zeroCoord,  windowSize) ||
 || getRadius.m || R  ||  getRadius || handles || Get the current radius ||
+|| getRes.m ||  ||  ||  || This function gets the chosen image size in the resolution box ||
+|| getSelectedRendering.m ||  ||  ||  || nction str = getSelectedRendering(handles) ||
+|| getStormDrift3.m ||  ||  ||  || nction [drift corAmplitude ] = getStormDrift3(stormData,minImPointPerArea,minFrame,stormPixSize,SccfWindowArea,imSize) ||
+|| getSubset.m ||  ||  ||  || nction subset = getSubset(handles) ||
+|| getVariables.m ||  ||  ||  || nction [rows2 data N] = getVariables(handles,N) ||
+|| getX.m ||  ||  ||  || nction X = getX(handles) ||
+|| getY.m ||  ||  ||  || nction Y = getY(handles) ||
+|| getZ.m ||  ||  ||  || nction Z = getZ(handles) ||
+|| getZbounds.m ||  ||  ||  || [minZ maxZ] = getZbounds(handles) ||
 || get_static_plugins.m || plugins  ||  get_static_plugin || function plugins = get_static_plugin || Returns a list of plugins which should be ||
+|| groupBy.m ||  ||  ||  || nction gX = groupBy(X, ID) ||
+|| grouping.m ||  ||  ||  || nction grouping(handles) ||
+|| importprm.m ||  ||  ||  ||  importprm(filename,delim) ||
+|| jdg_fit.m ||  ||  ||  || nction [coeff scoeff fitresult] = jdg_fit(x, y, amount, N) ||
+|| jhist.m ||  ||  ||  || Jittered histogram ||
+|| kde2d.m ||  ||  ||  || nction [bandwidth,density,X,Y]=kde2d(data,n,MIN_XY,MAX_XY) ||
 || limit80.m ||  || limit80 || handles  variable || Limits to central 80% of the data ||
+|| logger.m ||  ||  ||  || Logger function ||
 || matrix2html.m || str  ||  matrix2html || M precision || Matrix to HTML table ||
+|| nodiplib.m ||  ||  ||  || nction ndl = nodiplib() ||
+|| ppdiff.m ||  ||  ||  || nction qq = ppdiff(pp,j) ||
+|| ppint.m ||  ||  ||  || nction output = ppint(pp,a,b) ||
 || q05.m || q  ||  q05 || x || q05 ||
 || q10.m || q  ||  q10 || x || q10 ||
 || q90.m || q  ||  q90 || x || q90 ||
 || q95.m || q  ||  q95 || x || q95 ||
 || quantile.m || q  ||  quantile || data quantiles || QUANTILE ||
+|| quantization.m ||  ||  ||  || Quantization of signal x between xmin and xmax in N segments, indexed ||
 || radialSpectrum.m ||  PR PRx ||  radialSpectrum || X1 Y1 pxSize imSize || Calculate radial spectrum ||
 || removeAxisDrift.m || xc  ||  removeAxisDrift || x t xDrift tUn || ---------------------------------------------------- ||
+|| render_gauss.m ||  ||  ||  || nction im = render_gauss(pxSize, peaks, sigma, offsets, outSize, bounds) ||
 || render_histogram.m || density X  ||  render_histogram || handles || Render a histogram of the current view ||
+|| serialize.m ||  ||  ||  || nction ohandles=serialize(handles,filename) ||
+|| setBounds.m ||  ||  ||  || Sets the X,Y bounds ||
+|| setFramebounds.m ||  ||  ||  || Sets the Frame bounds ||
 || setMax.m ||  || setMax || handles  variable  maximum || Set maximum for a specified variable ||
 || setMin.m ||  || setMin || handles  variable  minimum || Set minimum for a specified variable ||
+|| setPSVar.m ||  ||  ||  || nction setPSVar(handles, varAssignment) ||
+|| setX.m ||  ||  ||  || nction setX(handles,X) ||
+|| setY.m ||  ||  ||  || nction setY(handles,Y) ||
+|| setZ.m ||  ||  ||  || nction setZ(handles,Z) ||
+|| setZbounds.m ||  ||  ||  || Sets the Z bounds ||
+|| sg_fit.m ||  ||  ||  || Single Gaussian fit ||
+|| splinefit.m ||  ||  ||  || nction pp = splinefit(varargin) ||
+|| stringToVarName.m ||  ||  ||  || nction varNames = stringToVarName(strings) ||
+|| sumsqr.m ||  ||  ||  || Elementwise sum of squares. ||
+|| testImportAscii.m ||  ||  ||  || leSpec='QuickPALM.m'; ||
+|| trace.m ||  ||  ||  || Tracing algorithm ||
+|| trace_collect.m ||  ||  ||  || Straighten and collect points along trace ||
+|| trace_histogram.m ||  ||  ||  || Calculate the histogram along a trace ||
+|| trace_sigmas.m ||  ||  ||  || Calculate sigmas along trace ||
 
  Automatically generated (2014-07-11)

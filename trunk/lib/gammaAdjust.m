@@ -1,3 +1,4 @@
+% Calculates gamma-adjusted image
 function imG = gammaAdjust(im,gammaVal)
 %GAMMAADJUST Calculates gamma-adjusted image
 %   Author: Seamus Holden, 2012

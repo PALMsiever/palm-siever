@@ -6,6 +6,7 @@
     * [Importing Importing data]
     * [Rendering]
     * [Sieving]
+    * [GUIreference GUI reference]
   * [WhoToAsk Who to ask for help]
   * [ChangeLog]
   * Developer Guide

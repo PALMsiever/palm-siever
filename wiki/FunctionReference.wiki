@@ -40,7 +40,7 @@
 || getX.m || X  ||  getX || handles ||  ---  ||
 || getY.m || Y  ||  getY || handles ||  ---  ||
 || getZ.m || Z  ||  getZ || handles ||  ---  ||
-|| getZbounds.m ||  ||  ||  || [minZ maxZ] = getZbounds(handles) ||
+|| getZbounds.m || minZ max ||  getZbounds || handles || Given the figure's handles, the function returns the minimum and maximum values for the Z variable. ||
 || get_static_plugins.m || plugins  ||  get_static_plugin || function plugins = get_static_plugin || Returns a list of plugins which should be ||
 || groupBy.m || gX  ||  groupBy || X  ID ||  ---  ||
 || grouping.m ||  || grouping || handles ||  ---  ||

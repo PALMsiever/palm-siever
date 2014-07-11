@@ -1,3 +1,4 @@
+%%% Internal function for the drift correction plugin
 function [xc,yc,tDrift,xDrift,yDrift,zc,zDrift]  = correctDrift(driftTracks,nSpline,t, x,y, z)
 if isfield(driftTracks{1},'z')
    isCorrectZ = true;

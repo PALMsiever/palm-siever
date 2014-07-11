@@ -35,9 +35,10 @@ For more information you can have a look at the [GUIreference GUI reference].
 
 ===The siever===
 
-This part of the interface allows you to select what subset of the data to display. The main table provides a list of all the variables (columns) of your dataset and the limits for each one. It also displays some basic statistic variables.
+This part of the interface allows you to select what subset of the data to display. The main table provides a list of all the variables (columns) of your dataset and the limits for each one. It also displays some basic statistic on the variables.
 
+Upon selecting a variable (by selecting the corresponding 'min' or 'max' column), a histogram appears below which shows the histogram of the selected variable. This allows to better decide the appropriate population, selected by directly changing the 'min' or the 'max' values in the table.
 
+You can also decide to discard the upper and lower 5% of your data by using the 'Exclude u/l 5%' button. The effect is to modify the 'min' and 'max' for the selected variable, calculating the upper and lower 5% thresholds, also shown to the right, under 'q05' and 'q95'.
 
-
-_To be continued..._
+Once the limits are modified, the statistics are not updated until the button 'Update stats' is pressed. 

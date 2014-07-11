@@ -13,3 +13,4 @@
   * Developer Guide
     * [ExtendingPALMsiever Extending PALMsiever]
     * [FunctionReference Function reference]
+  * [FAQ]

@@ -1,9 +1,8 @@
-% Plots a gaussian fit for datapoints (xs,ys) in a new figure and returns
-% the handle
+% Plots a gaussian fit for datapoints (xs,ys) in a new figure and returns the handle
+function f=double_gaussian_fit_1D_plot(xs,ys);
 %
 % Thomas Pengo, 2013
 %
-function f=double_gaussian_fit_1D_plot(xs,ys);
 xs=xs(:);ys=ys(:);
 
 f=figure;

@@ -1,3 +1,4 @@
+% Clustering the data with Density-Based Scan Algorithm with Noise (DBSCAN)
 function [class,type]=dbscan(x,k,Eps)
 % -------------------------------------------------------------------------
 % Function: [class,type]=dbscan(x,k,Eps)

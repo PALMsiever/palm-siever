@@ -1,3 +1,4 @@
+% Opens the GUI to perform drift correction with cross-correlation. See the corresponding documentation for details.
 function varargout = Drift_correction_xCor(varargin)
 % DRIFT_CORRECTION_XCOR MATLAB code for Drift_correction_xCor.fig
 %      DRIFT_CORRECTION_XCOR, by itself, creates a new DRIFT_CORRECTION_XCOR or raises the existing

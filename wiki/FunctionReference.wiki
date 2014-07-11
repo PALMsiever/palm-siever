@@ -1,74 +1,87 @@
 #summary The reference to each function in the library
 
-WIP... This is automatically generated from the .m files. Not perfect yet... Please refer to the corresponding .m file for additional documentation.
+|| *Filename* || *Output* || *Function name* || *Parameters* || *Description* ||
+|| add_colorbar.m ||  || add_colorbar || handles, col || Add colorbar ||
+|| add_scalebar.m || mask  ||  add_scalebar || handles,cbcol,img || Adding a scalebar ||
+|| autoIso.m || isoVal  ||  autoIso || vol || Automatic calculation of iso-surface value for volumetric data using Otsu's method ||
+|| calcFIRE.m || [ FIRE se frcprofile frcprofile_f ]  ||  calcFIRE || X, Y, res, minX, maxX, minY, maxY, nTrials || Calculate the FIRE value from the specified X and Y vectors. ||
+|| calcFIREh.m || [ frcprofile linx ]  ||  calcFIREh || handles, nTrials || Calculate the FIRE fetching the parameters from the GUI ||
+|| calcFIRE_1D.m || [ FIRE se frcprofile frcprofile_f F frcprofile_est fSNR fSNR_RES]  ||  calcFIRE_1D || X, res, minX, maxX, nTrials || Calculate a variation of the FIRE for 1-dimensional data ||
+|| calcHistogram.m || [density n m X Y]  ||  calcHistogram || handles || Calculate histogram ||
+|| calcHistogram_.m || [density n m X Y]  ||  calcHistogram_ || XPosition, YPosition, res, minX, maxX, minY, maxY || Calculates the histogram from the two vectors, within the specified bounds and with 'res' number of bins. ||
+|| dbscan.m || [class,type] || dbscan || x,k,Eps || Clustering the data with Density-Based Scan Algorithm with Noise (DBSCAN) ||
+|| dg_fit.m || [fitresult, gof]  ||  dg_fit || x, y, w0 || Performs a double-gaussian fit on the x and y vectors, with an optional initial estimation of the width w0. ||
+|| double_gaussian_fit_1D.m || [mu sigma w gof fits]  ||  double_gaussian_fit_1D  || xs,ys || Fits the data to a double Gaussian function ||
+|| double_gaussian_fit_1D_plot.m || f || double_gaussian_fit_1D_plot || xs,ys || Plots a gaussian fit for datapoints (xs,ys) in a new figure and returns the handle ||
+|| fetch.m || varargout  ||  fetch || varargin || Fetch variables from the workspace by name ||
+|| freedmanDiaconis.m || nBins ||  freedmanDiaconis || data || Calculates the Freedman-Diaconis choice for the bin width. 'data' is assumed to be a single column vector. ||
+|| fsize.m || siz  ||  fsize || filename || Get file size. ||
+|| gammaAdjust.m || imG  ||  gammaAdjust || im,gammaVal || Calculates gamma-adjusted image ||
+|| gaussian_fit_1D.m || imG  ||  gammaAdjust || im,gammaVal || nction [mu sigma gof fits] = gaussian_fit_1D (xs,ys) ||
+|| gaussian_fit_1D_plot.m || imG  ||  gammaAdjust || im,gammaVal || Plots a gaussian fit for datapoints (xs,ys) in a new figure and returns ||
+|| getBounds.m || imG  ||  gammaAdjust || im,gammaVal || nction [minX, maxX, minY, maxY] = getBounds(handles) ||
+|| getColHash.m || imG  ||  gammaAdjust || im,gammaVal || nction varargout = getColHash(varargin) ||
+|| getColormapName.m || imG  ||  gammaAdjust || im,gammaVal || nction cmap = getColormapName(handles) ||
+|| getDensity.m || imG  ||  gammaAdjust || im,gammaVal || nction [density X Y] = getDensity(handles) ||
+|| getF.m || imG  ||  gammaAdjust || im,gammaVal || nction frame = getF(handles) ||
+|| getFramebounds.m || imG  ||  gammaAdjust || im,gammaVal || [minFrame maxFrame] = getFramebounds(handles) ||
+|| getGamma.m || gamma  ||  getGamma || handles || Get the current gamma ||
+|| getID.m || gamma  ||  getGamma || handles || nction frame = getID(handles) ||
+|| getLength.m || L  ||  getLength || handles || Get the current radius ||
+|| getPalmSiever.m || L  ||  getLength || handles || nction h = getPalmSiever(handles) ||
+|| getPeakPosCentroid.m || L  ||  getLength || handles || nction [pos amplitude]= getPeakPosCentroid(im, posGuess, windowRadius) ||
+|| getPeakPosGauss2d.m || L  ||  getLength || handles || nction [pos amplitude]= getPeakPosGauss2d(im, zeroCoord,  windowSize) ||
+|| getRadius.m || R  ||  getRadius || handles || Get the current radius ||
+|| getRes.m || R  ||  getRadius || handles || This function gets the chosen image size in the resolution box ||
+|| getSelectedRendering.m || R  ||  getRadius || handles || nction str = getSelectedRendering(handles) ||
+|| getStormDrift3.m || R  ||  getRadius || handles || nction [drift corAmplitude ] = getStormDrift3(stormData,minImPointPerArea,minFrame,stormPixSize,SccfWindowArea,imSize) ||
+|| getSubset.m || R  ||  getRadius || handles || nction subset = getSubset(handles) ||
+|| getVariables.m || R  ||  getRadius || handles || nction [rows2 data N] = getVariables(handles,N) ||
+|| getX.m || R  ||  getRadius || handles || nction X = getX(handles) ||
+|| getY.m || R  ||  getRadius || handles || nction Y = getY(handles) ||
+|| getZ.m || R  ||  getRadius || handles || nction Z = getZ(handles) ||
+|| getZbounds.m || R  ||  getRadius || handles || [minZ maxZ] = getZbounds(handles) ||
+|| get_static_plugins.m || plugins  ||  get_static_plugin || function plugins = get_static_plugin || Returns a list of plugins which should be ||
+|| groupBy.m || plugins  ||  get_static_plugin || function plugins = get_static_plugin || nction gX = groupBy(X, ID) ||
+|| grouping.m || plugins  ||  get_static_plugin || function plugins = get_static_plugin || nction grouping(handles) ||
+|| importprm.m || plugins  ||  get_static_plugin || function plugins = get_static_plugin ||  importprm(filename,delim) ||
+|| jdg_fit.m || plugins  ||  get_static_plugin || function plugins = get_static_plugin || nction [coeff scoeff fitresult] = jdg_fit(x, y, amount, N) ||
+|| jhist.m || plugins  ||  get_static_plugin || function plugins = get_static_plugin || Jittered histogram ||
+|| kde2d.m || plugins  ||  get_static_plugin || function plugins = get_static_plugin || nction [bandwidth,density,X,Y]=kde2d(data,n,MIN_XY,MAX_XY) ||
+|| limit80.m ||  || limit80 || handles, variable || Limits to central 80% of the data ||
+|| logger.m ||  || limit80 || handles, variable || Logger function ||
+|| matrix2html.m || str  ||  matrix2html || M,precision || Matrix to HTML table ||
+|| nodiplib.m || str  ||  matrix2html || M,precision || nction ndl = nodiplib() ||
+|| ppdiff.m || str  ||  matrix2html || M,precision || nction qq = ppdiff(pp,j) ||
+|| ppint.m || str  ||  matrix2html || M,precision || nction output = ppint(pp,a,b) ||
+|| q05.m || q  ||  q05 || x || q05 ||
+|| q10.m || q  ||  q10 || x || q10 ||
+|| q90.m || q  ||  q90 || x || q90 ||
+|| q95.m || q  ||  q95 || x || q95 ||
+|| quantile.m || q  ||  quantile || data,quantiles || QUANTILE ||
+|| quantization.m || q  ||  quantile || data,quantiles || Quantization of signal x between xmin and xmax in N segments, indexed ||
+|| radialSpectrum.m || [ PR PRx ]  ||  radialSpectrum || X1,Y1,pxSize,imSize || Calculate radial spectrum ||
+|| removeAxisDrift.m || xc  ||  removeAxisDrift || x,t,xDrift,tUn || ---------------------------------------------------- ||
+|| render_gauss.m || xc  ||  removeAxisDrift || x,t,xDrift,tUn || nction im = render_gauss(pxSize, peaks, sigma, offsets, outSize, bounds) ||
+|| render_histogram.m || [density X Y]  ||  render_histogram || handles || Render a histogram of the current view ||
+|| serialize.m || [density X Y]  ||  render_histogram || handles || nction ohandles=serialize(handles,filename) ||
+|| setBounds.m || [density X Y]  ||  render_histogram || handles || Sets the X,Y bounds ||
+|| setFramebounds.m || [density X Y]  ||  render_histogram || handles || Sets the Frame bounds ||
+|| setMax.m ||  || setMax || handles, variable, maximum || Set maximum for a specified variable ||
+|| setMin.m ||  || setMin || handles, variable, minimum || Set minimum for a specified variable ||
+|| setPSVar.m ||  || setMin || handles, variable, minimum || nction setPSVar(handles, varAssignment) ||
+|| setX.m ||  || setMin || handles, variable, minimum || nction setX(handles,X) ||
+|| setY.m ||  || setMin || handles, variable, minimum || nction setY(handles,Y) ||
+|| setZ.m ||  || setMin || handles, variable, minimum || nction setZ(handles,Z) ||
+|| setZbounds.m ||  || setMin || handles, variable, minimum || Sets the Z bounds ||
+|| sg_fit.m ||  || setMin || handles, variable, minimum || Single Gaussian fit ||
+|| splinefit.m ||  || setMin || handles, variable, minimum || nction pp = splinefit(varargin) ||
+|| stringToVarName.m ||  || setMin || handles, variable, minimum || nction varNames = stringToVarName(strings) ||
+|| sumsqr.m ||  || setMin || handles, variable, minimum || Elementwise sum of squares. ||
+|| testImportAscii.m ||  || setMin || handles, variable, minimum || leSpec='QuickPALM.m'; ||
+|| trace.m ||  || setMin || handles, variable, minimum || Tracing algorithm ||
+|| trace_collect.m ||  || setMin || handles, variable, minimum || Straighten and collect points along trace ||
+|| trace_histogram.m ||  || setMin || handles, variable, minimum || Calculate the histogram along a trace ||
+|| trace_sigmas.m ||  || setMin || handles, variable, minimum || Calculate sigmas along trace ||
 
-|| Function name || output || Description ||
-||add_scalebar||mask ||Adding a scalebar||
-||autoIso||isoVal ||||
-||calcHistogram||[density n m X Y] ||Calculate histogram||
-||combineAllDriftTracks||[xDrift, xAllCor] ||||
-||correctDrift||[xc,yc,tDrift,xDrift,yDrift,zc,zDrift]  ||||
-||crossCorrect3D||[xc,yc,tDrift,xDrift,yDrift,zc,zDrift] ||||
-||dbscan||[class,type]||||
-||dg_fit||[fitresult, gof] ||||
-||fetch||varargout ||Fetch variables from the workspace by name||
-||fileIoAscii||[varargout] ||||
-||fileIoOther||varargout ||||
-||freedmanDiaconis||nBins||||
-||fsize||siz ||Get file size.||
-||gammaAdjust||imG ||||
-||get_static_plugins||plugins ||Returns a list of plugins which should be||
-||getBounds||[minX, maxX, minY, maxY] ||||
-||getColHash||varargout ||||
-||getColormapName||cmap ||||
-||getDensity||[density X Y] ||||
-||getF||frame ||||
-||getFramebounds||[minFrame maxFrame] ||[minFrame maxFrame] = getFramebounds(handles)||
-||getGamma||gamma ||Get the current gamma||
-||getPalmSiever||h ||||
-||getPeakPosCentroid||[pos amplitude]||||
-||getPeakPosGauss2d||[pos amplitude]||||
-||getRes||res ||This function gets the chosen image size in the resolution box||
-||getSelectedRendering||str ||||
-||getStormDrift3||[drift corAmplitude ] ||||
-||getSubset||subset ||||
-||getVariables||[rows2 data N] ||||
-||getX||X ||||
-||getY||Y ||||
-||getZ||Z ||||
-||getZbounds||[minZ maxZ] ||[minZ maxZ] = getZbounds(handles)||
-||groupBy||gX ||||
-||getX||||||
-||histn||[D px] ||||
-||importprm||Nr ||importprm(filename,delim)||
-||jdg_fit||[coeff scoeff fitresult] ||||
-||jhist||[H b H2]||Jittered histogram||
-||kde2d||[bandwidth,density,X,Y]||||
-||kden||[D px] ||||
-||=0||nargin||Logger function||
-||matrix2html||str ||Matrix to HTML table||
-||ppdiff||qq ||||
-||ppint||output ||||
-||q05||q ||q05||
-||q95||q ||q95||
-||quantile||q ||QUANTILE||
-||quantization||[i X] ||Quantization of signal x between xmin and xmax in N segments, indexed||
-||radialSpectrum||[ PR PRx ] ||Calculate radial spectrum||
-||removeAxisDrift||xc ||-----------------------------------------------------||
-||render_gauss||im ||||
-||render_histogram||[density X Y] ||Render a histogram of the current view||
-||serialize||ohandles||||
-||setBounds||handles ||Sets the X,Y bounds||
-||setFramebounds||handles ||Sets the Frame bounds||
-||get||||Set maximum for a specified variable||
-||get||||Set minimum for a specified variable||
-||get||||function setVar(handles, varAssignment)||
-||setZbounds||handles ||Sets the Z bounds||
-||sg_fit||[fitresult, gof] ||Single Gaussian fit||
-||splinefit||pp ||||
-||stringToVarName||varNames ||||
-||sumsqr||[s,n] ||Elementwise sum of squares.||
-||trace||Trace ||Tracing algorithm||
-||trace_collect||[ sX sY visited ] ||Straighten and collect points along trace||
-||trace_histogram||[ A centersY visited centersX  ]||Calculate the histogram along a trace||
-||trace_sigmas||[ sigmas means gofs ns sigmas_outliers] ||Calculate sigmas along trace||
+ Automatically generated (2014-07-11)

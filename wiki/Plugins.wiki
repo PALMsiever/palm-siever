@@ -1,0 +1,22 @@
+#summary A list of available plugins
+
+||adaptVisibleRangeForPixelSize||Plugin to set the limits for the size manually||
+||averageDensity||Otsu thresholding and average density calculation||
+||Box_Zoom||Box zoom||
+||Cluster_DBSCAN||nction varargout = Cluster_DBSCAN(varargin)||
+||density_column||nction density_column(handles)||
+||density_plot||nction density_plot(handles)||
+||double_Gaussian_fit||Perform a double Gaussian fit and plot the results||
+||Drift_correction_fiducial||nction varargout = Drift_correction_fiducial(varargin)||
+||Drift_correction_xCor||nction varargout = Drift_correction_xCor(varargin)||
+||frcLoop|| Torus (!! note that if you execute this section you will clear existing X,Y variables)||
+||generic_command||Generic command||
+||hello_message||nction hello_message(handles)||
+||meanDensity||nction meanDensity(handles)||
+||myFIRE||nction myFIRE(handles)||
+||plot3D||nction plot3D(handles)||
+||pspectrum||Power spectrum of the current rendering||
+||Render_3DVol||nction varargout = Render_3DVol(varargin)||
+||toNanometers||nction toNanometers(handles)||
+||Transform3D||nction varargout = Transform3D(varargin)||
+||vol3D||nction vol3D(handles)||

@@ -1,6 +1,6 @@
 #summary A list of available plugins
 
-||adaptVisibleRangeForPixelSize||Plugin to set the limits for the size manually||
+||adaptVisibleRangeForPixelSize||Allows to automatically set the XY limits to force a specified pixel size||
 ||averageDensity||Otsu thresholding and average density calculation||
 ||Box_Zoom||Allows the user to zoom into a region specified with a box. Double-click on the border to accept the zoom-box.||
 ||Cluster_DBSCAN||Opens the GUI to perform DBSCAN clustering. See the corresponding documentation for details.||

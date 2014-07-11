@@ -1,3 +1,4 @@
+% Converts the XYZ data from generic units to nanometers.
 function toNanometers(handles)
 
 if isnumeric(handles)

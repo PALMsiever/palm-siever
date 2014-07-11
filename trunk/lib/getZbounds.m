@@ -1,3 +1,5 @@
+% Given the figure's handles, the function returns the minimum and maximum values for the Z variable.
+function [minZ maxZ] = getZbounds(handles)
 % [minZ maxZ] = getZbounds(handles)
 %
 %   Given the figure's handles, the function returns the minimum and
@@ -7,7 +9,6 @@
 % warranty is given.
 %
 % Author: Thomas Pengo, 2012
-function [minZ maxZ] = getZbounds(handles)
 data = get(handles.tParameters,'Data');
 a = get(handles.tParameters,'RowName');
 varsZ = get(handles.pZAxis,'String');

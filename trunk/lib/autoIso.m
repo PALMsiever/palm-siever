@@ -1,6 +1,5 @@
+% Automatic calculation of iso-surface value for volumetric data using Otsu's method
 function isoVal = autoIso(vol)
-%automatic calculation of iso-surface value for 
-%volumetric data using otsu's method
 
 vol= double(vol);
 %nBins = freedmanDiaconis(vol(:)); this gives ridiculous nBins for large datasets

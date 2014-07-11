@@ -1,7 +1,8 @@
+% Calculates the histogram from the two vectors, within the specified bounds and with 'res' number of bins.
+function [density n m X Y] = calcHistogram_(XPosition, YPosition, res, minX, maxX, minY, maxY)
 % [density n m X Y] = calcHistogram_(XPosition, YPosition, res, minX, maxX, minY, maxY)
 %  or
 % [density n m X Y] = calcHistogram_(XPosition, YPosition, pxSize)
-function [density n m X Y] = calcHistogram_(XPosition, YPosition, res, minX, maxX, minY, maxY)
 
 if nargin == 3 % X,Y,res Note: res means pixel size
     rangeX = max(XPosition)-min(XPosition); cX = .5*(max(XPosition)+min(XPosition));

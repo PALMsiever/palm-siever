@@ -1,4 +1,4 @@
-% Plugin to set the limits for the size manually
+% Allows to automatically set the XY limits to force a specified pixel size
 %
 %  setLimitsForPixelSize(handles)
 %

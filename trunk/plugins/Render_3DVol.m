@@ -1,3 +1,4 @@
+% Opens the GUI for the 3D iso-surface rendering plugin. See corresponding documentation for details.
 function varargout = Render_3DVol(varargin)
 % RENDER_3DVOL MATLAB code for Render_3DVol.fig
 %      RENDER_3DVOL, by itself, creates a new RENDER_3DVOL or raises the existing

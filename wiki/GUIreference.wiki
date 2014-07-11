@@ -4,28 +4,29 @@
 
 Here is a list of all commands in the GUI and additional help.
 
-| *Location* | *Command* | *Description* |
-| File menu | Open | Opens a saved dataset (.MAT format) |
-| File menu | Save | Saves the data and the state of PALMsiever to a .MAT file |
-| File menu | Import | Imports data from a text file, see [Importing] |
-| File menu | Export | Exports data to a text file, see [Importing] |
-| File menu | Open PRM... | Legacy import function, faster for PRM files |
-| File menu | Open CSV... | Legacy import function |
-| File menu | Save TIFF.. | Saves the current rendered image into a 16-bit grayscale TIFF file. 0 corresponds to the 'Min' value, 2^16 corresponds to the 'Max' value. |
-| File menu | Save TIFF stack.. | Saves a stack of images through whatever variable has been selected as 'Z'. The step and the slice thickness are specified in the 'Wheel behavior/Z'. |
-| Edit menu | Copy | Copies the current rendered image into the system's clipboard, as an RGB image. |
-| Points menu | Sieve! | Discards all points which do not fall within the limits specified in the table, including the X, Y and Z variables. |
-| Points menu | Sieve! (no XYZ) | Discards all points which do not fall within the limits specified in the table, but without taking into account the current limits for X, Y and Z. |
-| Points menu | Group | Performs Grouping on the point localization data. See [Grouping] for more details |
-| Points menu | Keep grouped only | Keeps a single localization per group (ID column), where each corresponding variable is averaged across the members of a same group. |
-| Trace menu | Trace.. | Start a new trace. See [Tracing] |
-| Trace menu | Crop trace.. | Crop the current trace to the nearest point specified by the user. |
-| Trace menu | Save trace | Save the current trace to a .MAT file. |
-| Trace menu | Load trace | Loads a trace from a .MAT file and makes it the current trace. |
-| Trace menu | Show trace | Plots the current trace onto the rendered image. |
-| Trace menu | Histogram | Collects all the points along the trace and plots the histogram of their distance from the centerline. |
-| Trace menu | Density+DG fit | Collects all the points along the trace, plots the histogram of their distance from the centerline and fits it to a double Gaussian function. |
+|| *Location* || *Command* || *Description* ||
+|| File menu || Open || Opens a saved dataset (.MAT format) ||
+|| File menu || Save || Saves the data and the state of PALMsiever to a .MAT file ||
+|| File menu || Import || Imports data from a text file, see [Importing] ||
+|| File menu || Export || Exports data to a text file, see [Importing] ||
+|| File menu || Open PRM... || Legacy import function, faster for PRM files ||
+|| File menu || Open CSV... || Legacy import function ||
+|| File menu || Save TIFF.. || Saves the current rendered image into a 16-bit grayscale TIFF file. 0 corresponds to the 'Min' value, 2^16 corresponds to the 'Max' value. ||
+|| File menu || Save TIFF stack.. || Saves a stack of images through whatever variable has been selected as 'Z'. The step and the slice thickness are specified in the 'Wheel behavior/Z'. ||
+|| Edit menu || Copy || Copies the current rendered image into the system's clipboard, as an RGB image. ||
+|| Points menu || Sieve! || Discards all points which do not fall within the limits specified in the table, including the X, Y and Z variables. ||
+|| Points menu || Sieve! (no XYZ) || Discards all points which do not fall within the limits specified in the table, but without taking into account the current limits for X, Y and Z. ||
+|| Points menu || Group || Performs Grouping on the point localization data. See [Grouping] for more details ||
+|| Points menu || Keep grouped only || Keeps a single localization per group (ID column), where each corresponding variable is averaged across the members of a same group. ||
+|| Trace menu || Trace.. || Start a new trace. See [Tracing] ||
+|| Trace menu || Crop trace.. || Crop the current trace to the nearest point specified by the user. ||
+|| Trace menu || Save trace || Save the current trace to a .MAT file. ||
+|| Trace menu || Load trace || Loads a trace from a .MAT file and makes it the current trace. ||
+|| Trace menu || Show trace || Plots the current trace onto the rendered image. ||
+|| Trace menu || Histogram || Collects all the points along the trace and plots the histogram of their distance from the centerline. ||
+|| Trace menu || Density+DG fit || Collects all the points along the trace, plots the histogram of their distance from the centerline and fits it to a double Gaussian function. ||
   
+
 
 
 

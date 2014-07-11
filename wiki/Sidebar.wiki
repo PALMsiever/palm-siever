@@ -1,4 +1,4 @@
-  * [Help Main help page]
+  * [Help Homepage]
   * [WhoToAsk Who to ask for help]
   * [ChangeLog]
   * User Guide

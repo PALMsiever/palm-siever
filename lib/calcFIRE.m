@@ -1,3 +1,4 @@
+% Calculate the FIRE value from the specified X and Y vectors.
 function [ FIRE se frcprofile frcprofile_f ] = calcFIRE(X, Y, res, minX, maxX, minY, maxY, nTrials)
 frcprofile_f = linspace(0,res/(maxX-minX)/2,res/2+1)'; %dx=linx(2)-linx(1);
 frcprofile = zeros(nTrials,res/2+1);

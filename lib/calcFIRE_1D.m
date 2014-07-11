@@ -1,3 +1,4 @@
+% Calculate a variation of the FIRE for 1-dimensional data
 function [ FIRE se frcprofile frcprofile_f F frcprofile_est fSNR fSNR_RES] = calcFIRE_1D(X, res, minX, maxX, nTrials)
 frcprofile_f = linspace(0,res/(maxX-minX)/2,res/2)';
 frcprofile = zeros(res/2,1);

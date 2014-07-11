@@ -1,3 +1,4 @@
+% Creates a 3D volume from the data. Please use the Render_3DVol plugin.
 function vol3D(handles)
 
 X = getX(handles);

@@ -1,3 +1,4 @@
+% Fits the data to a double Gaussian function
 function [mu sigma w gof fits] = double_gaussian_fit_1D (xs,ys)
 
 % Gaussian

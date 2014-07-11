@@ -9,11 +9,9 @@
 ||double_Gaussian_fit||Perform a double Gaussian fit and plot the results||
 ||Drift_correction_fiducial||Opens the GUI to perform drift correction with fiducials. See corresponding documentation for details.||
 ||Drift_correction_xCor||Opens the GUI to perform drift correction with cross-correlation. See the corresponding documentation for details.||
-||frcLoop|| Torus (!! note that if you execute this section you will clear existing X,Y variables)||
 ||generic_command||Opens a mini-prompt to perform a generic MATLAB command||
 ||hello_message||Simplest possible plugin example.||
 ||meanDensity||nction meanDensity(handles)||
-||myFIRE||nction myFIRE(handles)||
 ||plot3D||Creates a new 3D scatterplot of the data||
 ||pspectrum||Power spectrum of the current rendering||
 ||Render_3DVol||Opens the GUI for the 3D iso-surface rendering plugin. See corresponding documentation for details.||

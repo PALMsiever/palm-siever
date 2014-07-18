@@ -18,7 +18,9 @@ Click "Correct drift!" to apply the correction. If you have ticked the "Show dri
 <img src="https://palm-siever.googlecode.com/svn/wiki/images/DriftCorrectionFiducial_DriftPlot.png" alt="Drift plot"/>
 
 Important notes: 
+
 - If the data is very drifty, or shows sharp "bumps" in the drift (as in the particularly nasty example I show here), then you may need to increase the number of splines - here I increased it to 100. In the case of smooth drift, then 10 usually  works fine.
+
 - Note that the initial fitted drift may look offset from the noisy measured drift (as can be seen in this image). This is because the zero point of the plotted measured drift is the first datapoint, which will randomly offset from the mean (time-averaged) bead position in that interval (which is what the spline corrresponds to.
 
 The tickbox "Correct Z drift" allows you to do 3D drift correction.

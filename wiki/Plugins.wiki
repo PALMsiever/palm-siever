@@ -16,6 +16,6 @@
 ||Render_3DVol||Opens the GUI for the 3D iso-surface rendering plugin. See corresponding documentation for details.||
 ||toNanometers||Converts the XYZ data from generic units to nanometers.||
 ||Transform3D||nction varargout = Transform3D(varargin)||
-||vol3D||Creates a 3D volume from the data. Please use the Render_3DVol plugin.||
+
 
  Automatically generated (2014-07-11)

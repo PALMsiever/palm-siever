@@ -1,11 +1,14 @@
-#summary One-sentence summary of this page.
+#summary Fiducial-based drift correction plugin
 
 = Introduction =
 
-Add your content here.
+A common and very robust way to correct for drift in localization microscopy is to use in situ fiducial markers. This plugin estimates the drift of the system using one or more fiducials as a reference. Spline fitting is used to ensure robust drift estimation
 
 
 = Details =
+
+<img src="https://palm-siever.googlecode.com/svn/wiki/images/DriftCorrectionFiducial_screenshot.png" alt="Drift correction screenshot"/>
+
 
 Add your content here.  Format your content with:
   * Text in *bold* or _italic_

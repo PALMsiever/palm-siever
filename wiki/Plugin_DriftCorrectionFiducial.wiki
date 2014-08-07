@@ -25,4 +25,4 @@ Important notes:
 
 - The tickbox "Correct Z drift" allows you to do 3D drift correction.
 
-- The test data, 'Bead drift example 30ms frame.mat' was used for the exemplar analysis shown here.
+- The test data, 'TetraSpeck bead drift example 30ms frame.mat' was used for the exemplar analysis shown here. Another example dataset containing fiducials is included: 'Tubulin-Alexa647 with fiducials.mat'.

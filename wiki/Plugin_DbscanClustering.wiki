@@ -4,11 +4,12 @@
 
 Add your content here.
 
+<img src="https://palm-siever.googlecode.com/svn/wiki/images/400px-DBSCAN-Illustration.svg_wikipedia.png" alt="DBSCAN principle"/>
 
 = Details =
 
-<img src="https://palm-siever.googlecode.com/svn/wiki/images/DriftCorrectionFiducial_screenshot.png" alt="DBSCAN test data"/>
+<img src="https://palm-siever.googlecode.com/svn/wiki/images/DBSCAN_FtsZ_example_data_screenshot.png" alt="DBSCAN test data"/>
 
-<img src="https://palm-siever.googlecode.com/svn/wiki/images/DriftCorrectionFiducial_screenshot.png" alt="DBSCAN plugin screenshot"/>
+<img src="https://palm-siever.googlecode.com/svn/wiki/images/DBSCAN_plugin.png" alt="DBSCAN plugin screenshot"/>
 
-<img src="https://palm-siever.googlecode.com/svn/wiki/images/DriftCorrectionFiducial_screenshot.png" alt="DBSCAN result"/>
+<img src="https://palm-siever.googlecode.com/svn/wiki/images/DBSCAN_example_result.png" alt="DBSCAN result"/>

@@ -43,8 +43,14 @@ vars{end+1} = 'settingz';
 if loading
     ohandles = handles;
     
+    % Save figure
+    PS_FIGURE=evalin('base','PS_FIGURE');
+    
     % Load file
     evalin('base',['load(''' filename ''')']);
+    
+    % Restore figure
+    assignin('base','PS_FIGURE',PS_FIGURE);
     
     myhandlez=evalin('base','myhandlez');
     settingz=evalin('base','settingz');

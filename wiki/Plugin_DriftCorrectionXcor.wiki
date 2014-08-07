@@ -20,7 +20,7 @@ Opening up the plugin we see the following dialogue:
 <img src="https://palm-siever.googlecode.com/svn/wiki/images/DriftCorrectionXCor_screenshot.png" alt="Drift correction screenshot"/>
 
 To perform drift correction, you need to set the following parameters:
-  * *Min Pts/ Area*: This is the minimum density of localizations required to form a sub-image. If there are not enough localizations, the cross-correlation amplitude will be very low, and it will not be possible to localize the peak. If this happens the drift graph will usually (but not always!) show lots of random spikes in measured drift. Generally *50 - 100 locs/ um^{2} * works reasonable well. The units here are locs/ (unit area)^{2} so depending on your data format you may need to convert this value to the appropriate distance units. Here, RapidStorm uses distance units of nm, so the right value is 50E-6 locs/ nm^2.
+  * *Min Pts/ Area*: This is the minimum density of localizations required to form a sub-image. If there are not enough localizations, the cross-correlation amplitude will be very low, and it will not be possible to localize the peak. If this happens the drift graph will usually (but not always!) show lots of random spikes in measured drift. Generally *50 - 100 locs/ um^2^ * works reasonable well. The units here are locs/ (unit area)^2^ so depending on your data format you may need to convert this value to the appropriate distance units. Here, RapidStorm uses distance units of nm, so the right value is 50E-6 locs/ nm^2.
   * *Min Frames*:
   * *Cross corr pixel size*:
   * *XCor fit window sz*:

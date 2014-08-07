@@ -23,4 +23,6 @@ Important notes:
 
 - Note that the initial fitted drift may look offset from the noisy measured drift (as can be seen in this image). This is because the zero point of the plotted measured drift is the first datapoint, which will randomly offset from the mean (time-averaged) bead position in that interval (which is what the spline corrresponds to.
 
-The tickbox "Correct Z drift" allows you to do 3D drift correction.
+- The tickbox "Correct Z drift" allows you to do 3D drift correction.
+
+- The test data, 'Bead drift example 30ms frame.mat' was used for the exemplar analysis shown here.

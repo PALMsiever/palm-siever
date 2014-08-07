@@ -46,4 +46,4 @@ Once the limits are modified, the statistics are not updated until the button 'U
 
 ===The plugins===
 
-A great deal of extended functionality is included in the form of [Plugins plugins], located in the menu bar. These allow several common tasks to be performed such as [Plugin_DriftCorrectionFiducial drift correction] and [DbscanPlugin clustering]. You can also add additional functionality to PALMsiever by [ExtendingPALMsiever writing new plugins].
+A great deal of extended functionality is included in the form of [Plugins plugins], located in the menu bar. These allow several common tasks to be performed such as [Plugin_DriftCorrectionFiducial drift correction] and [Plugin_DbscanClustering clustering]. You can also add additional functionality to PALMsiever by [ExtendingPALMsiever writing new plugins].

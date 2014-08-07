@@ -1,8 +1,12 @@
-#summary One-sentence summary of this page.
+#summary Cross-correlation based drift correction.
 
 = Introduction =
 
-Add your content here.
+This plugin uses image cross-correlation to correct sample drift, which does not require the presence of fiducial markers in the sample. Briefly, multiple super-resolved images are constructed for short time intervals (less than the total acquisition time), and each subsequent image is cross-correlated with the first image. The shift of the cross-correlation peak corresponds to the sample drift.
+
+This method is described in detail in several publications, eg. Wang et al, Opt. Express 2014. In the nomenclature of Wang et al. this implementation essentially corresponds to "direct cross-correlation". (Side note: the redundant cross-correlation method presented in that paper looks very cool - but is not yet implemented in PALMsiever!).
+
+NB: Cross-correlation based drift correction is generally less reliable than the fiducial approach, and works best for structures that contain lots of narrow lines (such as microtubules). In particular, I have found that for samples containing mainly sparse point-like structures
 
 
 = Details =

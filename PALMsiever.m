@@ -2505,6 +2505,8 @@ if strcmp(res,'Yes')
     
     handles.settings.N = evalin('base','numel(subset)');
     msgbox(['Discarded ' num2str(N0-handles.settings.N) ' points. ' num2str(handles.settings.N) ' remaining.']);
+    
+    guidata(hObject,handles);
 end
 
 

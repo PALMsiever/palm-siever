@@ -14,7 +14,7 @@ NB: Cross-correlation based drift correction is generally less reliable than the
 
 Let's drift correct some microtubules! Example dataset: "Tubulin-Alexa647 with fiducials.mat"
 
-<img src="https://palm-siever.googlecode.com/svn/wiki/images/DriftCorrectionXCor_microtubulesExample.png" alt="Drift correction screenshot"/>
+<img src="https://palm-siever.googlecode.com/svn/wiki/images/DriftCorrectionXCor_microtubulesExample.png" alt="Cross-correlation drift correction example data"/>
 
 Opening up the plugin we see the following dialogue:
 
@@ -26,3 +26,10 @@ To perform drift correction, you need to set the following parameters:
   * *Cross corr pixel size*: Pixel size of the super-resolved sub-image used for cross-correlation. Usually leave at 20 nm.
   * *XCor fit window sz*: Size of the fit window around the cross-correlation peak for a Gaussian fit to the peak to be performed. Usually leave at 100 (pixels).
     
+If you leave "Show drift graph" ticked, and click "Correct drift", the data will be drift corrected and you should see the resulting drift graph:
+
+<img src="https://palm-siever.googlecode.com/svn/wiki/images/DriftCorrectionXCor_DriftPlot.png" alt="Cross-correlation drift estimate"/>
+
+
+Notes: 
+ * For 3D data there is the option to correct Z drift using the same approach (2D cross-correlation). I have fount this to be much more unreliable than X,Y correction (hence the "Experimental!" warning), and have mainly left it in for testing purposes.

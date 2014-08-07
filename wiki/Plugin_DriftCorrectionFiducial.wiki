@@ -4,6 +4,8 @@
 
 A common and very robust way to correct for drift in localization microscopy is to use in situ fiducial markers. This plugin estimates the drift of the system using one or more fiducials as a reference. Spline fitting is used to ensure robust drift estimation
 
+<img src="https://palm-siever.googlecode.com/svn/wiki/images/400px-DBSCAN-Illustration.svg_wikipedia.png" alt="DBSCAN principle"/>
+
 
 = Details =
 

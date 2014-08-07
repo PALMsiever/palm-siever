@@ -9,6 +9,7 @@
     * [Rendering]
     * [Sieving]
     * [GUIreference GUI reference]
+    * [Plugins]
   * Developer Guide
     * [ExtendingPALMsiever Extending PALMsiever]
     * [FunctionReference Function reference]

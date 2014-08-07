@@ -22,5 +22,4 @@ To perform drift correction, you need to set the following parameters:
   * Min Frames
   * Cross corr pixel size
   * XCor fit window sz:
-  * * test
-
+    * test

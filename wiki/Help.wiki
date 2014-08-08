@@ -1,4 +1,5 @@
 #summary The main help page.
+#labels Featured
 
 = PALMsiever =
 *PALMsiever* has been to facilitate interactive exploration and analysis of single-molecule localization microscopy data. 

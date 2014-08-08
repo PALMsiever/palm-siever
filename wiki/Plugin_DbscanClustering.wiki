@@ -12,7 +12,7 @@ DBSCAN takes 2 parameters: _Eps_ and  _!MinPts_ (see Fig. 1). DBSCAN searches in
 Figure 1: Illustration of DBSCAN principle.
 
 
-The really nice thing about DBSCAN is that "density" is a very biologically appropriate definition of a cluster. The minimum cluster density approximately relates to _!MinPts_ and _Eps_ as
+The really nice thing about DBSCAN is that "density" is a very biologically appropriate definition of a cluster. In 2D, the minimum cluster density approximately relates to _!MinPts_ and _Eps_ as
 
 <img src="https://palm-siever.googlecode.com/svn/wiki/images/dbscan_density_eqn.png" alt="rho_min = MinPts/ (pi * Eps^2)"/>
 
@@ -40,4 +40,4 @@ DBSCAN adds two colums to the dataset:
   * _dbscan_type_ : -1 = noise point. 0 = border point. +1 = core point. Both border and core points are included within clusters.
   * _dbscan_id_ : Each cluster (containing both border points and noise points) is given a unique ID, starting at 1. Noise points are given an ID of -1. To filter out the noise, set the minimum _dbscan_id_ to 1.
 
-Note: This works in 3D too. Try it on this dataset! 
+Note: This works in 3D too. You can try it on this dataset (by ticking "Cluster Z axis". You will need to change Eps (due to the extra dimension).

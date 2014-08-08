@@ -20,4 +20,4 @@ to get something like this:
 
 Open the 3D rendering plugin. You should see something like the following (the ring here has been rotated a little bit to show it off):
 
-<img src="https://palm-siever.googlecode.com/svn/wiki/images/Render3D_vol_plugin_screenshot.png" width="250px" />
+<img src="https://palm-siever.googlecode.com/svn/wiki/images/Render3D_vol_plugin_screenshot.png" width="400px" />

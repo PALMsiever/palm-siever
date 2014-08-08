@@ -6,7 +6,7 @@ PALMsiever supports a variety of different file formats out-of-the-box. They are
 || Generic text file || * || can be used on most tabular data ||
 || Leica_GSD || ascii || reads the 2D version, can be extended, please contact me if you need it ||
 || Octane || txt || -- ||
-|| PeakSelector || prm || reads in all data. Note it's better to export it in nanometers, as the text looses precision if you export it in pixel units. ||
+|| !PeakSelector || prm || reads in all data. Note it's better to export it in nanometers, as the text looses precision if you export it in pixel units. ||
 || QuickPALM || txt || -- ||
 || RapidSTORM || txt || everything except the metadata ||
 || UTrack_Julia || -- || -- ||

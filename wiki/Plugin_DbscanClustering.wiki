@@ -4,7 +4,8 @@
 
 [http://en.wikipedia.org/wiki/DBSCAN DBSCAN] (Density-based spatial clustering of applications with noise) performs multi-dimensional clustering based on the local density of points. This plugin is implemented for 2-3 dimensions.
 
-DBSCAN takes 2 parameters: _MinPts_ and _Eps_. 
+DBSCAN takes 2 parameters: _!MinPts_ and _Eps_. 
+
 <img src="https://palm-siever.googlecode.com/svn/wiki/images/DBSCAN_Illustration_2.0.png" alt="DBSCAN illustration. Adapted from Wikipedia" title="test"/>
 
 = Details =

@@ -56,9 +56,12 @@ function [varNamesCell,semanticCell] = getVarNames()
 %Give the "Standard" semantic columns short variable names
 
 semanticCell={...
-'position in sample space in x dimension', 
+'position in sample space in x dimension', %v3.2
+'position in sample space in X', % v3.3
 'position in sample space in y dimension',
+'position in sample space in Y', % v3.3
 'position in sample space in z dimension',
+'position in sample space in Z', % v3.3
 'frame number',
 'emission strength' ,
 'fit residue chi square value',
@@ -66,7 +69,10 @@ semanticCell={...
 
 varNamesCell = {...
 'x',
+'x',
 'y',
+'y',
+'z',
 'z',
 'frame',
 'intensity',

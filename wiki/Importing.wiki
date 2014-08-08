@@ -7,7 +7,7 @@ PALMsiever supports a variety of different file formats out-of-the-box. They are
 || Leica_GSD || ascii || reads the 2D version, can be extended, please contact me if you need it ||
 || Octane || txt || -- ||
 || !PeakSelector || prm || reads in all data. Note it's better to export it in nanometers, as the text looses precision if you export it in pixel units. ||
-|| QuickPALM || txt || Note - make sure the saved file type is .txt not .xls (or change the ending of the filename if necessary). Trying to import the .xls causes MATLAB to freak out! ||
+|| QuickPALM || txt || Make sure the saved file type is .txt not .xls (or change the ending of the filename if necessary). Trying to import the .xls causes MATLAB to freak out! ||
 || RapidSTORM || txt || everything except the metadata ||
 || UTrack_Julia || -- || -- ||
 || Vutara || csv || reads all 3D data  ||

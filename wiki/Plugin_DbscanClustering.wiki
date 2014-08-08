@@ -22,7 +22,7 @@ Also, "noise" is ubiquitous in our measurements so it is nice to have this as an
 
 We will the example data "FtsZ-Dendra2 C crescentus live 3D 10 ms frame.mat". Here the goal is segment the (patchy) mid-cell rings and polar spots from the low density cytosolic/ membrane bound localizations.
 
-<img src="https://palm-siever.googlecode.com/svn/wiki/images/DBSCAN_FtsZ_example_data_screenshot.png" alt="DBSCAN test data" width="700px"/>
+<img src="https://palm-siever.googlecode.com/svn/wiki/images/DBSCAN_FtsZ_example_data_screenshot.png" alt="DBSCAN test data" width="600px"/>
 
 Opening the plugin gives the following dialogue:
 
@@ -34,8 +34,10 @@ The two parameters _!MinPts_ and _Eps_ need to be set.
 
 Click 'Do it' to see the clustered result:
 
-<img src="https://palm-siever.googlecode.com/svn/wiki/images/DBSCAN_example_result.png" alt="DBSCAN result" width="700px"/>
+<img src="https://palm-siever.googlecode.com/svn/wiki/images/DBSCAN_example_result.png" alt="DBSCAN result" width="600px"/>
 
 DBSCAN adds two colums to the dataset: 
-  * _dbscan_id_ :
-  * _dbscan_type_ :
+  * _dbscan_type_ : -1 = noise point. 0 = border point. +1 = core point. Both border and core points are included within clusters.
+  * _dbscan_id_ : Each cluster (containing both border points and noise points) is given a unique ID, starting at 1. Noise points are given an ID of -1. To filter out the noise, set the minimum _dbscan_id_ to 1.
+
+Note: This works in 3D too. Try it on this dataset! 

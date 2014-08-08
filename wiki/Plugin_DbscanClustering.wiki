@@ -11,6 +11,13 @@ DBSCAN takes 2 parameters: _Eps_ and  _!MinPts_ (see Fig. 1). DBSCAN searches in
 
 Figure 1: Illustration of DBSCAN principle.
 
+
+The really nice thing about DBSCAN for PALM data is that "density" is a very biologically appropriate definition of a cluster. The minimum cluster density relates to _MinPts_ and _Eps_ as
+
+<img src="https://palm-siever.googlecode.com/svn/wiki/images/dbscan_density_eqn.png" alt="rho_min = MinPts/ (pi * Eps^2)"/>
+
+Also, "noise" is ubiquitous in our measurements so it is n
+
 = Details =
 
 <img src="https://palm-siever.googlecode.com/svn/wiki/images/DBSCAN_FtsZ_example_data_screenshot.png" alt="DBSCAN test data"/>

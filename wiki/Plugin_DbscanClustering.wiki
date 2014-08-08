@@ -34,7 +34,7 @@ The two parameters _!MinPts_ and _Eps_ need to be set.
 
 Click 'Do it' to see the clustered result:
 
-<img src="https://palm-siever.googlecode.com/svn/wiki/images/DBSCAN_example_result.png" alt="DBSCAN result"/>
+<img src="https://palm-siever.googlecode.com/svn/wiki/images/DBSCAN_example_result.png" alt="DBSCAN result" width="700px"/>
 
 DBSCAN adds two colums to the dataset: 
   * _dbscan_id_ :

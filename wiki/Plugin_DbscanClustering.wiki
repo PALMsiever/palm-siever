@@ -6,7 +6,9 @@
 
 DBSCAN takes 2 parameters: _Eps_ and  _!MinPts_ (see Fig. 1). DBSCAN searches in a radius _Eps_ around each point. If that point contains at least _!MinPts_ then it counts as a _core point_. Any points at the edge of a cluster which are within _Eps_ of a _core point_, but are not themselves surrounded by _!MinPts_ are a _border point_ and count as part of the cluster. Any points which are not within _Eps_ of a core point are a _noise point_.
  	
+
 <img src="https://palm-siever.googlecode.com/svn/wiki/images/DBSCAN_Illustration_2.0.png" alt="DBSCAN illustration. Adapted from Wikipedia" width="350px" />
+
 Figure 1: Illustration of DBSCAN principle.
 
 = Details =

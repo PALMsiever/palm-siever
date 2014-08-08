@@ -6,7 +6,7 @@
 
 DBSCAN takes 2 parameters: _!MinPts_ and _Eps_. 
 
-<img src="https://palm-siever.googlecode.com/svn/wiki/images/DBSCAN_Illustration_2.0.png" alt="DBSCAN illustration. Adapted from Wikipedia" title="test" width="700px" />
+<img src="https://palm-siever.googlecode.com/svn/wiki/images/DBSCAN_Illustration_2.0.png" alt="DBSCAN illustration. Adapted from Wikipedia" title="test" width="150px" />
 
 = Details =
 

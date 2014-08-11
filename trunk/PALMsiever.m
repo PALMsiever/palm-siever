@@ -2250,42 +2250,7 @@ function mSaveStack_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if isPoints(handles)
-    msgbox('Does not work with scatterplot. Try KDE or Histogram instead');
-    return
-end
-
-[filename path]=uiputfile('*.tif');
-if filename
-    density = renderStack(handles);
-
-    minC = str2double(get(handles.minC,'String'));
-    maxC = str2double(get(handles.maxC,'String'));
-
-    [minX maxX minY maxY] = getBounds(handles);
-    res = getRes(handles);
-    
-    pxx = (maxX-minX)/res; pxy = (maxY-minY)/res;
-
-    physDims.dimensions = pxx;
-    physDims.dimensionUnits = 'nm';
-    
-    % To 16-bits
-    density = uint16((density-minC)*2^16/(maxC-minC)); 
-    
-    if nodiplib()
-        writeim(...
-            density,...
-            fullfile(path,filename),...
-            'TIFF',0,physDims);
-    else
-        nslices = size(density,3);
-        for slice = 1:size(density,3)
-            imwrite(squeeze(density(:,:,slice)),...
-                fullfile(path,sprintf([filename(1:end-4) '_%0' num2str(ceil(log(nslices+eps)/log(10))) 'd' filename(end-3:end)],slice)),'TIFF');
-        end
-    end
-end
+Export_PALM_Movie_or_Stack(handles); 
 
 % --------------------------------------------------------------------
 function mSaveCSV_Callback(hObject, eventdata, handles)

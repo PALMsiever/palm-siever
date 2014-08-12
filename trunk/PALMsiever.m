@@ -35,7 +35,7 @@ if ~isappdata(0,'ps_initialized') || ~getappdata(0,'ps_initialized')
     evalin('base','palmsiever_setup');
 end
 
-% Last Modified by GUIDE v2.5 18-Jul-2014 16:20:06
+% Last Modified by GUIDE v2.5 12-Aug-2014 16:18:39
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -2815,3 +2815,27 @@ handles.settings.varID = 'group_ID';
 guidata(gcf, handles);
 
 redraw(handles)
+
+
+function edit14_Callback(hObject, eventdata, handles)
+
+
+function edit14_CreateFcn(hObject, eventdata, handles)
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+function edit15_Callback(hObject, eventdata, handles)
+
+
+function edit15_CreateFcn(hObject, eventdata, handles)
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end

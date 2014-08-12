@@ -1349,6 +1349,9 @@ function p1to1X_Callback(hObject, eventdata, handles)
 % hObject    handle to p1to1X (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+resizeX1to1(handles);
+
+function resizeX1to1(handles)
 [minX maxX minY maxY] = getBounds(handles);
 x=(maxX+minX)/2;
 intY = maxY-minY;

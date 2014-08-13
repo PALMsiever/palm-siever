@@ -55,3 +55,4 @@ Version 1.2 alpha (r60-r99)
 
 = Aug 12 2014 =
   * Fixed a bug affecting grouping and other plugins
+  * Added lots of documentation to the Wiki!

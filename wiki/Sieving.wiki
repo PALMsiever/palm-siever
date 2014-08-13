@@ -8,4 +8,11 @@ The right panel is composed of a table and the histogram window. The table shows
 
 = The histogram =
 
-The histogram is shown as soon as you click on any cell of the parameter you wish to analyze. If all localizations seem to be squashed to the left, it is most probably because your data range is too wide. Try changing the maximum column to a lower value.
+The histogram is shown as soon as you click on any cell of the parameter you wish to analyze. If all localizations seem to be squashed to the left, it is most probably because your data range is too wide. Try changing the value in the maximum column to a lower value (see Fig. 1).
+
+ <img src="https://palm-siever.googlecode.com/svn/wiki/images/Histogram_example1_squashedLeft.png" width="60%">
+ <img src="https://palm-siever.googlecode.com/svn/wiki/images/Histogram_example1_centered.png" width="60%">
+* Fig. 1. A histogram squashed to the left indicates that the range in your variable table is too large. Check the 'max' value and change it accordingly to discard probable outliers.
+
+<img src="https://palm-siever.googlecode.com/svn/wiki/images/Histogram_example1_variableLimits.png">
+* Fig. 2. Changing the 'max' limits for the selected variable.

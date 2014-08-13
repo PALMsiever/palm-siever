@@ -15,4 +15,5 @@ The histogram is shown as soon as you click on any cell of the parameter you wis
 * Fig. 1. A histogram squashed to the left indicates that the range in your variable table is too large. Check the 'max' value and change it accordingly to discard probable outliers.
 
 <img src="https://palm-siever.googlecode.com/svn/wiki/images/Histogram_example1_variableLimits.png">
+
 * Fig. 2. Changing the 'max' limits for the selected variable.

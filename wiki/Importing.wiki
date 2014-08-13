@@ -1,7 +1,13 @@
 #summary Importing a dataset into PALMsiever
 
-PALMsiever supports a variety of different file formats out-of-the-box. They are all imported using the "File/Import" menu. If your format is not present, you can easily extend it (see [ExtendingPALMsiever]).
+PALMsiever supports a variety of different file formats out-of-the-box. They are all imported using the "File/Import" menu (see Fig. 1). If your format is not present, you can easily extend it (see [ExtendingPALMsiever]).
 
+ <img src="https://palm-siever.googlecode.com/svn/wiki/images/ImportMenu.png >
+*Fig. 1. The import menu in PALMsiever shows all supported formats.*
+
+Table 1 shows a list of all currently supported file formats. Please refer to [ExtendingPALMsiever Extending PALMsiever] to find out how to add support for additional file formats.
+
+* Table 1. The list of supported file formats *
 || _Software_ || _Extension_ || _Notes_ ||
 || Generic text file || * || can be used on most tabular data ||
 || Leica_GSD || ascii || reads the 2D version, can be extended, please contact me if you need it ||
@@ -11,5 +17,3 @@ PALMsiever supports a variety of different file formats out-of-the-box. They are
 || RapidSTORM || txt || everything except the metadata ||
 || UTrack_Julia || -- || -- ||
 || Vutara || csv || reads all 3D data  ||
-
-Please refer to [ExtendingPALMsiever Extending PALMsiever] to find out how to add support for additional file formats.

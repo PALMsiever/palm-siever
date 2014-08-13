@@ -20,6 +20,8 @@ You can filter using the siever (see below) and the corresponding fraction will 
 
 The interface is divided into two parts: the viewport and the siever. The viewport is where your data is rendered, while the siever is where you can adjust the limits of what is displayed.
 
+[https://palm-siever.googlecode.com/svn/wiki/images/PALMsiever_Layout.png]
+
 ===The viewport===
 
 The viewport provides a view on your current data. It renders the current subset of your data according to the limits specified on the sieving part.
@@ -34,6 +36,8 @@ There are a few fundamental controls:
 For more information you can have a look at the [GUIreference GUI reference].
 
 ===The siever===
+
+[https://palm-siever.googlecode.com/svn/wiki/images/SieverTable.png]
 
 This part of the interface allows you to select what subset of the data to display. The main table provides a list of all the variables (columns) of your dataset and the limits for each one. It also displays some basic statistic on the variables.
 

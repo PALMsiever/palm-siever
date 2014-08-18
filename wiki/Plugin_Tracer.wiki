@@ -6,7 +6,7 @@ Tracer allows the user to create a trace along a structure in an image. It uses 
 
 [https://palm-siever.googlecode.com/svn/wiki/images/Tracer_v1.0.png]
 
-*The Tracer GUI*
+*The Tracer GUI.*
 
 = Walktrough =
 
@@ -20,7 +20,7 @@ The protocol for tracing a filamentous structure is as follows:
 
 <img width="50%" src="https://palm-siever.googlecode.com/svn/wiki/images/Tracer_v1.0_trace.png">
 
-*Tracing the default example data using the default parameters*
+*Tracing the default example data using the default parameters.*
 
 = Additional Features =
 
@@ -30,4 +30,4 @@ The protocol for tracing a filamentous structure is as follows:
 
 <img width="50%" src="https://palm-siever.googlecode.com/svn/wiki/images/Tracer_v1.0_trace_hist.png">
 
-*An example of fiting a single Gaussian function to the cumulative histogram*
+*An example of fiting a single Gaussian function to the cumulative histogram.*

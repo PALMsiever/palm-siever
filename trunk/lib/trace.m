@@ -26,7 +26,7 @@ P = P0;
 dir = dir0;
 
 visited = false(size(X));
-hold
+
 while moving
     for j=1:3
         subset0 = (X-P(1)).^2 + (Y-P(2)).^2 < r*r;
@@ -37,7 +37,7 @@ while moving
         r = r*1.3;
     end
     ss = [X(subset0) Y(subset0)];
-    n = sum(subset);
+    n = sum(subset)
     if n<minN
         disp('Was not able to find enough unvisited points to continue')
         break

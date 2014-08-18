@@ -12,11 +12,11 @@ Tracer allows the user to create a trace along a structure in an image. It uses 
 
 The protocol for tracing a filamentous structure is as follows:
 
-  # Choose a Radius and a Step size. Radius should roughly be twice the radius of the structure. Step should be roughly twice the Radius parameter. You might need to adjust for your case
+  # Choose a *Radius* and a *Step* size. Radius should roughly be twice the radius of the structure. Step should be roughly twice the Radius parameter. You might need to adjust them to your data.
   # Press 'Trace!'.
-  # Select a first point where to start the trace.
-  # Select a second point, roughly along the direction of the structure you want to trace. 
-  # Done! The software will trace your structure, show the trace on the current rendering as a green line, and save it to the workspace as variable 'Trace'.
+  # Select a *first point* where to start the trace.
+  # Select a *second point*, roughly along the direction of the structure you want to trace. 
+  # *Done*! The software will trace your structure, show the trace on the current rendering as a green line, and save it to the workspace as variable 'Trace'.
 
 <img width="50%" src="https://palm-siever.googlecode.com/svn/wiki/images/Tracer_v1.0_trace.png">
 

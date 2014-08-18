@@ -6,6 +6,8 @@ Tracer allows the user to create a trace along a structure in an image. It uses 
 
 [https://palm-siever.googlecode.com/svn/wiki/images/Tracer_v1.0.png]
 
+*The Tracer GUI*
+
 = Walktrough =
 
 The protocol for tracing a filamentous structure is as follows:
@@ -21,6 +23,8 @@ The protocol for tracing a filamentous structure is as follows:
  5. Done! The software will trace your structure, show the trace on the current rendering as a green line, and save it to the workspace as variable 'Trace'.
 
 <img width="50%" src="https://palm-siever.googlecode.com/svn/wiki/images/Tracer_v1.0_trace.png">
+
+*Tracing the default example data using the default parameters*
 
 = Additional Features =
 

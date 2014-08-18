@@ -31,3 +31,15 @@ The protocol for tracing a filamentous structure is as follows:
 <img width="50%" src="https://palm-siever.googlecode.com/svn/wiki/images/Tracer_v1.0_trace_hist.png">
 
 *An example of fiting a single Gaussian function to the cumulative histogram.*
+
+{{{
+     General model:
+     fit(x) = a1*exp(-(x-b1).^2 / 2 /c1.^2 )
+     Coefficients (with 95% confidence bounds):
+       a1 =       79.23  (76.53, 81.93)
+       b1 =       1.582  (0.8155, 2.348)
+       c1 =       19.46  (18.69, 20.23)
+
+}}}
+
+*The results from the fitting are output to the command line.*

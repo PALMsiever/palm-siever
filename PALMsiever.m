@@ -442,8 +442,8 @@ if get(handles.pbGrouped,'Value')
     subset = true(size(XPosition));
 end
     
-[minX maxX minY maxY] = getBounds(handles);
-[minZ maxZ]=getZbounds(handles);
+[minX, maxX, minY, maxY] = getBounds(handles);
+[minZ, maxZ]=getZbounds(handles);
 
 minC = str2double(get(handles.minC,'String'));
 maxC = str2double(get(handles.maxC,'String'));
@@ -1948,7 +1948,7 @@ Trace = trace(X,Y,P0,dir0,r0,step);
 
 assignin('base','Trace',Trace)
 
-miShowTrace_Callback(hObject, eventdata, handles)
+showTrace(handles)
 
 % --------------------------------------------------------------------
 function miSaveTrace_Callback(hObject, eventdata, handles)
@@ -1978,13 +1978,18 @@ function miShowTrace_Callback(hObject, eventdata, handles)
 % hObject    handle to miShowTrace (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+showTrace(handles);
+
+function showTrace(handles)
+
 Trace = evalin('base','Trace');
 
 if numel(Trace)<2
     msgbox('No trace found. Try increasing the radius or the length.','modal')
 end
 
-axes(handles.axes1);
+%axes(handles.axes1);
+%hold on;
 line(Trace(:,1)',Trace(:,2)','Marker','+','Color','g');
 
 
@@ -2476,7 +2481,7 @@ if strcmp(res,'Yes')
     
     guidata(hObject,handles);
 end
-
+guidata(hObject,handles)
 
 % --------------------------------------------------------------------
 function mSieveNoXYZ_Callback(hObject, eventdata, handles)
@@ -2505,7 +2510,6 @@ for irow=1:length(rows)
     evalin('base',[rows{irow} '=' rows{irow} '(subset);']);
 end
 evalin('base','subset=subset(subset);');
-
 
 function rgb = plotZ_fancy(handles,res,subset,XPosition,YPosition,ZPosition,minZ,maxZ,n,m,minX,maxX,minY,maxY,gamma,minC,maxC,a,b,sbar)
 

@@ -8,6 +8,7 @@
     * [Importing Importing data]
     * [Rendering]
     * [Sieving]
+    * [Grouping]
     * [GUIreference GUI reference]
     * [Plugins]
   * Developer Guide

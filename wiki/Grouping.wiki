@@ -1,0 +1,22 @@
+#summary Grouping nearby consecutive localizations
+
+= Grouping =
+
+Grouping is the operation by which localizations appearing in consecutive frames are 'grouped' into a single localization.
+
+PALMsiever allows two steps in the process. The first step identifies potential localizations belonging to the same molecule and assigns an ID to each group. The second keeps a single representative localization for each group, by averaging the position of all the members. 
+
+This two-step approach allows the user to check the validity of the grouping before performing the final destructive operation of keeping a single representative for each group.
+
+The main parameter is the maximum allowed distance between a molecule and its neighbour in a consecutive frame, *D*. This is usually kept in the order of the expected localization precision. The algorithm allows a molecule to blink, i.e. temporarily turn off and then on again, within a certain number of frames *dF*. Please refer to [1-2] for additional considerations for grouping.
+
+[https://palm-siever.googlecode.com/svn/wiki/images/Grouping.png]
+
+*The Grouping GUI, callable under Point/Group.*
+
+Once the grouping has ended, a message shows how many groups or molecules have been identified.
+
+
+[1] [http://onlinelibrary.wiley.com/doi/10.1002/cbic.201100679/abstract Benke, A. and Manley, S. (2012), Live-Cell dSTORM of Cellular DNA Based on Direct DNA Labeling. ChemBioChem, 13: 298–301. doi: 10.1002/cbic.201100679]
+
+[2] [http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0022678 Annibale P, Vanni S, Scarselli M, Rothlisberger U, Radenovic A (2011) Quantitative Photo Activated Localization Microscopy: Unraveling the Effects of Photoblinking. PLoS ONE 6(7): e22678. doi:10.1371/journal.pone.0022678]

@@ -16,8 +16,8 @@ Here is a list of all commands in the GUI and additional help.
 || File menu || Save TIFF.. || Saves the current rendered image into a 16-bit grayscale TIFF file. 0 corresponds to the 'Min' value, 2^16 corresponds to the 'Max' value. ||
 || File menu || Export PALM movie/ stack.. || Exports a movie of slices along the selected "time" axis. To export Z-stacks just select "Z" as the time axis. ||
 || Edit menu || Copy || Copies the current rendered image into the system's clipboard, as an RGB image. ||
-|| Points menu || Sieve! || Discards all points which do not fall within the limits specified in the table, including the X, Y and Z variables. ||
-|| Points menu || Sieve! (no XYZ) || Discards all points which do not fall within the limits specified in the table, but without taking into account the current limits for X, Y and Z. ||
+|| Points menu || [Sieving Sieve!] || Discards all points which do not fall within the limits specified in the table, including the X, Y and Z variables. ||
+|| Points menu || [Sieving Sieve! (no XYZ)] || Discards all points which do not fall within the limits specified in the table, but without taking into account the current limits for X, Y and Z. ||
 || Points menu || Group || Performs Grouping on the point localization data. See [Grouping] for more details ||
 || Points menu || Keep grouped only || Keeps a single localization per group (ID column), where each corresponding variable is averaged across the members of a same group. ||
 || Options menu || Color bar || When selected, plots a colorbar together with the rendered image. ||

@@ -43,3 +43,15 @@ The protocol for tracing a filamentous structure is as follows:
 }}}
 
 *The results from the fitting are output to the command line.*
+
+= Algorithm =
+
+The tracing algorithm is given an initial position P0 (red cross) a direction dP, a search radius r and a step size s. 
+
+[https://palm-siever.googlecode.com/svn/wiki/images/Tracing%20algorithm.png]
+
+  # It first searches around the initial position for all points within the search radius (blue points); 
+  # then, it calculates their orientation by calculating the principal components of the covariance matrix (green ellipse). 
+  # It then sets the geometrical mean of the point cloud as the first point in the trace (green point) and moves along the strongest component (green arrow) for a distance s. 
+  # It repeats this process with unvisited points until there are not enough points along the trace (less than 20).  
+

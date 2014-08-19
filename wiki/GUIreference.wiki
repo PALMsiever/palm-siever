@@ -20,17 +20,7 @@ Here is a list of all commands in the GUI and additional help.
 || Points menu || Sieve! (no XYZ) || Discards all points which do not fall within the limits specified in the table, but without taking into account the current limits for X, Y and Z. ||
 || Points menu || Group || Performs Grouping on the point localization data. See [Grouping] for more details ||
 || Points menu || Keep grouped only || Keeps a single localization per group (ID column), where each corresponding variable is averaged across the members of a same group. ||
-|| Trace menu || Trace.. || Start a new trace. See [Tracing] ||
-|| Trace menu || Crop trace.. || Crop the current trace to the nearest point specified by the user. ||
-|| Trace menu || Save trace || Save the current trace to a .MAT file. ||
-|| Trace menu || Load trace || Loads a trace from a .MAT file and makes it the current trace. ||
-|| Trace menu || Show trace || Plots the current trace onto the rendered image. ||
-|| Trace menu || Histogram || Collects all the points along the trace and plots the histogram of their distance from the centerline. ||
-|| Trace menu || Density+DG fit || Collects all the points along the trace, plots the histogram of their distance from the centerline and fits it to a double Gaussian function. ||
-|| Trace menu || Sigma profile || Collects all the points along the trace, fits a Gaussian function to the density of the distances of each block of points forming the trace, then plots the variation of the fitted sigmas. ||
 || Options menu || Color bar || When selected, plots a colorbar together with the rendered image. ||
 || Options menu || Scale bar || When selected, plots the scalebar of each rendered image. ||
 || Analyze menu || FIRE || Performs the FRC/FIRE analysis on the data. ||
 || Plugins menu || Refresh || Reloads the plugins from the plugins directory. See [Plugins] for more information. ||
-
-

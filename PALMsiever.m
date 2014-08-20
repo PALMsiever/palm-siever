@@ -1234,7 +1234,10 @@ function bAutoMaxC_Callback(hObject, eventdata, handles)
 % hObject    handle to bAutoMaxC (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-autoMax(handles)
+updateAutoMax(handles);
+
+function updateAutoMax(handles)
+autoMax(handles);
 
 minC = str2double(get(handles.minC,'String'));
 maxC = str2double(get(handles.maxC,'String'));
@@ -1365,9 +1368,12 @@ function pRefreshVariables_Callback(hObject, eventdata, handles)
 % hObject    handle to pRefreshVariables (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+refreshVariables(handles);
 
+function h=refreshVariables(handles)
 rows_prev = get(handles.tParameters,'RowName');
 tabl_prev = get(handles.tParameters,'Data');
+h = handles;
 
 % Save X,Y,Frame,Z,ID
 vars = get(handles.pXAxis,'String');

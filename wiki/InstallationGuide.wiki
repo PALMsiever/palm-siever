@@ -7,7 +7,7 @@ PALM-siever is a MATLAB application. At the moment, for some features it needs `
 == Installation =
 
   # Make sure `DipImage` is installed and remember the installation directory, which we will refer to as _DIP_DIR_
-  # Download the public release version of [https://drive.google.com/file/d/0B4HKt81OmiaJUzlEMzZqNTY2U0E/edit?usp=sharing PALMsiever] to a folder of your choice _PALM_DIR_. The development version can be downloaded here:
+  # Download the public release version of [https://drive.google.com/file/d/0B4HKt81OmiaJUzlEMzZqNTY2U0E/edit?usp=sharing PALMsiever] to a folder of your choice, _PALM_DIR_. The development version can be downloaded here:
 {{{
 svn checkout http://palm-siever.googlecode.com/svn/trunk/ palm-siever-read-only
 }}}

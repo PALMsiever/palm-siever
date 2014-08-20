@@ -1,8 +1,8 @@
-% Sets the Z bounds 
+% Sets the X bounds 
 %
-%  handles = setBounds(handles, bounds)
+%  handles = setXBounds(handles, bounds)
 %       handles     the handles to the figure
-%       bounds      a 4-element vector [minZ maxZ]
+%       bounds      a 2-element vector [minX maxX]
 %
 % Note: you need to use guidata to actually modify the figure's values
 %
@@ -10,13 +10,13 @@
 % warranty is given.
 %
 % Author: Thomas Pengo, 2012
-function handles = setZbounds(handles, bounds)
+function handles = setXbounds(handles, bounds)
 data = get(handles.tParameters,'Data');
 a = get(handles.tParameters,'RowName');
-varsZ = get(handles.pZAxis,'String');
-varz=varsZ{get(handles.pZAxis,'Value')};
-data{cellfun(@(x) strcmp(x,varz),a),1} = bounds(1);
-data{cellfun(@(x) strcmp(x,varz),a),2} = bounds(2);
+varsX = get(handles.pXAxis,'String');
+varx=varsX{get(handles.pXAxis,'Value')};
+data{cellfun(@(x) strcmp(x,varx),a),1} = bounds(1);
+data{cellfun(@(x) strcmp(x,varx),a),2} = bounds(2);
 set(handles.tParameters,'Data',data);
 guidata(handles.output, handles);
 

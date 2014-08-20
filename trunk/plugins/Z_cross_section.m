@@ -64,6 +64,7 @@ handles.lineWidth=200;
 handles.crossSectionIsDisplayed = 0;
 handles.lineHandle=[];
 handles.linePos=[];
+handles.startSettings = getCurrentView(handlesPsvGui);
 
 %assign default values to gui components
 set(handles.edit_LineThickness1,'String',num2str(handles.lineWidth));
@@ -116,16 +117,13 @@ if handles.crossSectionIsDisplayed
    handles.crossSectionIsDisplayed =0;
    guidata(hObject, handles);
 end
-%%-------------------------------------------------
-%%-------------------------------------------------
-%function startSettings = getCurrentView(handlesPsvGui)
-%startSettings=[];%TODO
-%[startSettings.bounds startSettings.varNames]= getAllBounds(handlesPsvGui);
-%startSettings.N =handlesPsvGui.settings.N;
-%
-%for ii = 1:numel(startSettings.varNames)
-%   startSettings.data{ii} = evalin('base',startSettings.varNames{ii});
-%end
+%-------------------------------------------------
+%-------------------------------------------------
+function startSettings = getCurrentView(handlesPsvGui)
+startSettings.xName =handlesPsvGui.settings.varx;
+startSettings.yName =handlesPsvGui.settings.vary;
+startSettings.zName =handlesPsvGui.settings.varz;
+
 
 %-------------------------------------------------
 %-------------------------------------------------
@@ -138,8 +136,12 @@ if ~handles.crossSectionIsDisplayed
       %get rid of the line
       delete(handles.lineHandle);
       handles.lineHandle=[];
+      %get the crossSection thickness
+      handles.lineWidth = str2num(get(handles.edit_LineThickness1,'String'));
       %save the current data
+      guidata(handles.output,handles);
       handles.handlesPsvGui=guidata(handles.handlesPsvGui.output);%update the PS handles
+      handles.startSettings = getCurrentView(handles.handlesPsvGui);
       %switch to cross section view
       transformToCrossSectionView(handles);
       handles.crossSectionIsDisplayed =1;
@@ -171,7 +173,6 @@ lineLength = sqrt(Dx^2+Dy^2);
 lineAngle = atan2(Dy,Dx); %in radians
 
 %get the current xyz data
-[workSpaceNames data N] = getVariables(handlesPsvGui);
 varNames = get(handlesPsvGui.tParameters,'RowName');
 xName =handlesPsvGui.settings.varx;
 yName =handlesPsvGui.settings.vary;
@@ -188,9 +189,8 @@ R = [cos(-lineAngle),-sin(-lineAngle);...
 [XYRot]=R*[x';y'];
 X0Rot = R*X0';
 xRot = XYRot(1,:)' -X0Rot(1) ;
-yRot = XYRot(2,:)' - X0Rot(2) + lineWidth/2;
+yRot = XYRot(2,:)' - X0Rot(2);
 % then flip z & y ax s.t. y'=z & z'=-y. 
-
 along_crossSec= xRot;
 across_crossSec =-yRot;
 z_crossSec  = -z ;
@@ -225,18 +225,34 @@ guidata(handlesPsvGui.output,handlesPsvGui);
 %-------------------------------------------------
 function  resetToXyView(handles)
 startSettings = handles.startSettings;
-handlesPsvGui=handles.handlesPsvGui;
+handlesPsvGui=guidata(handles.handlesPsvGui.output);
 
-for ii = 1:numel(startSettings.varNames)
-   assignin('base',startSettings.varNames{ii},startSettings.data{ii});
-end
-handlesPsvGui.settings.N =startSettings.N;
+%reset the limits of the data
+varNames = get(handlesPsvGui.tParameters,'RowName');
+along_crossSecName =handlesPsvGui.settings.varx;
+across_crossSecName =handlesPsvGui.settings.vary;
+z_crossSecName =handlesPsvGui.settings.varz;
+along_crossSec = getX(handlesPsvGui);
+z_crossSec= getY(handlesPsvGui);
+across_crossSec = getZ(handlesPsvGui);
+alongMin = min(along_crossSec);
+alongMax = max(along_crossSec);
+acrossMin = min(across_crossSec);
+acrossMax = max(across_crossSec);
 
+handlesPsvGui = setXbounds(handlesPsvGui,[alongMin,alongMax]);
+handlesPsvGui = setZbounds(handlesPsvGui,[acrossMin,acrossMax]);
 
-%update PALMsiever
-h = getPalmSiever();
-guidata(h,handlesPsvGui);
-PALMsiever('reloadData',handlesPsvGui);
-setAllBounds(handlesPsvGui,startSettings.bounds);
+%switch the plotted variables back to the xy view
+handlesPsvGui = setVar(handlesPsvGui,startSettings.xName,'x');
+handlesPsvGui = setVar(handlesPsvGui,startSettings.yName,'y');
+handlesPsvGui = setVar(handlesPsvGui,startSettings.zName,'z');
+
 PALMsiever('redraw',handlesPsvGui);
-%%-------------------------------------------------
+handlesPsvGui = guidata(handles.handlesPsvGui.output);
+PALMsiever('resizeX1to1',handlesPsvGui);
+handlesPsvGui = guidata(handles.handlesPsvGui.output);
+PALMsiever('updateAutoMax',handlesPsvGui);
+handlesPsvGui = guidata(handles.handlesPsvGui.output);
+guidata(handlesPsvGui.output,handlesPsvGui);
+

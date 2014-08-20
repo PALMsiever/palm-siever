@@ -17,6 +17,7 @@ svn checkout http://palm-siever.googlecode.com/svn/trunk/ palm-siever-read-only
 addpath PALM_DIR
 }}}
   # Modify the `palmsiever_setup.m` file to reflect your _DIP_DIR_.
+  # Download this [https://drive.google.com/file/d/0B4HKt81OmiaJSnJ3cGhIc05RYmc/edit?usp=sharing example data] to facilitate exploration of PALMsiever.
 
 == Quickstart =
 

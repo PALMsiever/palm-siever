@@ -59,3 +59,6 @@ Version 1.2 alpha (r60-r99)
 
 = Aug 18 2014 =
   * New Tracer plugin, replacing functionality in the Trace menu
+
+= Aug 20 2014 =
+  * Fixed a bug in the Z_cross_section plugin.

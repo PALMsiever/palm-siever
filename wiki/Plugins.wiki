@@ -6,7 +6,7 @@
 ||[Plugin_DriftCorrectionXcor Drift_correction_xCor]||Opens the GUI to perform drift correction with cross-correlation. See the corresponding documentation for details.||
 ||[Plugin_Render_3DVol Render_3DVol]||Opens the GUI for the 3D iso-surface rendering plugin. See corresponding documentation for details.||
 ||[Plugin_Tracer Tracer]||Creates a trace along a structure semi-automatically.||
-||Z_cross_section||Select a line profile in the image and view a 2D XZ cross-section along it||
+||[Plugin_Z_cross_section Z_cross_section]||Select a line profile in the image and view a 2D XZ cross-section along it||
 ||adaptVisibleRangeForPixelSize||Allows to automatically set the XY limits to force a specified pixel size||
 ||averageDensity||Otsu thresholding and average density calculation||
 ||density_column||Adds a new variable corresponding to the density at each localization, measured from the last density-based rendering.||

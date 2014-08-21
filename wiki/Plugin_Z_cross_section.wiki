@@ -16,9 +16,9 @@ Select a line along which to plot the cross-section, by clicking 'Select cross-s
 
 <img src="https://palm-siever.googlecode.com/svn/wiki/images/Z_cross_section_crossSectionSelection.png" width="500px"/>
 
- * To select the _axial thickness of the cross-section_, edit the 'Thickness' box
+To select the _axial thickness of the cross-section_, edit the 'Thickness' box
 
- * The cross-section line can be repositioned by selecting it with the mouse, or cleared by clicking 'Clear selection'.
+The _cross-section line_ can be repositioned by selecting it with the mouse, or cleared by clicking 'Clear selection'.
 
 Click 'Cross-section view' to switch to the view of the 2D cross-section:
 

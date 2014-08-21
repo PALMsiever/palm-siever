@@ -1,0 +1,17 @@
+#summary Plugin for plotting Z cross sections.
+
+= Introduction =
+
+Plot 2D cross-sections along an arbitrary angle across XY.
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
+<img src="https://palm-siever.googlecode.com/svn/wiki/images/Z_cross_section_pluginScreenshot.png"/>
+
+<img src="https://palm-siever.googlecode.com/svn/wiki/images/Z_cross_section_crossSectionSelection.png" width="600px"/>
+
+<img src="https://palm-siever.googlecode.com/svn/wiki/images/Z_cross_section_crossSectionView.png" width="300px"/>

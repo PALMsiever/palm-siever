@@ -7,10 +7,10 @@ subset = getSubset(handles);
 
 %%%%%%  READ IN PARAMETERS %%%%%%%
 
-prompt={'Maximum allowed gap between ''blinks'' [frames]: ','Maximum distance between two events [data units]:'};
+prompt={'Maximum gap (off-time) between localizations [frames]: ','Maximum distance between two events [data units]:'};
 name='Grouping/merging multiple events';
 numlines=1;
-defaultanswer={'3','50'};
+defaultanswer={'0','50'};
 
 answer=inputdlg(prompt,name,numlines,defaultanswer); 
 drawnow; pause(0.05);  % this line prevents Matlab crash casued by inputdlg. See http://www.tuicool.com/articles/ZnuQnmq
@@ -20,7 +20,18 @@ if isempty(answer)
     return
 end
 
-maxF = str2double(answer{1});
+%SH140902
+% Requested input above is the 'gap' between localizations
+% For a non-blinking fluorophore this is 0 between adjacent frames.
+% maxF is the _number of frames_ between adjacent localizations
+% Ie minimum of 1 for a single non-blinking fluorophore.
+% Since the 'gap' is more commonly asked for in SPT algorithms
+% I have left the requested input, but modified maxF so that it
+% is consistent with both the prompt and other SPT algs.
+% ALSO - rephrased prompt to make meaning clearer
+% : 'Maximum allowed gap between ''blinks'' [frames]: 
+maxGap = str2double(answer{1});
+maxF = maxGap +1; 
 maxD = str2double(answer{2});
     
 if isnan(maxF) || isnan(maxD)
@@ -38,6 +49,8 @@ end
 
 t0 = cputime;
 t00 = t0;
+%cons is a linked list of points which are grouped
+% contains addresses of other point within a track
 cons = zeros(size(x));
 for ff = min(frame):max(frame)-maxF
     ss = subset & frame>=ff & frame<=(ff+maxF);
@@ -47,8 +60,11 @@ for ff = min(frame):max(frame)-maxF
     xx = x(iss);
     yy = y(iss);
     
+    %for all points
     for ii=1:length(iss)-1
+        %find the nearest point
         [ mind2 imind2 ]= min((xx(ii)-xx(ii+1:end)).^2+(yy(ii)-yy(ii+1:end)).^2);
+        %if its within the minimum radius, link it to the current point
         if mind2 < maxD2
             cons(iss(ii))=iss(ii+imind2);
         end
@@ -63,21 +79,6 @@ end
 
 % Remove self
 cons(cons'==(1:length(cons)))=0;
-
-% % Assign ID
-% cur = 1; curID = 1; 
-% IDs = zeros(N,1);
-% while cur <= N
-%     if IDs(cur) > 0 % already assigned to a group
-%         if cons(cur)==0 % last member of the group
-%             IDs(cons(cur))=IDs(cur); 
-%         end
-%     else
-%         IDs(cur)=curID;
-%         curID=curID+1;
-%     end    
-%     cur = cur + 1;
-% end
 
 % Calculate group frame IDs
 N = size(cons,1);

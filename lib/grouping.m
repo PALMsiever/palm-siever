@@ -12,7 +12,9 @@ name='Grouping/merging multiple events';
 numlines=1;
 defaultanswer={'3','50'};
 
-answer=inputdlg(prompt,name,numlines,defaultanswer);
+answer=inputdlg(prompt,name,numlines,defaultanswer); 
+drawnow; pause(0.05);  % this line prevents Matlab crash casued by inputdlg. See http://www.tuicool.com/articles/ZnuQnmq
+
 
 if isempty(answer) 
     return

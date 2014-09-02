@@ -1106,7 +1106,7 @@ end
 
 % end of uberize code
 
-tracks = newtracks;
+result= newtracks;
 
 
 

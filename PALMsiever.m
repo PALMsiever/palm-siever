@@ -2825,6 +2825,23 @@ handles.settings.varID = 'group_ID';
 guidata(gcf, handles);
 
 redraw(handles)
+% --------------------------------------------------------------------
+function miTrack_Callback(hObject, eventdata, handles)
+% hObject    handle to miTrack (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+tracking(handles)
+
+handles = reloadData(handles);
+
+set(handles.pID,'Value',find(ismember(get(handles.pID,'String'),'group_ID')));
+handles.settings.varID = 'group_ID';
+
+guidata(gcf, handles);
+
+redraw(handles)
+
 
 
 function edit14_Callback(hObject, eventdata, handles)

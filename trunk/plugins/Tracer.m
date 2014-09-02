@@ -142,7 +142,7 @@ function pbLoadTrace_Callback(hObject, eventdata, handles)
 if filename
     S=load(fullfile(path,filename),'Trace');
     assignin('base','Trace',S.Trace);
-    miShowTrace_Callback(hObject, eventdata, handles)
+    showTrace(handles.PSG)
 end
 
 % --- Executes on button press in pbHistogram.
@@ -174,14 +174,14 @@ switch fit_id
         figure;
             h = bar(b,a,1,'EdgeColor','none','FaceColor',[.8 .8 .8]);
             hold;
-            fit = sg_fit(b',a')
+            fit = sg_fit(b',a'); for s = strsplit(evalc('fit'),char(10)); logger(s{1}); end
             plot(fit); legend off;
 
     case 3
         figure;
             h = bar(b,a,1,'EdgeColor','none','FaceColor',[.8 .8 .8]); 
             hold;
-            fit = dg_fit(b',a')
+            fit = dg_fit(b',a'); for s = strsplit(evalc('fit'),char(10)); logger(s{1}); end
             plot(fit); legend off;
 end
 xlabel('Distance from center line');

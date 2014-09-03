@@ -113,7 +113,7 @@ if ~isempty(varargin)
     handles.settings.N=evalin('base',['length(' varargin{1} ')']);   
 else
     N = 1000; R = 1000; s = 20;sZ = 100;
-    T = linspace(0,2*pi,N)';
+    T = (1:N)';
     X = sin(T)*R;
     Y = cos(T)*R;
 

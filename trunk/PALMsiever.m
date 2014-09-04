@@ -1729,7 +1729,7 @@ try
         fig = gcf;
     end
     feval(name,guidata(fig))
-    redraw(guidata(fig))
+    %redraw(guidata(fig))
 catch err
     if strcmp(err.identifier,'MATLAB:scriptNotAFunction')
         evalin('base',name)

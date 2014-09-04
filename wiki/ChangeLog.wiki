@@ -62,3 +62,12 @@ Version 1.2 alpha (r60-r99)
 
 = Aug 20 2014 =
   * Fixed a bug in the Z_cross_section plugin.
+
+= Sep 04 2014 =
+  * removed spurious plugins-test from repository
+  * solved bug in grouping.m due to inputdlg
+  * fixed bug in show-trace for Tracer plugin
+  * modified definition of gap in grouping
+  * tracking in beta
+  * T in startup data is now integer
+  * removed auto-refresh in plugins

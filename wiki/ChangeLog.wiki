@@ -71,3 +71,4 @@ Version 1.2 alpha (r60-r99)
   * tracking in beta
   * T in startup data is now integer
   * removed auto-refresh in plugins
+  * fixed 'To Figure' button

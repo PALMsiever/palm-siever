@@ -1703,10 +1703,19 @@ uimenu(mh,'Label','Refresh','Callback',@(varargin) plugins_refresh(mh));
 if isappdata(0,'staticplugins') && getappdata(0,'staticplugins')
     plugins = get_static_plugins;
 else
-    pluginsDir= fullfile(fileparts(which('palmsiever_setup')),'plugins');
+    palm_siever = fileparts(which('palmsiever_setup'));
+    pluginsDir= fullfile(palm_siever,'plugins');
     addpath(pluginsDir)
-    
-    plugins = dir(fullfile(pluginsDir,'*.m'))';
+    pluginsCore = dir(fullfile(pluginsDir,'*.m'))';
+    %optional directory for local plugins
+    if exist(fullfile(palm_siever,'plugin-test'),'dir')
+        pluginsTestDir = fullfile(palm_siever,'plugin-test');
+        addpath(pluginsTestDir);
+        pluginsTest = dir(fullfile(pluginsTestDir,'*.m'))';
+    else
+       pluginsTest = [];
+    end
+    plugins = [pluginsCore,pluginsTest];
 end
 
 sep = true;

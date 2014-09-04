@@ -2091,8 +2091,13 @@ h=figure;
 % handles.axes1 = gca;
 % redraw(handles)
 
-copyobj(handles.axes1,h);
-set(handles.axes1,'OuterPosition',[0 0 1 1]);
+nh = copyobj(handles.axes1,h);
+set(nh,'OuterPosition',[0 0 1 1]);
+axis(nh,'equal');
+set(nh,'color','none');
+
+cm = colormap(handles.axes1);
+colormap(nh,cm);
 
 
 % --------------------------------------------------------------------

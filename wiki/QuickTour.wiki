@@ -24,31 +24,6 @@ The interface is divided into two parts: the viewport and the siever. The viewpo
 
 [https://palm-siever.googlecode.com/svn/wiki/images/PALMsiever_Layout.png]
 
-*Exercise 2: Sieving.*
-  # Open the data from Example 1.
-  # On the siever side there is a table with a list of all the columns in the data you just loaded. Click on the 'Max' column of the 'chi2' row. 
-  # See how the histogram window (below the table) indicates a histogram of the selected variable 'chi2'.
-  # Try modifying the value in that cell and press 'Enter' on the keyboard. See the effect on the data.
-  # Once you're satisfied with the set of localizations, choose 'Points/Sieve (no XYZ)!' to discard all points not within the limits you have specified in the table.
-
-
-1- GH Patterson, M Davidson, S Manley, HF Hess and J Lippincott-Schwartz, “Superresolution imaging using single-molecule localization,” Annu Rev Phys Chem 61:345-367 (2010)
-
-==Basic concepts==
-
-||_PALMsiever works on the variables in the workspace_||
-
-You don't need to be a MATLAB expert, but if you know MATLAB, you can benefit from that idea. In other words, you can modify the variables in the workspace and you will see (after a Redraw) the effect in the viewport. You can also call PALMsiever with two arguments, specifying the names of the two variables in the workspace that correspond you the X (horizontal coordinate) and the Y (vertical coordinate). You can even add a new variable as a combination of the previous ones, and after the Refresh variables you will see it in the list.
-
-||_The rendered image is of a constant size_||
-
-That means that if your image is 256x256, when you zoom in using the '+' button, it'll still have 256x256, but each pixel will represent only a fraction of the area of the original pixel. You can check the size of the pixel in data units by reading the label at the top of the screen, next to the resolution drop-down list.
-
-||_You keep the entire dataset until you decide to discard_||
-
-You can filter using the siever (see below) and the corresponding fraction will be shown. The original data is still there, until you remove it with the menu 'Point/Sieve!'. Only after using the sieve menu item you effectively discard all points that have not been selected.
-
-
 ===The viewport===
 
 The viewport provides a view on your current data. It renders the current subset of your data according to the limits specified on the sieving part.
@@ -74,7 +49,33 @@ You can also decide to discard the upper and lower 5% of your data by using the 
 
 Once the limits are modified, the statistics are not updated until the button 'Update stats' is pressed. 
 
+*Exercise 2: Sieving.*
+  # Open the data from Example 1.
+  # On the siever side there is a table with a list of all the columns in the data you just loaded. Click on the 'Max' column of the 'chi2' row. 
+  # See how the histogram window (below the table) indicates a histogram of the selected variable 'chi2'.
+  # Try modifying the value in that cell and press 'Enter' on the keyboard. See the effect on the data.
+  # Once you're satisfied with the set of localizations, choose 'Points/Sieve (no XYZ)!' to discard all points not within the limits you have specified in the table.
+
+
+1- GH Patterson, M Davidson, S Manley, HF Hess and J Lippincott-Schwartz, “Superresolution imaging using single-molecule localization,” Annu Rev Phys Chem 61:345-367 (2010)
+
 
 ===The plugins===
 
 A great deal of extended functionality is included in the form of [Plugins plugins], located in the menu bar. These allow several common tasks to be performed such as [Plugin_DriftCorrectionFiducial drift correction] and [Plugin_DbscanClustering clustering]. You can also add additional functionality to PALMsiever by [ExtendingPALMsiever writing new plugins].
+
+
+==A few key concepts==
+
+||_The rendered image is of a constant size_||
+
+That means that if your image is 256x256, when you zoom in using the '+' button, it'll still have 256x256, but each pixel will represent only a fraction of the area of the original pixel. You can check the size of the pixel in data units by reading the label at the top of the screen, next to the resolution drop-down list.
+
+||_You keep the entire dataset until you decide to discard_||
+
+You can filter using the siever (see below) and the corresponding fraction will be shown. The original data is still there, until you remove it with the menu 'Point/Sieve!'. Only after using the sieve menu item you effectively discard all points that have not been selected.
+
+||_(advanced) PALMsiever works on the variables in the workspace_||
+
+You don't need to be a MATLAB expert, but if you know MATLAB, you can benefit from that idea. In other words, you can modify the variables in the workspace and you will see (after a Redraw) the effect in the viewport. You can also call PALMsiever with two arguments, specifying the names of the two variables in the workspace that correspond you the X (horizontal coordinate) and the Y (vertical coordinate). You can even add a new variable as a combination of the previous ones, and after the Refresh variables you will see it in the list.
+

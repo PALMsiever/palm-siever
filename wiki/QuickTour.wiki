@@ -2,7 +2,7 @@
 
 PALMsiever has been designed with the idea of putting the data in the foreground and let you explore it in the easiest possible way.
 
-This quick tour assumes you have installed PALMsiever. If not, please refer to the [InstallationGuide Installation Guide] or watch the video.
+This quick tour assumes you have installed PALMsiever. If not, please refer to the [InstallationGuide Installation Guide] or follow the steps in the video.
 
 <wiki:video url="http://www.youtube.com/watch?v=IA-MEjS4Gp0"/>
 
@@ -14,8 +14,6 @@ You can import the tabular data using PALMsiever quite easily, through the FIle/
 
 1- GH Patterson, M Davidson, S Manley, HF Hess and J Lippincott-Schwartz, “Superresolution imaging using single-molecule localization,” Annu Rev Phys Chem 61:345-367 (2010)
 
-
-*Exercise 0: download and install PALMsiever.*
 
 *Exercise 1: Import an example dataset.*
   # Download the Tubulin example dataset from [https://palm-siever.googlecode.com/svn/example_data/Tubulin-Alexa647%20with%20fiducials.RapidStorm.txt here].

@@ -10,6 +10,9 @@ This data usually comes in the form of a table or list of localizations, stored 
 
 You can import the tabular data using PALMsiever quite easily, through the FIle/Import menu items. If the software you used is supported directly, it will conveniently recognize, if present, a few standard columns corresponding to the X, Y, Z, Frame number for example. Otherwise, you can use the "Generic" menu item and then correct the columns. See the [Importing] document for more information on importing.
 
+1- GH Patterson, M Davidson, S Manley, HF Hess and J Lippincott-Schwartz, “Superresolution imaging using single-molecule localization,” Annu Rev Phys Chem 61:345-367 (2010)
+
+
 *Exercise 0: download and install PALMsiever.*
 
 *Exercise 1: Import an example dataset.*
@@ -57,9 +60,6 @@ Once the limits are modified, the statistics are not updated until the button 'U
   # Once you're satisfied with the set of localizations, choose 'Points/Sieve (no XYZ)!' to discard all points not within the limits you have specified in the table.
 
 
-1- GH Patterson, M Davidson, S Manley, HF Hess and J Lippincott-Schwartz, “Superresolution imaging using single-molecule localization,” Annu Rev Phys Chem 61:345-367 (2010)
-
-
 ===The plugins===
 
 A great deal of extended functionality is included in the form of [Plugins plugins], located in the menu bar. These allow several common tasks to be performed such as [Plugin_DriftCorrectionFiducial drift correction] and [Plugin_DbscanClustering clustering]. You can also add additional functionality to PALMsiever by [ExtendingPALMsiever writing new plugins].
@@ -78,4 +78,3 @@ You can filter using the siever (see below) and the corresponding fraction will 
 ||_(advanced) PALMsiever works on the variables in the workspace_||
 
 You don't need to be a MATLAB expert, but if you know MATLAB, you can benefit from that idea. In other words, you can modify the variables in the workspace and you will see (after a Redraw) the effect in the viewport. You can also call PALMsiever with two arguments, specifying the names of the two variables in the workspace that correspond you the X (horizontal coordinate) and the Y (vertical coordinate). You can even add a new variable as a combination of the previous ones, and after the Refresh variables you will see it in the list.
-

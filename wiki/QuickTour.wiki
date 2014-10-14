@@ -1,12 +1,44 @@
 #summary A quick tour of the operation of PALMsiever.
 
-PALMsiever has been designed with the idea of putting the data in the foreground and let you explore it in the most easy possible way.
+PALMsiever has been designed with the idea of putting the data in the foreground and let you explore it in the easiest possible way.
+
+This quick tour assumes you have installed PALMsiever. If not, please refer to the [InstallationGuide Installation Guide].
+
+PALMsiever has been designed specifically for single-molecule localization microscopy data, but can be used to analyze other spatial data too. For an introduction to single-molecule localization microscopy, refer to any good introductory material (e.g. ref. 1).
+
+This data usually comes in the form of a table or list of localizations, stored in a text file (e.g. a CSV file). This can be generated from the single-molecule localization microscopy video sequence using other software packages such as RapidSTORM, QuickPALM, or many other. A list of available software packages has been redacted for the ISBI localization microscopy challenge in 2013 and is still growing [http://bigwww.epfl.ch/smlm/software/index.html here].
+
+You can import the tabular data using PALMsiever quite easily, through the FIle/Import menu items. If the software you used is supported directly, it will conveniently recognize, if present, a few standard columns corresponding to the X, Y, Z, Frame number for example. Otherwise, you can use the "Generic" menu item and then correct the columns. See the [Importing] document for more information on importing.
+
+*Exercise 0: download and install PALMsiever.*
+
+*Exercise 1: Import an example dataset.*
+  # Download the Tubulin example dataset from [https://palm-siever.googlecode.com/svn/example_data/Tubulin-Alexa647%20with%20fiducials.RapidStorm.txt here].
+  # Open PALMsiever
+  # Go to "File/Import/RapidSTORM" and select the file you just downloaded.
+  # After a few seconds, an image is going to appear on the screen of the dataset.
+
+Congratulations! You have just imported a dataset into PALMsiever. Most of the time, the data coming from the localization software is unclean: it contains many spurious or false localizations resulting from photon noise, localizations from planes outside the plane of focus or badly fitted localizations. These need to be discarded, or sieved out, in order to generate meaningful images. PALMsiever is especially designed for this.
+
+The interface is divided into two parts: the viewport and the siever. The viewport is where your data is rendered (i.e. transformed into a density map of all the localizations), while the siever is where you can select what portion of the data is displayed.
+
+[https://palm-siever.googlecode.com/svn/wiki/images/PALMsiever_Layout.png]
+
+*Exercise 2: Sieving.*
+  # Open the data from Example 1.
+  # On the siever side there is a table with a list of all the columns in the data you just loaded. Click on the 'Max' column of the 'chi2' row. 
+  # See how the histogram window (below the table) indicates a histogram of the selected variable 'chi2'.
+  # Try modifying the value in that cell and press 'Enter' on the keyboard. See the effect on the data.
+  # Once you're satisfied with the set of localizations, choose 'Points/Sieve (no XYZ)!' to discard all points not within the limits you have specified in the table.
+
+
+1- GH Patterson, M Davidson, S Manley, HF Hess and J Lippincott-Schwartz, “Superresolution imaging using single-molecule localization,” Annu Rev Phys Chem 61:345-367 (2010)
 
 ==Basic concepts==
 
 ||_PALMsiever works on the variables in the workspace_||
 
-You don't need to be a MATLAB expert, but if you know MATLAB, you can benefit from that idea. In other words, you can modify the variables in the workspace and you will see (after a Redraw) the effect in the viewport. You can also call PALMsiever with two arguments, specifying the names of the two variables in the workspace that correspond you the X (horizontal coorodinate) and the Y (vertical coordinate). You can even add a new variable as a combination of the previous ones, and after the Refresh variables you will see it in the list.
+You don't need to be a MATLAB expert, but if you know MATLAB, you can benefit from that idea. In other words, you can modify the variables in the workspace and you will see (after a Redraw) the effect in the viewport. You can also call PALMsiever with two arguments, specifying the names of the two variables in the workspace that correspond you the X (horizontal coordinate) and the Y (vertical coordinate). You can even add a new variable as a combination of the previous ones, and after the Refresh variables you will see it in the list.
 
 ||_The rendered image is of a constant size_||
 
@@ -16,11 +48,6 @@ That means that if your image is 256x256, when you zoom in using the '+' button,
 
 You can filter using the siever (see below) and the corresponding fraction will be shown. The original data is still there, until you remove it with the menu 'Point/Sieve!'. Only after using the sieve menu item you effectively discard all points that have not been selected.
 
-==The interface==
-
-The interface is divided into two parts: the viewport and the siever. The viewport is where your data is rendered, while the siever is where you can adjust the limits of what is displayed.
-
-[https://palm-siever.googlecode.com/svn/wiki/images/PALMsiever_Layout.png]
 
 ===The viewport===
 

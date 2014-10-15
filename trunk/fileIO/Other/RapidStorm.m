@@ -116,6 +116,7 @@ if isempty(filename)
 else
    [data dataSemanticCell] = readRapidStorm(filename);
    varNames =  parseVarNames(dataSemanticCell);
+   [varNames, data]= addSnrColumn(varNames,data);
    assignToWorkSpace(data,varNames,workspaceName);
    varAssignment=assignVars(varNames);
 end
@@ -265,6 +266,20 @@ for ii = 1:nField
   end
 end
 %-----------------------------------------------------------
+function [varNames, data]= addSnrColumn(varNames,data)
+
+if any(strcmp(varNames,'local_bg')) & any(strcmp(varNames,'intensity'))
+  intensityCol = find(strcmp(varNames,'intensity'));
+  localBgCol = find(strcmp(varNames,'local_bg'));
+  intensity = data(:,intensityCol);
+  localBg = data(:,localBgCol);
+
+  snr = intensity./sqrt(localBg);
+
+  varNames{end+1} = 'snr';
+  data= [data,snr];
+
+end
 %-----------------------------------------------------------
 %-----------------------------------------------------------
 %-----------------------------------------------------------

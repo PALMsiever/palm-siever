@@ -460,7 +460,7 @@ end
 
 set(handles.tNumPoints,'String',num2str(NP));
 
-is3D = get(handles.pShow,'Value') == 6;
+is3D = (get(handles.pShow,'Value') == 6||get(handles.pShow,'Value') == 9);
 
 res = getRes(handles);
 
@@ -2608,6 +2608,8 @@ rgb(rgb>1)=1;
 
 function rgb = plotZ_fast(handles,res,subset,XPosition,YPosition,ZPosition,minZ,maxZ,minX,maxX,minY,maxY,gamma,minC,maxC,a,b)
 nz = 32;
+RGB_SCALE_FACTOR= 10;
+
 
 pxx=(maxX-minX)/res; pxy=(maxY-minY)/res; pxz=(maxZ-minZ)/res;
 pxVol=pxx * pxy * pxz;
@@ -2633,7 +2635,6 @@ end
 % ADJUST GAMMA HERE
 density(density<0)=0;
 density = gammaAdjust(density,gamma);
-
 rgbc = hsv(round(nz*3/2));
 rgbc = rgbc(1:nz,:);
 rgb = zeros(size(density,2),size(density,1),3);
@@ -2643,8 +2644,9 @@ for i=1:size(density,3)
         rgb(:,:,c) = rgb(:,:,c).*(1-a*D) + b*rgbc(i,c).*D;
     end
 end
+%keyboard
 
-rgb = (rgb/max(rgb(:)) - minC) / (maxC-minC);
+rgb = (rgb/max(rgb(:)) - minC) / (maxC-minC)/RGB_SCALE_FACTOR;
 
 rgb(rgb<0)=0; 
 rgb(rgb>1)=1;

@@ -6,6 +6,8 @@ This quick tour assumes you have installed PALMsiever. If not, please refer to t
 
 <wiki:video url="http://www.youtube.com/watch?v=IA-MEjS4Gp0"/>
 
+<wiki:video url="http://youtu.be/0TLuuV6Z0ac"/>
+
 PALMsiever has been designed specifically for single-molecule localization microscopy data, but can be used to analyze other spatial data too. For an introduction to single-molecule localization microscopy, refer to any good introductory material (e.g. ref. 1).
 
 This data usually comes in the form of a table or list of localizations, stored in a text file (e.g. a CSV file). This can be generated from the single-molecule localization microscopy video sequence using other software packages such as RapidSTORM, QuickPALM, or many other. A list of available software packages has been redacted for the ISBI localization microscopy challenge in 2013 and is still growing [http://bigwww.epfl.ch/smlm/software/index.html here].

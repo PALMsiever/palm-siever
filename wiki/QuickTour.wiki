@@ -6,7 +6,7 @@ This quick tour assumes you have installed PALMsiever. If not, please refer to t
 
 <wiki:video url="http://www.youtube.com/watch?v=IA-MEjS4Gp0"/>
 
-<wiki:video url="http://youtu.be/0TLuuV6Z0ac"/>
+<wiki:video url="https://www.youtube.com/watch?v=0TLuuV6Z0ac"/>
 
 PALMsiever has been designed specifically for single-molecule localization microscopy data, but can be used to analyze other spatial data too. For an introduction to single-molecule localization microscopy, refer to any good introductory material (e.g. ref. 1).
 

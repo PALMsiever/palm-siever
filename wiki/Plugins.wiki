@@ -8,7 +8,7 @@
 ||[Plugin_Tracer Tracer]||Creates a trace along a structure semi-automatically.||
 ||[Plugin_Z_cross_section Z_cross_section]||Select a line profile in the image and view a 2D XZ cross-section along it||
 ||adaptVisibleRangeForPixelSize||Allows to automatically set the XY limits to force a specified pixel size||
-||averageDensity||Otsu thresholding and average density calculation||
+||[averageDensity]||Otsu thresholding and average density calculation||
 ||density_column||Adds a new variable corresponding to the density at each localization, measured from the last density-based rendering.||
 ||density_plot||Performs a density plot around a specified position, across the spread of the point distribution.||
 ||double_Gaussian_fit||Perform a double Gaussian fit and plot the results||

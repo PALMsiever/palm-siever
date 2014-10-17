@@ -7,3 +7,5 @@ It operates in the following way.
   # Reads the most recently calculated density map (depends on the current rendering)
   # Calculates the density of each localization using Nearest Neighbour 
   # Adds a new parameter for each localization containing the calculated density
+
+After excecution, you can filter/sieve the points based on the additional density parameter.

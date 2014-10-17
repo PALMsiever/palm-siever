@@ -48,4 +48,4 @@ A detailed discussion of most of the rendering algorithms presented above can be
 
 Visualization of localization microscopy data
 D Baddeley, MB Cannell, C Soeller
-Microscopy and Microanalysis 16 (01), 64-72
+Microscopy and Microanalysis 16 (01), 64-72, 2010.

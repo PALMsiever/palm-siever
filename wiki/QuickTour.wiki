@@ -63,6 +63,21 @@ Once the limits are modified, the statistics are not updated until the button 'U
   # Try modifying the value in that cell and press 'Enter' on the keyboard. See the effect on the data.
   # Once you're satisfied with the set of localizations, choose 'Points/Sieve (no XYZ)!' to discard all points not within the limits you have specified in the table.
 
+===Grouping===
+
+An important step in localization microscopy data anaysis is what is commonly referred to as 'grouping'. The photophysics of the fluorophore during the strong excitation causes it to 'blink' and thus appear as a bright spot in multiple successive frames. To correctly count the number of fluorophores, these multiple appearances need to be _grouped_ together.
+
+Using PALMsiever, this can be easily done using the 'Points/Group' menu. For additional information, see the [Grouping] wiki page.
+
+*Excersise 3: Grouping*
+  # Open data from Example 1.
+  # Select the 'Points' menu and the 'Group' menu item. 
+  # Put 0 as the first parameter and 50 in the second, then  'OK'. Now, grouping will start. You can monitor the progress in the log window that appears. 
+  # After grouping, each localization will be assigned a sequential number identifying to which group it belongs. Tick the 'Grouped' check box in the lower part of the screen.
+
+[https://palm-siever.googlecode.com/svn/wiki/images/GroupedCheckBox.png]
+
+The viewport will now show a rendering of only the grouped localizations.
 
 ===The plugins===
 

@@ -4,6 +4,8 @@ PALMsiever has been designed with the idea of putting the data in the foreground
 
 This quick tour assumes you have installed PALMsiever. If not, please refer to the [InstallationGuide Installation Guide] or follow the steps in the video.
 
+The two videos below show you how to install and use PALMsiever:
+
 <wiki:video url="http://www.youtube.com/watch?v=IA-MEjS4Gp0"/>
 
 <wiki:video url="https://www.youtube.com/watch?v=0TLuuV6Z0ac"/>

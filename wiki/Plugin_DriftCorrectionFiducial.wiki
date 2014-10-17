@@ -4,6 +4,12 @@
 
 A common and very robust way to correct for drift in localization microscopy is to use in situ fiducial markers. This plugin estimates the drift of the system using one or more fiducials as a reference. Spline fitting is used to ensure robust drift estimation
 
+= Algorithm summary = 
+
+1. An N-segmented piecewise cubic spline is fit to the x-t, y-t and z-t localizations of each selected fiducial.
+2. The fitted drift from each fiducial is combined by averaging.
+3. For any gaps where there is no fiducial, the last measured drift value is assigned.
+
 = Details =
 
 <img src="https://palm-siever.googlecode.com/svn/wiki/images/DriftCorrectionFiducial_screenshot.png" alt="Drift correction screenshot"/>

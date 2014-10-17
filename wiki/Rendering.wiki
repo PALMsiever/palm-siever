@@ -41,3 +41,11 @@ This representation, first proposed by Baddeley, performs a triangulation of the
 
 = 3D Hue =
 This is the classical color-coded depth. Localizations are binned into a 3D matrix, which is then rendered according to depth and density and averaged.
+
+== Algorithms ==
+
+A detailed discussion of most of the rendering algorithms presented above can be found in :
+
+Visualization of localization microscopy data
+D Baddeley, MB Cannell, C Soeller
+Microscopy and Microanalysis 16 (01), 64-72

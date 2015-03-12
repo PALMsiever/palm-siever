@@ -1,0 +1,6 @@
+You can still use PALMsiever, but some of parts will not work. Specifically:
+
+  * the "Histogram + Gauss" rendering, as it uses the `DipImage` Gaussian filter
+  * the "3D Hue-Opacity" rendering, for the same reason.
+
+To use it without error, you can comment out the two lines referring to `DipImage` in the `palmsiever_setup.m`.

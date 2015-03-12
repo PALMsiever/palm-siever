@@ -1,0 +1,16 @@
+# Sieving #
+
+Sieving (or filtering) is _choosing the good localizations and discarding the false ones_. This operation is performed by inspecting the distribution of the localizations' fitted parameters and changing the `min` and `max` accordingly.
+
+The right panel is composed of a table and the histogram window. The table shows all available parameters for each localization, as loaded from your data, with some basic statistics. Only the min and max columns are editable. Whenever you change the minimum and maximum columns, you change the visible range of the parameters and the corresponding rendering is generated immediately.
+
+# The histogram #
+
+The histogram is shown as soon as you click on any cell of the parameter you wish to analyze. If all localizations seem to be squashed to the left, it is most probably because your data range is too wide. Try changing the value in the maximum column to a lower value (see Fig. 1).
+
+> <img src='https://palm-siever.googlecode.com/svn/wiki/images/Histogram_example1_squashedLeft.png' width='60%'>
+<blockquote><img src='https://palm-siever.googlecode.com/svn/wiki/images/Histogram_example1_centered.png' width='60%'>
+<b>Fig. 1. A histogram squashed to the left indicates that the range in your variable table is too large. Check the 'max' value and change it accordingly to discard probable outliers.</blockquote></b>
+
+<blockquote><img src='https://palm-siever.googlecode.com/svn/wiki/images/Histogram_example1_variableLimits.png'></blockquote>
+

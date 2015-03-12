@@ -1,0 +1,25 @@
+# The GUI #
+
+Here is a list of all commands in the GUI and additional help.
+
+| **Location** | **Command** | **Description** |
+|:-------------|:------------|:----------------|
+| File menu | Open | Opens a saved dataset (.MAT format) |
+| File menu | Save | Saves the data and the state of PALMsiever to a .MAT file |
+| File menu | Import | Imports data from a text file, see [Importing](Importing.md) |
+| File menu | Export | Exports data to a text file, see [Importing](Importing.md) |
+| File menu | Open PRM... | Legacy import function, faster for PRM files |
+| File menu | Open CSV... | Legacy import function |
+| File menu | Open CSV... | Legacy import function |
+| File menu | Save CSV    | Legacy export function |
+| File menu | Save TIFF.. | Saves the current rendered image into a 16-bit grayscale TIFF file. 0 corresponds to the 'Min' value, 2^16 corresponds to the 'Max' value. |
+| File menu | Export PALM movie/ stack.. | Exports a movie of slices along the selected "time" axis. To export Z-stacks just select "Z" as the time axis. |
+| Edit menu | Copy | Copies the current rendered image into the system's clipboard, as an RGB image. |
+| Points menu | [Sieve!](Sieving.md) | Discards all points which do not fall within the limits specified in the table, including the X, Y and Z variables. |
+| Points menu | [Sieve! (no XYZ)](Sieving.md) | Discards all points which do not fall within the limits specified in the table, but without taking into account the current limits for X, Y and Z. |
+| Points menu | Group | Performs Grouping on the point localization data. See [Grouping](Grouping.md) for more details |
+| Points menu | Keep grouped only | Keeps a single localization per group (ID column), where each corresponding variable is averaged across the members of a same group. |
+| Options menu | Color bar | When selected, plots a colorbar together with the rendered image. |
+| Options menu | Scale bar | When selected, plots the scalebar of each rendered image. |
+| Analyze menu | FIRE | Performs the FRC/FIRE analysis on the data. |
+| Plugins menu | Refresh | Reloads the plugins from the plugins directory. See [Plugins](Plugins.md) for more information. |

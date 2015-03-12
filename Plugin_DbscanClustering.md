@@ -1,0 +1,41 @@
+# Introduction #
+
+[DBSCAN](http://en.wikipedia.org/wiki/DBSCAN) (Density-based spatial clustering of applications with noise) performs multi-dimensional clustering based on the local density of points. This plugin is implemented for 2-3 dimensions.
+
+DBSCAN takes 2 parameters: _Eps_ and  _MinPts_ (see Fig. 1). DBSCAN searches in a radius _Eps_ around each point. If that point contains at least _MinPts_ then it counts as a _core point_. Any points at the edge of a cluster which are within _Eps_ of a _core point_, but are not themselves surrounded by _MinPts_ are a _border point_ and count as part of the cluster. Any points which are not within _Eps_ of a core point are a _noise point_.
+
+
+<img src='https://palm-siever.googlecode.com/svn/wiki/images/DBSCAN_Illustration_2.0.png' alt='DBSCAN illustration. Adapted from Wikipedia' width='350px' />
+
+Figure 1: Illustration of DBSCAN principle.
+
+
+The really nice thing about DBSCAN is that "density" is a very biologically appropriate definition of a cluster. In 2D, the minimum cluster density approximately relates to _MinPts_ and _Eps_ as
+
+<img src='https://palm-siever.googlecode.com/svn/wiki/images/dbscan_density_eqn.png' alt='rho_min = MinPts/ (pi * Eps^2)' />
+
+Also, "noise" is ubiquitous in our measurements so it is nice to have this as an inherent property of the algorithm.
+
+# Details #
+
+We will use the example data "FtsZ-Dendra2 C crescentus live 3D 10 ms frame.mat". Here the goal is segment the (patchy) mid-cell rings and polar spots from the low density cytosolic/ membrane bound localizations.
+
+<img src='https://palm-siever.googlecode.com/svn/wiki/images/DBSCAN_FtsZ_example_data_screenshot.png' alt='DBSCAN test data' width='600px' />
+
+Opening the plugin gives the following dialogue:
+
+<img src='https://palm-siever.googlecode.com/svn/wiki/images/DBSCAN_plugin.png' alt='DBSCAN plugin screenshot' />
+
+The two parameters _MinPts_ and _Eps_ need to be set.
+  * _MinPts_ : It is best to treat this essentially as a smoothing parameter. Larger _MinPts_ means less sensitivity to noisy fluctuations in background density. Smaller _MinPts!_ allows sensitivity to very small clusters (assuming the background noise is small). **_MinPts_=10** usually works well unless the clusters are very small or the data is very noisy.
+  * _Eps_ : Manually vary this parameter to control the minimum density of the cluster (larger Eps = lower minimum density). The appropriate Eps depends on your sample and on the distance units of the dataset. In this dataset, _Eps_=20 works well.
+
+Click 'Do it' to see the clustered result:
+
+<img src='https://palm-siever.googlecode.com/svn/wiki/images/DBSCAN_example_result.png' alt='DBSCAN result' width='600px' />
+
+DBSCAN adds two colums to the dataset:
+  * _dbscan\_type_ : -1 = noise point. 0 = border point. +1 = core point. Both border and core points are included within clusters.
+  * _dbscan\_id_ : Each cluster (containing both border points and noise points) is given a unique ID, starting at 1. Noise points are given an ID of -1. To filter out the noise, set the minimum _dbscan\_id_ to 1.
+
+Note: This works in 3D too. You can try it on this dataset (by ticking "Cluster Z axis". You will need to change Eps (due to the extra dimension).

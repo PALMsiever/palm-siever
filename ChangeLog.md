@@ -1,0 +1,71 @@
+# Aug 29 2012 #
+
+First version!
+
+# Sep 6 2012 #
+
+Added a few features for plugin support.
+
+  * new `getX`, `getY`, `getZ` and `getSubset` functions in the `lib` directory let you write plugins more easily. As an example, `plot3D.m` uses these three functions to generate a 3D scatterplot of the data shown in the window.
+  * `fetch` also exposed. Can be used to retrieve a variable from the workspace. Use of this function is encouraged, as it future-proofs changes.
+
+# Nov 23 2012 #
+Version 1.0.2 alpha (  -[r36](https://code.google.com/p/palm-siever/source/detail?r=36))
+
+Added file import and output!
+
+  * new GUI layout
+  * new file import and export. Supports a variety of ascii-based formats
+
+
+# Mar 22 2013 #
+Version 1.1 alpha ([r37](https://code.google.com/p/palm-siever/source/detail?r=37)-[r59](https://code.google.com/p/palm-siever/source/detail?r=59))
+
+Many new features:
+
+  * state saving: you can save and resume exactly where you left
+  * save on exit dialog
+  * MAIN m-file for packaging
+  * added frame field
+  * "sieve" menu items
+  * no need for palmsiever\_setup.m
+  * circle default pointset. rendering min/max fixed.
+  * redraw now forced each time a plugin is called
+  * now supports Leica GSD .ascii format
+  * removed dependency on prctile from stats toolbox
+  * added calcHistogram
+  * toNanometers now works on all XY var names
+
+New plugins
+  * drift correction with fiducials
+  * generic\_command.m
+  * a plugin to tune the limits to achieve a specified pixels size
+
+# Apr 09 2014 #
+Version 1.2 alpha ([r60](https://code.google.com/p/palm-siever/source/detail?r=60)-[r99](https://code.google.com/p/palm-siever/source/detail?r=99))
+
+  * Some bug exterminating
+  * new 3D isosurface plugin
+  * new DBSCAN plugin
+  * FIRE
+  * new double Gaussian fitting plugin
+
+# Aug 12 2014 #
+  * Fixed a bug affecting grouping and other plugins
+  * Added lots of documentation to the Wiki!
+
+# Aug 18 2014 #
+  * New Tracer plugin, replacing functionality in the Trace menu
+
+# Aug 20 2014 #
+  * Fixed a bug in the Z\_cross\_section plugin.
+
+# Sep 04 2014 #
+  * removed spurious plugins-test from repository
+  * solved bug in grouping.m due to inputdlg
+  * fixed bug in show-trace for Tracer plugin
+  * modified definition of gap in grouping
+  * tracking in beta
+  * T in startup data is now integer
+  * removed auto-refresh in plugins
+  * fixed 'To Figure' button

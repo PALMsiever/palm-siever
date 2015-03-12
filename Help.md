@@ -1,0 +1,8 @@
+# PALMsiever #
+**PALMsiever** has been to facilitate interactive exploration and analysis of single-molecule localization microscopy data.
+
+You can start by reading the InstallationGuide, then the QuickTour will quickly get you started. For specific help, you can have a look at the [FAQ](FAQ.md) or the other sections on the sidebar. If you get lost, have a look at WhoToAsk.
+
+We hope you enjoy using PALMsiever as much as we did developing it.
+
+The authors

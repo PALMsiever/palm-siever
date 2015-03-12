@@ -1,0 +1,31 @@
+# Introduction #
+
+A common and very robust way to correct for drift in localization microscopy is to use in situ fiducial markers. This plugin estimates the drift of the system using one or more fiducials as a reference. Spline fitting is used to ensure robust drift estimation
+
+# Algorithm summary #
+
+  1. An N-segmented piecewise cubic spline is fit to the x-t, y-t and z-t localizations of each selected fiducial.
+  1. The fitted drift from each fiducial is combined by averaging.
+  1. For any gaps where there is no fiducial, the last measured drift value is assigned.
+
+# Details #
+
+<img src='https://palm-siever.googlecode.com/svn/wiki/images/DriftCorrectionFiducial_screenshot.png' alt='Drift correction screenshot' />
+
+To do drift correction, you must select one or more fiducials (click "Add fiducial"):
+
+<img src='https://palm-siever.googlecode.com/svn/wiki/images/DriftCorrectionFiducial_selectedBead.png' alt='Selecting a bead' />
+
+Click "Correct drift!" to apply the correction. If you have ticked the "Show drift graph" box you should see something like the following:
+
+<img src='https://palm-siever.googlecode.com/svn/wiki/images/DriftCorrectionFiducial_DriftPlot.png' alt='Drift plot' />
+
+Important notes:
+
+- If the data is very drifty, or shows sharp "bumps" in the drift (as in the particularly nasty example I show here), then you may need to increase the number of splines - here I increased it to 100. In the case of smooth drift, then 10 usually  works fine.
+
+- Note that the initial fitted drift may look offset from the noisy measured drift (as can be seen in this image). This is because the zero point of the plotted measured drift is the first datapoint, which will randomly offset from the mean (time-averaged) bead position in that interval (which is what the spline corrresponds to.
+
+- The tickbox "Correct Z drift" allows you to do 3D drift correction.
+
+- The test data, 'TetraSpeck bead drift example 30ms frame.mat' was used for the exemplar analysis shown here. Another example dataset containing fiducials is included: 'Tubulin-Alexa647 with fiducials.mat'.

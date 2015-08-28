@@ -35,7 +35,7 @@ if ~isappdata(0,'ps_initialized') || ~getappdata(0,'ps_initialized')
     evalin('base','palmsiever_setup');
 end
 
-% Last Modified by GUIDE v2.5 12-Aug-2014 16:18:39
+% Last Modified by GUIDE v2.5 27-Aug-2015 18:46:40
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -136,6 +136,11 @@ else
     handles.settings.sigmax='Dummy_sigma_X';
     handles.settings.sigmay='Dummy_sigma_Y';
     handles.settings.N=size(X,1);
+    
+    % OMERO session details
+    handles.session = [];
+    handles.client = [];
+    handles.userid = [];
 end
 guidata(handles.output, handles);
 handles=reloadData(handles);
@@ -2467,6 +2472,12 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 
 % Hint: delete(hObject) closes the figure
 
+if ~isempty(handles.client)
+    disp('Closing OMERO session');
+    handles.client.closeSession();
+    
+end
+
 res = questdlg('Would you like to save your work before closing?','Save');
 
 if strcmp(res,'Yes')
@@ -2881,4 +2892,109 @@ function edit15_CreateFcn(hObject, eventdata, handles)
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
+end
+
+
+% --------------------------------------------------------------------
+function mOMERO_Callback(hObject, eventdata, handles)
+% hObject    handle to mOMERO (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function mOMERO_Logon_Callback(hObject, eventdata, handles)
+% hObject    handle to mOMERO_Logon (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+addpath('OMERO.matlab');
+addpath('OMEuiUtils');
+
+loadOmero();
+
+% find paths to OMEuiUtils.jar and ini4j.jar - approach copied from
+% bfCheckJavaPath
+
+
+% first check they aren't already in the dynamic path
+jPath = javaclasspath('-dynamic');
+utilJarInPath = false;
+for i = 1:length(jPath)
+    if strfind(jPath{i},'OMEuiUtils.jar');
+        utilJarInPath = true;
+    end
+    
+end
+
+if ~utilJarInPath
+    path = which('OMEuiUtils.jar');
+    if isempty(path)
+        path = fullfile(fileparts(mfilename('fullpath')), 'OMEuiUtils.jar');
+    end
+    if ~isempty(path) && exist(path, 'file') == 2
+        javaaddpath(path);
+    else
+        errordlg('Cannot automatically locate an OMEuiUtils JAR file');
+    end
+end
+
+logon = OMERO_logon();
+
+try
+    port = logon{2};
+    if ischar(port)
+        port = str2num(port); 
+    end
+    client = loadOmero(logon{1},port);
+    session = client.createSession(logon{3},logon{4});
+catch err
+    errordlg('Logon failed!');
+end   % end catch
+
+if ~isempty(session)
+    client.enableKeepAlive(60); % Calls session.keepAlive() every 60 seconds
+    handles.session = session;
+    handles.client = client;
+    handles.userid = session.getAdminService().getEventContext().userId; 
+    set(handles.mOMERO_Import,'Enable','on');
+    guidata(hObject,handles);
+end
+
+
+
+
+% --------------------------------------------------------------------
+function mOMERO_Import_Callback(hObject, eventdata, handles)
+% hObject    handle to mOMERO_Import (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+chooser = OMEuiUtils.OMEROImageChooser(handles.client, handles.userid, int32(1));
+dataset = chooser.getSelectedDataset();
+clear chooser;
+if ~isempty(dataset)
+    
+    
+    annotationList = getDatasetFileAnnotations(handles.session,dataset,'owner', -1);
+    
+    if isempty(annotationList)                
+        return;
+    end
+    
+    for a=1:length(annotationList)
+        names{a} = char(annotationList(a).getFile().getName().getValue());
+    end
+    
+    [s,v] = listdlg('PromptString','Select an annotation:',...
+                'SelectionMode','single',...
+                'ListString',names);
+            
+    originalFile = annotationList(s).getFile();
+    %rawFileStore = session.createRawFileStore();
+    %rawFileStore.setFileId(originalFile.getId().getValue());
+    %byteArr  = rawFileStore.read(0,originalFile.getSize().getValue());
+    %rawFileStore.close();
+        
 end

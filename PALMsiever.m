@@ -1818,10 +1818,10 @@ fileType = feval(fname,name,'FileType');
 if filename~=0
    watch_on
    
-   varAssignment={{'frame','frame'},{'x','x'}, {'y','y'}};
+   varAssignment=feval(fname,name, 'Import', 'Filename',fullfile(path,filename));
    nEl = evalin('base',['numel(',varAssignment{1}{2},')']);
    handles.settings.N = nEl;
-  
+   set(handles.tFilename,'String',filename);
    guidata(handles.output, handles);
    reloadData(handles);
    setPSVar(handles,varAssignment);
@@ -2976,8 +2976,8 @@ dataset = chooser.getSelectedDataset();
 clear chooser;
 if ~isempty(dataset)
     
-    session = handles.session;
-    annotationList = getDatasetFileAnnotations(session,dataset,'owner', -1);
+    
+    annotationList = getDatasetFileAnnotations(handles.session,dataset,'owner', -1);
     
     if isempty(annotationList)                
         return;
@@ -2992,61 +2992,9 @@ if ~isempty(dataset)
                 'ListString',names);
             
     originalFile = annotationList(s).getFile();
-    
-    resources = session.sharedResources();
-    table = resources.openTable(originalFile);
-    
- 
-    % read 1st three columns initially (frame,x,y)
-    % full-list is:
-    % frame,x,y,id,intensity,precision,bkgstd (?!), sigma,offset
-    
-    nCols = 3;
-    
-    nRows = 10;
-    
-    
-    colSubset = 0:nCols-1
-    rowSubset = 0:nRows-1
-    data = table.slice(colSubset, rowSubset);
-    cols = data.columns;
-    
-    workspacename = 'base';
-    
-
-    frame = double(cols(1).values);
-    assignin(workspacename,'frame', frame);
-    x = double(cols(2).values);
-    assignin(workspacename,'x', x);
-    y = double(cols(3).values);
-    assignin(workspacename,'y', y);
-    
-   
-    table.close();
-    
-    
-    watch_on
-   
-   varAssignment={{'frame','frame'},{'x','x'},{'y','y'} };
-   nEl = evalin('base',['numel(',varAssignment{1}{2},')']);
-   handles.settings.N = nEl;
-
-   guidata(handles.output, handles);
-   reloadData(handles);
-   setPSVar(handles,varAssignment);
-   handles=guidata(handles.output);
-   reloadData(handles);
-   handles=guidata(handles.output);
-   redraw(handles);
-   handles=guidata(handles.output);
-   autoMin(handles);
-   handles=guidata(handles.output);
-   autoMax(handles);
-   handles=guidata(handles.output);
-   redraw(handles);
-   
-   watch_off
-
-   
+    %rawFileStore = session.createRawFileStore();
+    %rawFileStore.setFileId(originalFile.getId().getValue());
+    %byteArr  = rawFileStore.read(0,originalFile.getSize().getValue());
+    %rawFileStore.close();
         
 end

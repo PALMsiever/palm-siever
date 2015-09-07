@@ -2907,17 +2907,19 @@ function mOMERO_Logon_Callback(hObject, eventdata, handles)
 % hObject    handle to mOMERO_Logon (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-
+ 
+ 
 addpath('OMERO.matlab');
 addpath('OMEuiUtils');
-
+ 
 loadOmero();
-
+ 
 % find paths to OMEuiUtils.jar and ini4j.jar - approach copied from
 % bfCheckJavaPath
 
 
+session = [];
+ 
 % first check they aren't already in the dynamic path
 jPath = javaclasspath('-dynamic');
 utilJarInPath = false;
@@ -2927,7 +2929,7 @@ for i = 1:length(jPath)
     end
     
 end
-
+ 
 if ~utilJarInPath
     path = which('OMEuiUtils.jar');
     if isempty(path)
@@ -2939,9 +2941,9 @@ if ~utilJarInPath
         errordlg('Cannot automatically locate an OMEuiUtils JAR file');
     end
 end
-
+ 
 logon = OMERO_logon();
-
+ 
 try
     port = logon{2};
     if ischar(port)
@@ -2952,7 +2954,7 @@ try
 catch err
     errordlg('Logon failed!');
 end   % end catch
-
+ 
 if ~isempty(session)
     client.enableKeepAlive(60); % Calls session.keepAlive() every 60 seconds
     handles.session = session;
@@ -2961,40 +2963,111 @@ if ~isempty(session)
     set(handles.mOMERO_Import,'Enable','on');
     guidata(hObject,handles);
 end
-
-
-
-
+ 
+ 
+ 
+ 
 % --------------------------------------------------------------------
 function mOMERO_Import_Callback(hObject, eventdata, handles)
 % hObject    handle to mOMERO_Import (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+ 
 chooser = OMEuiUtils.OMEROImageChooser(handles.client, handles.userid, int32(1));
 dataset = chooser.getSelectedDataset();
 clear chooser;
 if ~isempty(dataset)
     
-    
-    annotationList = getDatasetFileAnnotations(handles.session,dataset,'owner', -1);
+    session = handles.session;
+    annotationList = getDatasetFileAnnotations(session,dataset,'owner', -1);
     
     if isempty(annotationList)                
         return;
     end
     
+    n = 1;
     for a=1:length(annotationList)
-        names{a} = char(annotationList(a).getFile().getName().getValue());
+        name = char(annotationList(a).getFile().getName().getValue());
+        if strfind(name,'.h5')
+            names{n} = name;
+            h5List(n) = annotationList(a);
+            n = n + 1;
+        end
     end
     
-    [s,v] = listdlg('PromptString','Select an annotation:',...
+    if isempty(names)
+        return;
+    end
+    
+    if length(names) > 1
+        [s,v] = listdlg('PromptString','Select an annotation:',...
                 'SelectionMode','single',...
                 'ListString',names);
+    else
+        s = 1;
+    end
             
-    originalFile = annotationList(s).getFile();
-    %rawFileStore = session.createRawFileStore();
-    %rawFileStore.setFileId(originalFile.getId().getValue());
-    %byteArr  = rawFileStore.read(0,originalFile.getSize().getValue());
-    %rawFileStore.close();
+    originalFile = h5List(s).getFile();
+    filename = names{s};
+    
+    resources = session.sharedResources();
+    table = resources.openTable(originalFile);
+    
+ 
+    % read 1st three columns initially (frame,x,y)
+    % full-list is:
+    % frame,x,y,id,intensity,precision,bkgstd (?!), sigma,offset
+    
+    nCols = 5;
+    
+    nRows = 30000;
+    
+    
+    colSubset = 0:nCols-1;
+    rowSubset = 0:nRows-1;
+    data = table.slice(colSubset, rowSubset);
+    cols = data.columns;
+    
+    workspacename = 'base';
+    
+ 
+    frame = double(cols(1).values);
+    assignin(workspacename,'frame', frame);
+    x = double(cols(2).values);
+    assignin(workspacename,'x', x);
+    y = double(cols(3).values);
+    assignin(workspacename,'y', y);
+    int = double(cols(5).values);
+    assignin(workspacename,'intensity', int);
+    
+   
+    table.close();
+    
+   
+    watch_on
+   
+   varAssignment={{'frame','frame'},{'x','x'},{'y','y'} };
+    
+   nEl = evalin('base',['numel(',varAssignment{1}{2},')']);
+   handles.settings.N = nEl;
+   set(handles.tFilename,'String',filename);
+   guidata(handles.output, handles);
+   reloadData(handles);
+   setPSVar(handles,varAssignment);
+   handles=guidata(handles.output);
+   reloadData(handles);
+   handles=guidata(handles.output);
+   redraw(handles);
+   handles=guidata(handles.output);
+   autoMin(handles);
+   handles=guidata(handles.output);
+   autoMax(handles);
+   handles=guidata(handles.output);
+   redraw(handles);
+   
+   watch_off
+ 
+   
         
 end
+

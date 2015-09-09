@@ -2999,19 +2999,19 @@ if ~isempty(dataset)
         return;
     end
     
-    if length(names) > 1
+    if length(names) > 0
         [s,v] = listdlg('PromptString','Select an annotation:',...
                 'SelectionMode','single',...
                 'ListString',names);
-    else
-        s = 1;
     end
             
     originalFile = h5List(s).getFile();
-    filename = names{s};
+    filename = char(originalFile.getName().getValue())
     
-    resources = session.sharedResources();
-    table = resources.openTable(originalFile);
+    table = session.sharedResources().openTable(originalFile)
+    
+    %table = entryUnencrypted.sharedResources().openTable(originalFile);
+    %table = resources.openTable(originalFile);
     
  
     % read 1st three columns initially (frame,x,y)
@@ -3019,38 +3019,63 @@ if ~isempty(dataset)
     % frame,x,y,id,intensity,precision,bkgstd (?!), sigma,offset
     
     nCols = 5;
-    
-    nRows = 30000;
-    
-    
     colSubset = 0:nCols-1;
-    rowSubset = 0:nRows-1;
-    data = table.slice(colSubset, rowSubset);
-    cols = data.columns;
+    
+    totalRows = table.getNumberOfRows()
+    
+    % load 4096 points at a time
+    nRows = 4096;
     
     workspacename = 'base';
     
- 
-    frame = double(cols(1).values);
-    assignin(workspacename,'frame', frame);
-    x = double(cols(2).values);
-    assignin(workspacename,'x', x);
-    y = double(cols(3).values);
-    assignin(workspacename,'y', y);
-    int = double(cols(5).values);
-    assignin(workspacename,'intensity', int);
+    nBlocks = floor(totalRows./nRows)
+    % pre-allocate arrays
+    frame = zeros(nBlocks * nRows,1);
+    x = zeros(nBlocks * nRows,1);
+    y = zeros(nBlocks * nRows,1);
+    int = zeros(nBlocks * nRows,1);
     
-   
+    h = waitbar(0,'Importing data...');
+    
+    for block = 0:nBlocks -1 
+        
+        waitbar(block./(nBlocks-1));
+        
+        sstart = block * nRows;
+        eend = sstart + (nRows -1);
+     
+        rowSubset = sstart:eend;
+        data = table.slice(colSubset, rowSubset);
+        cols = data.columns;
+        
+        % convrt to matlab numbering
+        sstart = sstart + 1;
+        eend = eend + 1;
+    
+        frame(sstart:eend) = double(cols(1).values);
+        x(sstart:eend) = double(cols(2).values);
+        y(sstart:eend) = double(cols(3).values);
+        int(sstart:eend) = double(cols(5).values);
+        
+        waitbar(block./(nBlocks-1),h);
+        
+    end
+        
+    close(h);
+    
     table.close();
     
-   
+    assignin(workspacename,'frame', frame);
+    assignin(workspacename,'x', x);
+    assignin(workspacename,'y', y);
+    assignin(workspacename,'intensity', int);
     watch_on
-   
-   varAssignment={{'frame','frame'},{'x','x'},{'y','y'} };
     
-   nEl = evalin('base',['numel(',varAssignment{1}{2},')']);
-   handles.settings.N = nEl;
-   set(handles.tFilename,'String',filename);
+    varAssignment={{'frame','frame'},{'x','x'},{'y','y'} };
+    
+    nEl = evalin('base',['numel(',varAssignment{1}{2},')']);
+    handles.settings.N = nEl;
+    set(handles.tFilename,'String',filename);
    guidata(handles.output, handles);
    reloadData(handles);
    setPSVar(handles,varAssignment);

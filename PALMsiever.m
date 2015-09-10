@@ -3021,14 +3021,14 @@ if ~isempty(dataset)
     nCols = 5;
     colSubset = 0:nCols-1;
     
-    totalRows = table.getNumberOfRows()
+    totalRows = table.getNumberOfRows();
     
     % load 4096 points at a time
     nRows = 4096;
     
     workspacename = 'base';
     
-    nBlocks = floor(totalRows./nRows)
+    nBlocks = floor(totalRows./nRows) + 1;
     % pre-allocate arrays
     frame = zeros(nBlocks * nRows,1);
     x = zeros(nBlocks * nRows,1);
@@ -3043,6 +3043,10 @@ if ~isempty(dataset)
         
         sstart = block * nRows;
         eend = sstart + (nRows -1);
+        
+        if eend > totalRows -1
+            eend = totalRows -1
+        end
      
         rowSubset = sstart:eend;
         data = table.slice(colSubset, rowSubset);

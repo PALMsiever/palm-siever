@@ -11,7 +11,7 @@ palm_siever = fileparts(which('palmsiever_setup'));
 
 if usediplib && ~isdeployed
   % Initialize Dipimage
-  diplib_directory = 'C:\Program Files\DIPimage 2.7'; % Change me if necess.
+  diplib_directory = 'C:\Program Files\DIPimage 2.4.1'; % Change me if necess.
   addpath(diplib_directory); 
 end
 

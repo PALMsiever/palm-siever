@@ -13,8 +13,8 @@ else
     h = .85; margY = .1;
     [minX, maxX, minY, maxY] = getBounds(handles);
     [minZ, maxZ] = getZbounds(handles);
-    x = minX + (maxX-minX) * (1-w-margX)
-    y = minY + (maxY-minY) * (1-h-margY)
+    x = minX + (maxX-minX) * (1-w-margX);
+    y = minY + (maxY-minY) * (1-h-margY);
     w = w * (maxX-minX);
     h = h * (maxY-minY);
     rectangle('Position',[x,y,w,h],'EdgeColor','white','FaceColor','None');
@@ -22,7 +22,7 @@ else
     % Calc z colors
     nc = 32;
     rgbc = hsv(nc*3/2);
-    rgbZ = @(z) rgbc(max(1,ceil( (z-minZ)/(maxZ-minZ)*nc )),:);
+    rgbZ = @(z) rgbc(max(1,ceil( (maxZ-z)/(maxZ-minZ)*nc )),:);
     rightC = zeros(nc,3);
     leftC = rgbZ(linspace(minZ,maxZ,nc)');
     xs = repmat([x x+w x+w x]',nc,1);
@@ -34,8 +34,8 @@ else
     fvc(3:4:end,:) = rightC;
     fvc(4:4:end,:) = leftC;
     patch('Vertices',[xs ys],'Faces',reshape(1:nc*4,4,nc)','FaceVertexCData',fvc,'FaceColor','flat','EdgeColor','none');
-    for i=0:32
-        text(x-w/2,y+i*h/nc,sprintf('%.2e',minZ+i*(maxZ-minZ)/nc),'Color','white','FontSize',8,'HorizontalAlignment','right')
+    for i=0:nc
+        text(x-w/2,y+i*h/nc,sprintf('%.2e',minZ+(nc-i)*(maxZ-minZ)/nc),'Color','white','FontSize',8,'HorizontalAlignment','right')
     end
 end
 

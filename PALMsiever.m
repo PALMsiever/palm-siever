@@ -2472,7 +2472,7 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 
 % Hint: delete(hObject) closes the figure
 
-if ~isempty(handles.client)
+if isfield(handles,'client') && ~isempty(handles.client)
     disp('Closing OMERO session');
     handles.client.closeSession();
     

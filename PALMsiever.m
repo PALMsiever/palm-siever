@@ -568,7 +568,7 @@ switch get(handles.pShow,'Value')
         setappdata(0,'KDE',{X,Y,density'})
     case 6 % Histogram 3D Hue Opacity
         n=linspace(minX,maxX,res); m=linspace(minY,maxY,res);
-        a = .5; b=1;
+        a = .05; b=1;
         rgb = plotZ_fast(handles,res,subset,XPosition,YPosition,ZPosition,minZ,maxZ,minX,maxX,minY,maxY,gamma,minC,maxC,a,b);%simplified version without jittering
         
         imagesc(n,m,rgb);
@@ -2618,46 +2618,64 @@ rgb(rgb>1)=1;
 
 
 function rgb = plotZ_fast(handles,res,subset,XPosition,YPosition,ZPosition,minZ,maxZ,minX,maxX,minY,maxY,gamma,minC,maxC,a,b)
-nz = 32;
-RGB_SCALE_FACTOR= 10;
+nz = res/8;
 
-
-pxx=(maxX-minX)/res; pxy=(maxY-minY)/res; pxz=(maxZ-minZ)/res;
+pxx=(maxX-minX)/res; pxy=(maxY-minY)/res; pxz=(maxZ-minZ)/nz;
 pxVol=pxx * pxy * pxz;
 
-RR = [round((res-1)*[...
+RR = [ceil((res-1)*[...
     (XPosition(subset)-minX)/(maxX-minX) ...
     (YPosition(subset)-minY)/(maxY-minY) ])+1 ...
-      round(nz*(ZPosition(subset)-minZ)/(maxZ-minZ))];
+      ceil(nz*(ZPosition(subset)-minZ)/(maxZ-minZ))];
+RR(RR==0)=1;
 RRok = all(RR(:,1:2)<=res,2) & all(RR>=1,2) & RR(:,3)<=nz;
 
 density = accumarray(RR(RRok,[2 1 3]),1,[res,res,nz])/pxVol;
 
 sigma = str2double(get(handles.sigma,'String'));
 sPix = sigma/pxx;
-gWindow = ceil(5*sPix);
-gKern = fspecial('gaussian',gWindow, sPix);
+%gWindow = ceil(5*sPix);
+%gKern = fspecial('gaussian',gWindow, sPix);
 dMax = max(density(:));
 density = density/dMax;
-for ii = 1:size(density,3)
-  density(:,:,ii) = imfilter(density(:,:,ii),gKern,'replicate');
-end
+%for ii = 1:size(density,3)
+%  density(:,:,ii) = imfilter(density(:,:,ii),gKern,'replicate');
+%end
+density=double(gaussf(density,sigma./[pxx pxy pxz]));
 
 % ADJUST GAMMA HERE
 density(density<0)=0;
 density = gammaAdjust(density,gamma);
 rgbc = hsv(round(nz*3/2));
 rgbc = rgbc(1:nz,:);
-rgb = zeros(size(density,2),size(density,1),3);
-for i=1:size(density,3)
-    D = squeeze(density(:,:,i));
-    for c=1:3
-        rgb(:,:,c) = rgb(:,:,c).*(1-a*D) + b*rgbc(i,c).*D;
-    end
-end
-%keyboard
+%rgb = zeros(size(density,2),size(density,1),3);
 
-rgb = (rgb/max(rgb(:)) - minC) / (maxC-minC)/RGB_SCALE_FACTOR;
+Z = reshape(kron(1:size(density,3),ones(size(density,1),size(density,2))),size(density));
+
+%att = cumsum(flip(density./repmat(sum(density,3),1,1,size(density,3)),3),3);
+att = 1+sum(density(:))*a*cumsum(density,3);
+att(isnan(att))=Inf;
+
+rs = reshape(rgbc(Z,1),size(Z));
+gs = reshape(rgbc(Z,2),size(Z));
+bs = reshape(rgbc(Z,3),size(Z));
+
+rgb = cat(3,sum(density.* rs./att,3),sum(density.* gs./att,3),sum(density.* bs./att,3));
+
+% alphO = zeros(size(density,2),size(density,1));
+% for i=1:size(density,3)
+%     D = squeeze(density(:,:,i));    
+%     alphA = a*alphO;
+%     alphB = b*D;
+%     for c=1:3
+%         Ca = rgb(:,:,c);
+%         Cb = rgbc(i,c);
+%         rgb(:,:,c) = alphA.*Ca+(1-alphA).*alphB.*Cb;
+%     end
+%     alphO = 1-(1-alphO).*(1-D);
+% end
+
+rgb = (rgb/max(rgb(:))*max(density(:)) - minC) / (maxC-minC);
 
 rgb(rgb<0)=0; 
 rgb(rgb>1)=1;

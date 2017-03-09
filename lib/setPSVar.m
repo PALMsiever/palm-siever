@@ -46,7 +46,8 @@ end
 if ~isempty(leftoverVar)
    defaultVar = leftoverVar{1};
 else
-   defaultVar = get(handles.pXAxis,'Value');
+   vars = get(handles.pXAxis,'String');
+   defaultVar = vars{get(handles.pXAxis,'Value')};
 end
 
 for ii = 1:numel(psVarUnassigned)
